@@ -1,0 +1,22 @@
+{
+  "name": "spooktacular-db",
+  "version": "1.0.0",
+  "description": "CS340 basic CRUD with Node, Express and MySQL",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peppercorno/spooktacular-db.git"
+  },
+  "author": "Dawn Toh, Debbie Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/peppercorno/spooktacular-db/issues"
+  },
+  "homepage": "https://github.com/peppercorno/spooktacular-db#readme",
+  "dependencies": {
+    "express-handlebars": "^7.1.2"
+  }
+}
