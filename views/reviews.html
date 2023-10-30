@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Spooktacular Haunted House</title>
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/main.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	</head>
+
+	<body>
+		<nav>
+			<a href="index.html" class="nav-item">Home <i class="fa fa-bugs"></i></a>
+			<a href="customers.html" class="nav-item">Customers <i class="fa fa-ghost"></i></a>
+			<a href="admission-prices.html" class="nav-item">Admission Prices <i class="fa fa-money-check"></i></a>
+			<a href="tickets.html" class="nav-item">Tickets <i class="fa fa-ticket"></i></a>
+			<a href="rooms.html" class="nav-item">Rooms <i class="fa fa-broom"></i></a>
+			<a href="inventory-items.html" class="nav-item">Inventory Items <i class="fa fa-hat-wizard"></i></a>
+			<a href="reviews.html" class="nav-item selected">Reviews <i class="fa fa-book-skull"></i></a>
+			<a href="employees.html" class="nav-item">Employees <i class="fa fa-skull-crossbones"></i></a>
+		</nav>
+		<main>
+			<section>
+				<h1>Reviews</h1>
+				<table>
+					<thead>
+						<tr>
+							<th>reviewID</th>
+							<th>customerID</th>
+							<th>roomID</th>
+							<th>rating</th>
+							<th>text</th>
+							<th>creationDate</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- To be deleted once DB data can be loaded -->
+						<tr>
+							<td>1</td>
+							<td>1</td>
+							<td>4</td>
+							<td>5</td>
+							<td>Just want to say The Catacombs really bury your competitors in the haunted house scene! Made my skin crawl.</td>
+							<td>2021-10-19 10:02:20</td>
+							<td><button class="table-button"><i class="fa fa-pen-to-square"></i></button></td>
+							<td><button class="table-button delete"><i class="fa fa-trash-can"></i></button></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<section>
+				<h1>Add Review</h1>
+				<form method="">
+					<div class="form-field">
+						<label for="" class="form-label" class="form-label">Written by</label>
+						<select>
+							<option>Customer name</option>
+						</select>
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Reviewing a room?</label>
+						<select>
+							<option>Room name</option>
+						</select>
+					</div>
+					<div class="form-field">
+						<label class="form-label">Rating</label>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating0" name="reviewRating" value="0" />
+							<label for="reviewRating0">0</label>
+						</div>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating1" name="reviewRating" value="1" />
+							<label for="reviewRating1">1</label>
+						</div>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating2" name="reviewRating" value="2" />
+							<label for="reviewRating2">2</label>
+						</div>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating3" name="reviewRating" value="3" />
+							<label for="reviewRating3">3</label>
+						</div>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating4" name="reviewRating" value="4" />
+							<label for="reviewRating4">4</label>
+						</div>
+						<div class="radio-wrapper">
+							<input type="radio" id="reviewRating5" name="reviewRating" value="5" />
+							<label for="reviewRating5">5</label>
+						</div>
+					</div>
+					<div class="form-field stacked">
+						<label for="" class="form-label">Review Text</label>
+						<textarea rows="5"></textarea>
+					</div>
+					<div class="button-row">
+						<input type="submit" value="Add Review" />
+					</div>
+				</form>
+			</section>
+		</main>
+		<footer></footer>
+	</body>
+</html>

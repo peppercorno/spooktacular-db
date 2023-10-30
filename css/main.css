@@ -1,0 +1,229 @@
+@font-face {
+	font-family: 'EuclidCircularB';
+	src: url('../fonts/EuclidCircularB-Regular.woff2') format('woff2');
+  }
+
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font-family: 'EuclidCircularB';
+	background: #181a1b;
+	color: #ffffff;
+	display: flex;
+	flex-direction: column;
+}
+
+/*-----------------------------
+Typography/Links/Bullet Points
+------------------------------*/
+h1 {
+	color: #de6603;
+	text-transform: uppercase;
+	font-weight: 800;
+}
+
+p {
+	color: #a4b7a4;
+}
+
+a {
+	color: #a4b7a4;
+	text-decoration: none;
+}
+
+a:active,
+a:focus,
+a:hover {
+	color: #186a3e;
+}
+
+ul {
+	list-style: none;
+}
+
+/*-----------------
+Nav items, buttons 
+-------------------*/
+button,
+a.nav-item,
+input[type='submit'] {
+	padding: 1em;
+	margin: 1em;
+	font-weight: bold;
+	color: #181a1b;
+	letter-spacing: 4px;
+	background-color: #02af54;
+	border: none;
+	border-radius: 5px;
+	text-transform: uppercase;
+	transition: all ease 0.3s;
+}
+
+button:hover,
+a.nav-item:hover,
+input[type='submit']:hover {
+	background-color: #186a3e;
+}
+
+a.nav-item.selected {
+	color: #ffffff;
+	background-color: #046b34;
+}
+
+button:disabled,
+input[type='submit']:disabled {
+	color: #616161;
+	background-color: #131313;
+}
+
+/*-----------------
+Layout
+-------------------*/
+nav {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+main {
+	margin: 0 auto;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+}
+
+section {
+	width: 100%;
+	min-width: 42em;
+	max-width: 64em;
+	margin-bottom: 1.75em;
+	padding: 1em 1.5em;
+	background-color: rgba(255, 255, 255, 0.02);
+	border-radius: 5px;
+}
+
+.intro h1,
+.intro p {
+	text-align: center;
+}
+
+/*-----------------
+Tables
+-------------------*/
+table {
+	width: 100%;
+	text-align: left;
+	margin: 1.5em 0;
+	border: none;
+	outline: none;
+	border-collapse: collapse;
+}
+
+thead {
+	background-color: #212121;
+	border-bottom: 2px solid #333333;
+}
+
+th,
+td {
+	padding: 0.5em 0.75em;
+	line-height: 1.25em;
+}
+
+tbody tr:nth-child(odd) {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-button {
+	width: 96px;
+	margin: 0;
+	letter-spacing: 0px;
+	text-align: center;
+	padding: 0.5em 1.25em;
+}
+
+.table-button.delete {
+	background-color: tomato;
+}
+
+/*-------------------
+Form Elements
+---------------------*/
+.form-field {
+	padding: 0.5em 0;
+	display: flex;
+	align-items: center;
+}
+
+.form-field.stacked {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.form-label {
+	min-width: 160px;
+}
+
+.form-label.disabled {
+	opacity: 0.2;
+}
+
+.form-field.stacked .form-label {
+	min-width: 0;
+	margin-bottom: 0.75em;
+}
+
+select,
+input[type='text'],
+input[type='password'],
+textarea {
+	font-family: sans-serif;
+	font-size: 16px;
+	color: #ffffff;
+	padding: 0.5em 0.75em;
+	border: 1px solid #333333;
+	border-radius: 3px;
+	outline: none;
+	background-color: #212121;
+}
+
+textarea {
+	min-width: 50%;
+}
+
+select:disabled,
+input[type='text']:disabled,
+input[type='password']:disabled,
+textarea:disabled {
+	color: #616161;
+	border: none;
+	background-color: #131313;
+}
+
+.radio-wrapper {
+	margin-right: 2em;
+	margin-bottom: 0.5em;
+}
+
+input[type='radio'] {
+	margin: 0 0.5em 0 0;
+}
+
+.button-row {
+	width: 100%;
+	padding: 0.75em 0;
+	display: flex;
+	justify-content: flex-end;
+}
+
+input[type='submit'] {
+	letter-spacing: 0;
+	margin: 0;
+	cursor: pointer;
+}

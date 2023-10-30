@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Spooktacular Haunted House</title>
+		<meta name="robots" content="noindex, nofollow" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/main.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+	</head>
+
+	<body>
+		<nav>
+			<a href="index.html" class="nav-item">Home <i class="fa fa-bugs"></i></a>
+			<a href="customers.html" class="nav-item">Customers <i class="fa fa-ghost"></i></a>
+			<a href="admission-prices.html" class="nav-item">Admission Prices <i class="fa fa-money-check"></i></a>
+			<a href="tickets.html" class="nav-item">Tickets <i class="fa fa-ticket"></i></a>
+			<a href="rooms.html" class="nav-item">Rooms <i class="fa fa-broom"></i></a>
+			<a href="inventory-items.html" class="nav-item">Inventory Items <i class="fa fa-hat-wizard"></i></a>
+			<a href="reviews.html" class="nav-item">Reviews <i class="fa fa-book-skull"></i></a>
+			<a href="employees.html" class="nav-item selected">Employees <i class="fa fa-skull-crossbones"></i></a>
+		</nav>
+		<main>
+			<section>
+				<h1>Employees</h1>
+				<table>
+					<thead>
+						<tr>
+							<th>employeeID</th>
+							<th>firstName</th>
+							<th>lastName</th>
+							<th>email</th>
+							<th>jobTitle</th>
+							<th>startDate</th>
+							<th>endDate</th>
+							<th>salary</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- To be deleted once DB data can be loaded -->
+						<tr>
+							<td>1</td>
+							<td>Vincent</td>
+							<td>Vampire</td>
+							<td>vincentv@email.com</td>
+							<td>Count von Canapes</td>
+							<td>2022-09-15 12:00:00</td>
+							<td>2022-11-05 12:00:00</td>
+							<td>60000.00</td>
+							<td><button class="table-button"><i class="fa fa-pen-to-square"></i></button></td>
+							<td><button class="table-button delete"><i class="fa fa-trash-can"></i></button></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<section>
+				<h1>Add Employee</h1>
+				<form method="">
+					<div class="form-field">
+						<label for="" class="form-label">First Name</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Last Name</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Email</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Job Title</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Start Date</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">End Date</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="form-field">
+						<label for="" class="form-label">Salary</label>
+						<input type="text" name="" placeholder="" />
+					</div>
+					<div class="button-row">
+						<input type="submit" value="Add Employee" />
+					</div>
+				</form>
+			</section>
+		</main>
+		<footer></footer>
+	</body>
+</html>
