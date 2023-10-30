@@ -2,11 +2,11 @@
 	<h1>Customers</h1>
 
 	{{#if customerDeleted}}
-		{{> table-notification type='success' message='Customer successfully deleted.'}}
+		{{> notification centered='true' type='success' message='Customer successfully deleted.'}}
 	{{/if}}
 
-    {{#if responseError}}
-		{{> table-notification message='Unable to retrieve customers from database.'}}
+    {{#if retrievalError}}
+		{{> notification centered='true' message='Unable to retrieve Customers from database.'}}
 	{{/if}}
 
 	<table>
@@ -22,18 +22,18 @@
 		</thead>
 		<tbody>
 			{{#each rows}}
-				<tr>
-					<td>{{this.customerID}}</td>
-					<td>{{this.firstName}}</td>
-					<td>{{this.lastName}}</td>
-					<td>{{this.email}}</td>
-					<td>
-						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
-					</td>
-					<td>
-						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
-					</td>
-				</tr>
+			<tr>
+				<td>{{this.customerID}}</td>
+				<td>{{this.firstName}}</td>
+				<td>{{this.lastName}}</td>
+				<td>{{this.email}}</td>
+				<td>
+					<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+				</td>
+				<td>
+					<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+				</td>
+			</tr>
 			{{/each}}
 		</tbody>
 	</table>
@@ -54,12 +54,12 @@
 			<input type='email' name='' placeholder='' />
 		</div>
 		<div class='button-row'>
-			<!--Dynamically insert either .success or .error depending on usage of notification-->
-			<div id='notificationAddCustomer' class='notification error display-none'>
-				<i class='fa fa-check display-none'></i>
-				<i class='fa fa-triangle-exclamation'></i>
-				<span>Error or success message.</span>
-			</div>
+			{{#if addCustomerSuccess}}
+				{{> notification type='success' message='Customer added successfully!'}}
+			{{/if}}
+			{{#if addCustomerError}}
+				{{> notification message='Error! Customer was not added.'}}
+			{{/if}}
 			<input type='submit' value='Add Customer' />
 		</div>
 	</form>
@@ -85,12 +85,12 @@
 			<input type='email' name='' />
 		</div>
 		<div class='button-row'>
-			<!--Dynamically insert either .success or .error depending on usage of notification-->
-			<div id='notificationUpdateCustomer' class='notification error display-none'>
-				<i class='fa fa-check display-none'></i>
-				<i class='fa fa-triangle-exclamation'></i>
-				<span>Error or success message.</span>
-			</div>
+			{{#if updateCustomerSuccess}}
+				{{> notification type='success' message='Customer updated successfully!'}}
+			{{/if}}
+			{{#if updateCustomerError}}
+				{{> notification message='Error! Customer was not updated.'}}
+			{{/if}}
 			<input type='submit' value='Update Price' />
 		</div>
 	</form>

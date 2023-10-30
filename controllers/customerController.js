@@ -8,8 +8,8 @@ exports.findAll = (req, res) => {
 	dbConnection.query('SELECT * FROM Customers', (err, rows) => {
 		if (err) {
 			console.log(err)
-			let responseError = true
-			res.render('customers', { responseError })
+			let retrievalError = true
+			res.render('customers', { retrievalError })
 		}
 
 		let customerDeleted = req.query.removed // If a customer was successfully deleted

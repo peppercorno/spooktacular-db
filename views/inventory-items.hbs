@@ -1,0 +1,152 @@
+<section>
+	<h1>Inventory Items</h1>
+
+	{{#if inventoryItemDeleted}}
+		{{> notification centered='true' type='success' message='Inventory Item successfully deleted.'}}
+	{{/if}}
+
+    {{#if retrievalError}}
+		{{> notification centered='true' message='Unable to retrieve Inventory Items from database.'}}
+	{{/if}}
+
+	<div class='filter-row'>
+		<div>
+			<label>Filter by room</label>
+			<select id=''>
+				<option></option>
+			</select>
+		</div>
+		<div>
+			<label>Filter by employee</label>
+			<select id=''>
+				<option></option>
+			</select>
+		</div>
+	</div>
+
+	<table>
+		<thead>
+			<tr>
+				<th>itemID</th>
+				<th>roomID</th>
+				<th>employeeID</th>
+				<th>name</th>
+				<th>itemCondition</th>
+				<th class='col-table-button'></th>
+				<th class='col-table-button'></th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each rows}}
+			<tr>
+				<td>{{this.itemID}}</td>
+				<td>{{this.roomID}}</td>
+                <td>{{this.employeeID}}</td>
+				<td>{{this.name}}</td>
+				<td>{{this.itemCondition}}</td>
+				<td>
+					<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+				</td>
+				<td>
+					<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+				</td>
+			</tr>
+            {{/each}}
+		</tbody>
+	</table>
+</section>
+<section>
+	<h1>Add Inventory Item</h1>
+	<form method='POST'>
+		<div class='form-field'>
+			<label for='' class='form-label'>Name</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='form-field columns'>
+			<div class='column-label'>
+				<label for='' class='form-label'>Room</label>
+				<p class='form-field-explanation'>Optional</p>
+			</div>
+			<div class='column-input'>
+				<select>
+					<option>Room name</option>
+				</select>
+			</div>
+		</div>
+		<div class='form-field columns'>
+			<div class='column-label'>
+				<label for='' class='form-label'>Employee</label>
+				<p class='form-field-explanation'>Optional. Employee(s) responsible for item. Can select multiple.</p>
+			</div>
+			<div class='column-input'>
+				<select multiple>
+					<option>Employee name 1</option>
+					<option>Employee name 2</option>
+				</select>
+			</div>
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label'>Item Condition</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='button-row'>
+			{{#if addInventoryItemSuccess}}
+				{{> notification type='success' message='Inventory Item added successfully!'}}
+			{{/if}}
+			{{#if addInventoryItemError}}
+				{{> notification message='Error! Inventory Item was not added.'}}
+			{{/if}}
+			<input type='submit' value='Add Inventory Item' />
+		</div>
+	</form>
+</section>
+<section>
+	<h1>Update Inventory Item</h1>
+	<h2 class='form-subtitle'>
+		Edit entry
+		<span id='inventoryItemID'>7</span>:
+		<span id='inventoryItemName'>Skeleton</span>
+	</h2>
+	<form method='POST'>
+		<div class='form-field'>
+			<label for='' class='form-label'>Name</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='form-field columns'>
+			<div class='column-label'>
+				<label for='' class='form-label'>Room</label>
+				<p class='form-field-explanation'>Optional</p>
+			</div>
+			<div class='column-input'>
+				<select>
+					<option>Room name</option>
+				</select>
+			</div>
+		</div>
+		<div class='form-field columns'>
+			<div class='column-label'>
+				<label for='' class='form-label'>Employee</label>
+				<p class='form-field-explanation'>Optional. Employee(s) responsible for item. Can select multiple.</p>
+			</div>
+			<div class='column-input'>
+				<select multiple>
+					<option>Employee name 1</option>
+					<option>Employee name 2</option>
+				</select>
+			</div>
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label'>Item Condition</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='button-row'>
+			{{#if updateInventoryItemSuccess}}
+				{{> notification type='success' message='Inventory Item updated successfully!'}}
+			{{/if}}
+			{{#if updateInventoryItemError}}
+				{{> notification message='Error! Inventory Item was not updated.'}}
+			{{/if}}
+			<input type='submit' value='Add Inventory Item' />
+		</div>
+	</form>
+</section>

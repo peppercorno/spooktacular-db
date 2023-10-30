@@ -1,4 +1,4 @@
-<div id='notificationTableCustomers' class='notification centered {{#ifCond this.type '===' 'success'}}success{{else}}error{{/ifCond}}'>
+<div class='notification {{#ifCond this.centered '===' 'true'}}centered{{/ifCond}} {{#ifCond this.type '===' 'success'}}success{{else}}error{{/ifCond}}'>
 	{{#ifCond this.type '===' 'success'}}
 	<i class='fa fa-check'></i>
 	{{else}}
