@@ -1,18 +1,22 @@
 @font-face {
 	font-family: 'EuclidCircularB';
 	src: url('../fonts/EuclidCircularB-Regular.woff2') format('woff2');
-  }
+}
 
 body {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	font-size: 100%;
+	font-size: 1em;
 	font-family: 'EuclidCircularB';
 	background: #181a1b;
 	color: #ffffff;
 	display: flex;
 	flex-direction: column;
+}
+
+* {
+	box-sizing: border-box;
 }
 
 /*-----------------------------
@@ -22,6 +26,12 @@ h1 {
 	color: #de6603;
 	text-transform: uppercase;
 	font-weight: 800;
+}
+
+h2 {
+	color: #ffc08d;
+	font-size: 1.1em;
+	font-weight: normal;
 }
 
 p {
@@ -98,10 +108,31 @@ main {
 	flex: 1;
 }
 
+.filter-row {
+	padding: 0.5em 0;
+	display: flex;
+}
+
+.filter-row div {
+	margin-right: 3em;
+}
+
+.filter-row div:last-of-type {
+	margin-right: 0;
+}
+
+.filter-row label {
+	font-size: 0.75em;
+	text-transform: uppercase;
+	margin-right: 1em;
+}
+
+.filter-row select {
+	min-width: 200px;
+}
+
 section {
-	width: 100%;
 	min-width: 42em;
-	max-width: 64em;
 	margin-bottom: 1.75em;
 	padding: 1em 1.5em;
 	background-color: rgba(255, 255, 255, 0.02);
@@ -136,20 +167,42 @@ td {
 	line-height: 1.25em;
 }
 
+/* Column with button */
+th.col-table-button {
+	width: 72px;
+}
+
+/* Alternating table row colors */
+tbody tr {
+	background-color: rgba(255, 255, 255, 0.08);
+}
+
 tbody tr:nth-child(odd) {
 	background-color: rgba(255, 255, 255, 0.05);
 }
 
-.table-button {
-	width: 96px;
+button.table-button {
+	width: 64px;
+	height: 38px;
 	margin: 0;
+	padding: 0;
 	letter-spacing: 0px;
 	text-align: center;
-	padding: 0.5em 1.25em;
+	display: flex;
+	cursor: pointer;
 }
 
-.table-button.delete {
+button.table-button i {
+	font-size: 1.5em;
+	margin: auto;
+}
+
+button.table-button.delete {
 	background-color: tomato;
+}
+
+button.table-button.delete:hover {
+	background-color: #b9402b;
 }
 
 /*-------------------
@@ -166,8 +219,26 @@ Form Elements
 	align-items: flex-start;
 }
 
+.form-field.columns {
+	align-items: flex-start;
+}
+
+.form-field.columns .column-label {
+	width: 160px;
+}
+
+.form-field.columns .column-input {
+	flex: 1;
+}
+
 .form-label {
 	min-width: 160px;
+}
+
+.form-field-explanation {
+	margin: 0.5em 0;
+	font-size: 0.75em;
+	color: #616161;
 }
 
 .form-label.disabled {
@@ -179,11 +250,18 @@ Form Elements
 	margin-bottom: 0.75em;
 }
 
+.form-field select,
+.form-field input[type='text'],
+.form-field input[type='email'],
+.form-field textarea {
+	width: 100%;
+}
+
 select,
 input[type='text'],
-input[type='password'],
+input[type='email'],
 textarea {
-	font-family: sans-serif;
+	font-family: EuclidCircularB;
 	font-size: 16px;
 	color: #ffffff;
 	padding: 0.5em 0.75em;
@@ -193,13 +271,9 @@ textarea {
 	background-color: #212121;
 }
 
-textarea {
-	min-width: 50%;
-}
-
 select:disabled,
 input[type='text']:disabled,
-input[type='password']:disabled,
+input[type='email']:disabled,
 textarea:disabled {
 	color: #616161;
 	border: none;
@@ -217,8 +291,10 @@ input[type='radio'] {
 
 .button-row {
 	width: 100%;
+	margin-top: 1.5em;
 	padding: 0.75em 0;
 	display: flex;
+	align-items: center;
 	justify-content: flex-end;
 }
 
@@ -226,4 +302,47 @@ input[type='submit'] {
 	letter-spacing: 0;
 	margin: 0;
 	cursor: pointer;
+}
+
+/*-----------------
+Notification
+-------------------*/
+.notification {
+	border-radius: 5px;
+	padding: 0.5em 1em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.notification.centered {
+	max-width: 600px;
+	margin: 1.5em auto;
+}
+
+.button-row .notification {
+	flex: 1;
+	margin-right: 1.5em;
+}
+
+.notification.error {
+	border: 1px solid tomato;
+	color: tomato;
+}
+
+.notification.success {
+	border: 1px solid #02af54;
+	color: #02af54;
+}
+
+.notification i {
+	font-size: 1.3em;
+	margin-right: 0.75em;
+}
+
+/*-----------------
+Helpers
+-------------------*/
+.display-none {
+	display: none !important;
 }
