@@ -1,0 +1,97 @@
+<section>
+	<h1>Customers</h1>
+
+	{{#if customerDeleted}}
+		{{> table-notification type='success' message='Customer successfully deleted.'}}
+	{{/if}}
+
+    {{#if responseError}}
+		{{> table-notification message='Unable to retrieve customers from database.'}}
+	{{/if}}
+
+	<table>
+		<thead>
+			<tr>
+				<th>customerID</th>
+				<th>firstName</th>
+				<th>lastName</th>
+				<th>email</th>
+				<th class='col-table-button'></th>
+				<th class='col-table-button'></th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each rows}}
+				<tr>
+					<td>{{this.customerID}}</td>
+					<td>{{this.firstName}}</td>
+					<td>{{this.lastName}}</td>
+					<td>{{this.email}}</td>
+					<td>
+						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+					</td>
+					<td>
+						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+					</td>
+				</tr>
+			{{/each}}
+		</tbody>
+	</table>
+</section>
+<section>
+	<h1>Add Customer</h1>
+	<form method='POST' id='formAddCustomer'>
+		<div class='form-field'>
+			<label for='' class='form-label'>First Name</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label'>Last Name</label>
+			<input type='text' name='' placeholder='' />
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label'>Email</label>
+			<input type='email' name='' placeholder='' />
+		</div>
+		<div class='button-row'>
+			<!--Dynamically insert either .success or .error depending on usage of notification-->
+			<div id='notificationAddCustomer' class='notification error display-none'>
+				<i class='fa fa-check display-none'></i>
+				<i class='fa fa-triangle-exclamation'></i>
+				<span>Error or success message.</span>
+			</div>
+			<input type='submit' value='Add Customer' />
+		</div>
+	</form>
+</section>
+<section>
+	<h1>Update Customer</h1>
+	<h2 class='form-subtitle'>
+		Edit entry
+		<span id='customerID'>1</span>:
+		<span id='customerFullName'>Jack O'Lantern</span>
+	</h2>
+	<form method='POST' id='formUpdateCustomer'>
+		<div class='form-field'>
+			<label for='' class='form-label' class='form-label'>New First Name</label>
+			<input type='text' name='' />
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label' class='form-label'>New Last Name</label>
+			<input type='text' name='' />
+		</div>
+		<div class='form-field'>
+			<label for='' class='form-label'>New Email</label>
+			<input type='email' name='' />
+		</div>
+		<div class='button-row'>
+			<!--Dynamically insert either .success or .error depending on usage of notification-->
+			<div id='notificationUpdateCustomer' class='notification error display-none'>
+				<i class='fa fa-check display-none'></i>
+				<i class='fa fa-triangle-exclamation'></i>
+				<span>Error or success message.</span>
+			</div>
+			<input type='submit' value='Update Price' />
+		</div>
+	</form>
+</section>
