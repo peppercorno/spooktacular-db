@@ -40,25 +40,25 @@
 </section>
 <section>
 	<h1>Add Customer</h1>
-	<form method='POST' id='formAddCustomer'>
+	<form method='POST' action='/customers/add'>
 		<div class='form-field'>
-			<label for='' class='form-label'>First Name</label>
-			<input type='text' name='' placeholder='' />
+			<label for='addCustomerFirstName' class='form-label'>First Name</label>
+			<input type='text' id='addCustomerFirstName' name='firstName' >
 		</div>
 		<div class='form-field'>
-			<label for='' class='form-label'>Last Name</label>
-			<input type='text' name='' placeholder='' />
+			<label for='addCustomerLastName' class='form-label'>Last Name</label>
+			<input type='text' id='addCustomerLastName' name='lastName' />
 		</div>
 		<div class='form-field'>
-			<label for='' class='form-label'>Email</label>
-			<input type='email' name='' placeholder='' />
+			<label for='addCustomerEmail' class='form-label'>Email</label>
+			<input type='email' id='addCustomerEmail' name='email' />
 		</div>
 		<div class='button-row'>
 			{{#if addCustomerSuccess}}
 				{{> notification type='success' message='Customer added successfully!'}}
 			{{/if}}
 			{{#if addCustomerError}}
-				{{> notification message='Error! Customer was not added.'}}
+				{{> notification message=addCustomerErrorMessage}}
 			{{/if}}
 			<input type='submit' value='Add Customer' />
 		</div>
@@ -74,15 +74,15 @@
 	<form method='POST' id='formUpdateCustomer'>
 		<div class='form-field'>
 			<label for='' class='form-label' class='form-label'>New First Name</label>
-			<input type='text' name='' />
+			<input type='text' name='firstName' />
 		</div>
 		<div class='form-field'>
 			<label for='' class='form-label' class='form-label'>New Last Name</label>
-			<input type='text' name='' />
+			<input type='text' name='lastName' />
 		</div>
 		<div class='form-field'>
 			<label for='' class='form-label'>New Email</label>
-			<input type='email' name='' />
+			<input type='email' name='email' />
 		</div>
 		<div class='button-row'>
 			{{#if updateCustomerSuccess}}
