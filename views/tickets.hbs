@@ -1,6 +1,10 @@
 <section>
 	<h1>Tickets</h1>
 
+	{{#if ticketAdded}}
+		{{> notification centered='true' type='success' message='Ticket added successfully!'}}
+	{{/if}}
+
 	{{#if ticketDeleted}}
 		{{> notification centered='true' type='success' message='Ticket successfully deleted.'}}
 	{{/if}}
@@ -70,9 +74,6 @@
 			<input type='text' name='' placeholder='' />
 		</div>
 		<div class='button-row'>
-            {{#if addTicketSuccess}}
-				{{> notification type='success' message='Ticket added successfully!'}}
-			{{/if}}
 			{{#if addTicketError}}
 				{{> notification message='Error! Ticket was not added.'}}
 			{{/if}}

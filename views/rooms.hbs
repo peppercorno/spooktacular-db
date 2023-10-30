@@ -1,6 +1,10 @@
 <section>
 	<h1>Rooms</h1>
 
+	{{#if roomAdded}}
+		{{> notification centered='true' type='success' message='Room successfully added!'}}
+	{{/if}}
+
 	{{#if roomDeleted}}
 		{{> notification centered='true' type='success' message='Room successfully deleted.'}}
 	{{/if}}
@@ -65,9 +69,6 @@
 			</select>
 		</div>
 		<div class='button-row'>
-			{{#if addRoomSuccess}}
-				{{> notification type='success' message='Room added successfully!'}}
-			{{/if}}
 			{{#if addRoomError}}
 				{{> notification message='Error! Room was not added.'}}
 			{{/if}}

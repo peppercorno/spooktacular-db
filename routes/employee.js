@@ -5,9 +5,9 @@ const employeeController = require('../controllers/employeeController')
 // Routes
 router.get('/', employeeController.findAll) // Retrieve all Employees
 
-// router.post('/addemployee', employeeController.create); // Create new Employee
-// router.get('/updateemployee/:id', employeeController.findById)  // Get Employee data for update form
-// router.post('/updateemployee/:id', employeeController.update)   // Update Employee
-// router.delete('/deleteemployee/:id', employeeController.delete);   // Delete an Employee
+// router.post('/add', employeeController.create); // Create new Employee
+// router.get('/update/:id', employeeController.findById)  // Get Employee data for update form
+// router.post('/update/:id', employeeController.update)   // Update Employee
+// router.delete('/delete/:id', employeeController.delete);   // Delete an Employee
 
 module.exports = router

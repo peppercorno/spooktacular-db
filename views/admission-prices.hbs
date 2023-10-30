@@ -1,6 +1,10 @@
 <section>
 	<h1>Admission Prices</h1>
 
+	{{#if admissionPriceAdded}}
+		{{> notification centered='true' type='success' message='Admission Price successfully added!'}}
+	{{/if}}
+
 	{{#if admissionPriceDeleted}}
 		{{> notification centered='true' type='success' message='Admission Price successfully deleted.'}}
 	{{/if}}
@@ -49,9 +53,6 @@
 			<input type='text' name='' placeholder='' />
 		</div>
 		<div class='button-row'>
-			{{#if addAdmissionPriceSuccess}}
-				{{> notification type='success' message='Admission Price added successfully!'}}
-			{{/if}}
 			{{#if addAdmissionPriceError}}
 				{{> notification message='Error! Admission Price was not added.'}}
 			{{/if}}

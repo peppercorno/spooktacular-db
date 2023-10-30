@@ -1,6 +1,10 @@
 <section>
 	<h1>Inventory Items</h1>
 
+	{{#if inventoryItemAdded}}
+		{{> notification centered='true' type='success' message='Inventory Item successfully added.'}}
+	{{/if}}
+
 	{{#if inventoryItemDeleted}}
 		{{> notification centered='true' type='success' message='Inventory Item successfully deleted.'}}
 	{{/if}}
@@ -90,9 +94,6 @@
 			<input type='text' name='' placeholder='' />
 		</div>
 		<div class='button-row'>
-			{{#if addInventoryItemSuccess}}
-				{{> notification type='success' message='Inventory Item added successfully!'}}
-			{{/if}}
 			{{#if addInventoryItemError}}
 				{{> notification message='Error! Inventory Item was not added.'}}
 			{{/if}}

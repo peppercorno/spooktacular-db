@@ -1,6 +1,10 @@
 <section>
 	<h1>Employees</h1>
 
+	{{#if employeeAdded}}
+		{{> notification centered='true' type='success' message='Employee successfully added!'}}
+	{{/if}}
+
 	{{#if employeeDeleted}}
 		{{> notification centered='true' type='success' message='Employee successfully deleted.'}}
 	{{/if}}
@@ -78,9 +82,6 @@
 			<input type='text' name='' placeholder='' />
 		</div>
 		<div class='button-row'>
-			{{#if addEmployeeSuccess}}
-				{{> notification type='success' message='Employee added successfully!'}}
-			{{/if}}
 			{{#if addEmployeeError}}
 				{{> notification message='Error! Employee was not added.'}}
 			{{/if}}

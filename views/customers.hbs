@@ -1,6 +1,10 @@
 <section>
 	<h1>Customers</h1>
 
+	{{#if customerAdded}}
+		{{> notification centered='true' type='success' message='Customer successfully added!'}}
+	{{/if}}
+
 	{{#if customerDeleted}}
 		{{> notification centered='true' type='success' message='Customer successfully deleted.'}}
 	{{/if}}
@@ -40,7 +44,7 @@
 </section>
 <section>
 	<h1>Add Customer</h1>
-	<form method='POST' action='/customers/add'>
+	<form method='POST' action='/customers/add' id="formAddCustomer">
 		<div class='form-field'>
 			<label for='addCustomerFirstName' class='form-label'>First Name</label>
 			<input type='text' id='addCustomerFirstName' name='firstName' >
@@ -54,9 +58,6 @@
 			<input type='email' id='addCustomerEmail' name='email' />
 		</div>
 		<div class='button-row'>
-			{{#if addCustomerSuccess}}
-				{{> notification type='success' message='Customer added successfully!'}}
-			{{/if}}
 			{{#if addCustomerError}}
 				{{> notification message=addCustomerErrorMessage}}
 			{{/if}}

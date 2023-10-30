@@ -13,8 +13,9 @@ exports.findAll = (req, res) => {
 			return
 		}
 
+		let customerAdded = req.query.added // If a customer was successfully added
 		let customerDeleted = req.query.removed // If a customer was successfully deleted
-		res.render('customers', { rows, customerDeleted })
+		res.render('customers', { rows, customerDeleted, customerAdded })
 	})
 }
 
@@ -46,12 +47,10 @@ exports.create = (req, res) => {
 			}
 
 			// Show success notification
-			let addCustomerSuccess = true
-			res.render('customers', { addCustomerSuccess })
+			// let customerAdded = true
+			res.redirect('/customers' + '/?added=' + firstName + lastName)
 		})
 	} catch (err) {
-		// preventDefault()
-
 		console.log(err.message)
 		let addCustomerError = true
 		let addCustomerErrorMessage = 'Error! Customer was not added for an unknown reason.' // Default error message

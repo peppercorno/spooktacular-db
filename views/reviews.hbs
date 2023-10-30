@@ -1,6 +1,10 @@
 <section>
 	<h1>Reviews</h1>
 
+	{{#if reviewAdded}}
+		{{> notification centered='true' type='success' message='Review successfully added!'}}
+	{{/if}}
+
 	{{#if reviewDeleted}}
 		{{> notification centered='true' type='success' message='Review successfully deleted.'}}
 	{{/if}}
@@ -89,9 +93,6 @@
 			<textarea rows='5'></textarea>
 		</div>
 		<div class='button-row'>
-			{{#if addReviewSuccess}}
-				{{> notification type='success' message='Review added successfully!'}}
-			{{/if}}
 			{{#if addReviewError}}
 				{{> notification message='Error! Review was not added.'}}
 			{{/if}}
