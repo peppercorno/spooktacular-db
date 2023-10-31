@@ -13,6 +13,7 @@ body {
 	color: #ffffff;
 	display: flex;
 	flex-direction: column;
+	overflow-y: scroll;
 }
 
 * {
@@ -167,7 +168,10 @@ td {
 	line-height: 1.25em;
 }
 
-/* Column with button */
+/* Column widths */
+th.col-long-text {
+	width: 400px;
+}
 th.col-table-button {
 	width: 72px;
 }
