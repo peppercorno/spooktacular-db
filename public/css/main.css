@@ -13,6 +13,7 @@ body {
 	color: #ffffff;
 	display: flex;
 	flex-direction: column;
+	overflow-y: scroll;
 }
 
 * {
@@ -108,31 +109,29 @@ main {
 	flex: 1;
 }
 
-.filter-row {
+.header-row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.filter-wrapper {
 	padding: 0.5em 0;
 	display: flex;
+	align-items: center;
 }
 
-.filter-row div {
-	margin-right: 3em;
-}
-
-.filter-row div:last-of-type {
-	margin-right: 0;
-}
-
-.filter-row label {
+.filter-wrapper label {
 	font-size: 0.75em;
 	text-transform: uppercase;
 	margin-right: 1em;
 }
 
-.filter-row select {
+.filter-wrapper select {
 	min-width: 200px;
 }
 
 section {
-	min-width: 42em;
+	min-width: 50em;
 	margin-bottom: 1.75em;
 	padding: 1em 1.5em;
 	background-color: rgba(255, 255, 255, 0.02);
@@ -167,7 +166,10 @@ td {
 	line-height: 1.25em;
 }
 
-/* Column with button */
+/* Column widths */
+th.col-long-text {
+	width: 400px;
+}
 th.col-table-button {
 	width: 72px;
 }

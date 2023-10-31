@@ -1,163 +1,167 @@
-<section>
-	<h1>Reviews</h1>
+{{> navigation reviews='true' }}
 
-	{{#if reviewAdded}}
-		{{> notification centered='true' type='success' message='Review successfully added!'}}
-	{{/if}}
+<main>
+	<section>
+		<h1>Reviews</h1>
 
-	{{#if reviewDeleted}}
-		{{> notification centered='true' type='success' message='Review successfully deleted.'}}
-	{{/if}}
+		{{#if reviewAdded}}
+			{{> notification centered='true' type='success' message='Review successfully added!'}}
+		{{/if}}
 
-    {{#if retrievalError}}
-		{{> notification centered='true' message='Unable to retrieve reviews from database.'}}
-	{{/if}}
+		{{#if reviewDeleted}}
+			{{> notification centered='true' type='success' message='Review successfully deleted.'}}
+		{{/if}}
 
-	<table>
-		<thead>
-			<tr>
-				<th>reviewID</th>
-				<th>customerID</th>
-				<th>roomID</th>
-				<th>rating</th>
-				<th>text</th>
-				<th>creationDate</th>
-				<th class='col-table-button'></th>
-				<th class='col-table-button'></th>
-			</tr>
-		</thead>
-		<tbody>
-			{{#each rows}}
-			<tr>
-				<td>{{this.reviewID}}</td>
-				<td>{{this.customerID}}</td>
-				<td>{{this.roomID}}</td>
-				<td>{{this.rating}}</td>
-				<td>{{this.text}}</td>
-				<td>{{this.creationDate}}</td>
-				<td>
-					<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
-				</td>
-				<td>
-					<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
-				</td>
-			</tr>
-            {{/each}}
-		</tbody>
-	</table>
-</section>
-<section>
-	<h1>Add Review</h1>
-	<form method='POST'>
-		<div class='form-field'>
-			<label for='' class='form-label' class='form-label'>Written by</label>
-			<select>
-				<option>Customer name</option>
-			</select>
-		</div>
-		<div class='form-field'>
-			<label for='' class='form-label'>Reviewing a room?</label>
-			<select>
-				<option>Room name</option>
-			</select>
-		</div>
-		<div class='form-field'>
-			<label class='form-label'>Rating</label>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating0' name='reviewRating' value='0' />
-				<label for='reviewRating0'>0</label>
+		{{#if retrievalError}}
+			{{> notification centered='true' message='Unable to retrieve reviews from database.'}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>reviewID</th>
+					<th>customerID</th>
+					<th>roomID</th>
+					<th>rating</th>
+					<th class="col-long-text">text</th>
+					<th>creationDate</th>
+					<th class='col-table-button'></th>
+					<th class='col-table-button'></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each rows}}
+				<tr>
+					<td>{{this.reviewID}}</td>
+					<td>{{this.customerID}}</td>
+					<td>{{this.roomID}}</td>
+					<td>{{this.rating}}</td>
+					<td>{{this.text}}</td>
+					<td>{{this.creationDate}}</td>
+					<td>
+						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+					</td>
+					<td>
+						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+	<section>
+		<h1>Add Review</h1>
+		<form method='POST'>
+			<div class='form-field'>
+				<label for='' class='form-label' class='form-label'>Written by</label>
+				<select>
+					<option>Customer name</option>
+				</select>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating1' name='reviewRating' value='1' />
-				<label for='reviewRating1'>1</label>
+			<div class='form-field'>
+				<label for='' class='form-label'>Reviewing a room?</label>
+				<select>
+					<option>Room name</option>
+				</select>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating2' name='reviewRating' value='2' />
-				<label for='reviewRating2'>2</label>
+			<div class='form-field'>
+				<label class='form-label'>Rating</label>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating0' name='reviewRating' value='0' />
+					<label for='reviewRating0'>0</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating1' name='reviewRating' value='1' />
+					<label for='reviewRating1'>1</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating2' name='reviewRating' value='2' />
+					<label for='reviewRating2'>2</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating3' name='reviewRating' value='3' />
+					<label for='reviewRating3'>3</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating4' name='reviewRating' value='4' />
+					<label for='reviewRating4'>4</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating5' name='reviewRating' value='5' />
+					<label for='reviewRating5'>5</label>
+				</div>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating3' name='reviewRating' value='3' />
-				<label for='reviewRating3'>3</label>
+			<div class='form-field stacked'>
+				<label for='' class='form-label'>Review Text</label>
+				<textarea rows='5'></textarea>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating4' name='reviewRating' value='4' />
-				<label for='reviewRating4'>4</label>
+			<div class='button-row'>
+				{{#if addReviewError}}
+					{{> notification message='Error! Review was not added.'}}
+				{{/if}}
+				<input type='submit' value='Add Review' />
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating5' name='reviewRating' value='5' />
-				<label for='reviewRating5'>5</label>
+		</form>
+	</section>
+	<section>
+		<h1>Update Review</h1>
+		<h2 class='form-subtitle'>
+			Edit entry created on
+			<span id='reviewCreationDate'>2021-10-19 10:02:20</span>
+		</h2>
+		<form method='POST'>
+			<div class='form-field'>
+				<label for='' class='form-label' class='form-label'>Written by</label>
+				<select>
+					<option>Customer name</option>
+				</select>
 			</div>
-		</div>
-		<div class='form-field stacked'>
-			<label for='' class='form-label'>Review Text</label>
-			<textarea rows='5'></textarea>
-		</div>
-		<div class='button-row'>
-			{{#if addReviewError}}
-				{{> notification message='Error! Review was not added.'}}
-			{{/if}}
-			<input type='submit' value='Add Review' />
-		</div>
-	</form>
-</section>
-<section>
-	<h1>Update Review</h1>
-	<h2 class='form-subtitle'>
-		Edit entry created on
-		<span id='reviewCreationDate'>2021-10-19 10:02:20</span>
-	</h2>
-	<form method='POST'>
-		<div class='form-field'>
-			<label for='' class='form-label' class='form-label'>Written by</label>
-			<select>
-				<option>Customer name</option>
-			</select>
-		</div>
-		<div class='form-field'>
-			<label for='' class='form-label'>Reviewing a room?</label>
-			<select>
-				<option>Room name</option>
-			</select>
-		</div>
-		<div class='form-field'>
-			<label class='form-label'>Rating</label>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating0' name='reviewRating' value='0' />
-				<label for='reviewRating0'>0</label>
+			<div class='form-field'>
+				<label for='' class='form-label'>Reviewing a room?</label>
+				<select>
+					<option>Room name</option>
+				</select>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating1' name='reviewRating' value='1' />
-				<label for='reviewRating1'>1</label>
+			<div class='form-field'>
+				<label class='form-label'>Rating</label>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating0' name='reviewRating' value='0' />
+					<label for='reviewRating0'>0</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating1' name='reviewRating' value='1' />
+					<label for='reviewRating1'>1</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating2' name='reviewRating' value='2' />
+					<label for='reviewRating2'>2</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating3' name='reviewRating' value='3' />
+					<label for='reviewRating3'>3</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating4' name='reviewRating' value='4' />
+					<label for='reviewRating4'>4</label>
+				</div>
+				<div class='radio-wrapper'>
+					<input type='radio' id='reviewRating5' name='reviewRating' value='5' />
+					<label for='reviewRating5'>5</label>
+				</div>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating2' name='reviewRating' value='2' />
-				<label for='reviewRating2'>2</label>
+			<div class='form-field stacked'>
+				<label for='' class='form-label'>Review Text</label>
+				<textarea rows='5'></textarea>
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating3' name='reviewRating' value='3' />
-				<label for='reviewRating3'>3</label>
+			<div class='button-row'>
+				{{#if updateReviewSuccess}}
+					{{> notification type='success' message='Review updated successfully!'}}
+				{{/if}}
+				{{#if updateReviewError}}
+					{{> notification message='Error! Review was not updated.'}}
+				{{/if}}
+				<input type='submit' value='Update Review' />
 			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating4' name='reviewRating' value='4' />
-				<label for='reviewRating4'>4</label>
-			</div>
-			<div class='radio-wrapper'>
-				<input type='radio' id='reviewRating5' name='reviewRating' value='5' />
-				<label for='reviewRating5'>5</label>
-			</div>
-		</div>
-		<div class='form-field stacked'>
-			<label for='' class='form-label'>Review Text</label>
-			<textarea rows='5'></textarea>
-		</div>
-		<div class='button-row'>
-			{{#if updateReviewSuccess}}
-				{{> notification type='success' message='Review updated successfully!'}}
-			{{/if}}
-			{{#if updateReviewError}}
-				{{> notification message='Error! Review was not updated.'}}
-			{{/if}}
-			<input type='submit' value='Update Review' />
-		</div>
-	</form>
-</section>
+		</form>
+	</section>
+</main>
