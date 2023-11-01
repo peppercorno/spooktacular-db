@@ -7,13 +7,13 @@ Node.js, Express, MySQL CRUD project
 ### Getting started:
 
 -   Clone the project to a local directory.
--   In the root directory, copy the .env.template file and rename it to .env. Fill in the fields with your own settings. An example:
+-   In the root directory, duplicate the .env.template file and rename it to .env. Fill in the fields with your own settings. Eg.:
     -   PORT = 5000
     -   HOST = "localhost"
     -   DB_NAME = "spooktacular"
     -   DB_USERNAME = "root"
     -   DB_PASS = ""
--   Using your intended server's phpmyadmin (or MySQL), make sure a table exists with the name used in your .env file. To set up and populate this table, import the **db > DDL.sql** file.
+-   Using your intended server's phpmyadmin (or MySQL CLI), make sure a table exists with the name used above in your .env file. To set up and populate this table, import the **db > DDL.sql** file.
 -   In the command line, navigate to the project directory and run `npm install`.
 -   To start the server, you can either use `npm start` to run with nodemon, or `node app.js`.
 -   In your browser, navigate to the URL you set up (eg. localhost:5000 ) to view the web app.
