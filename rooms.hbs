@@ -1,0 +1,122 @@
+{{> navigation rooms='true' }}
+
+<main>
+	<section>
+		<h1>Rooms</h1>
+
+		{{#if roomAdded}}
+			{{> notification centered='true' type='success' message='Room successfully added!'}}
+		{{/if}}
+
+		{{#if roomDeleted}}
+			{{> notification centered='true' type='success' message='Room successfully deleted.'}}
+		{{/if}}
+
+		{{#if retrievalError}}
+			{{> notification centered='true' message='Unable to retrieve rooms from database.'}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>roomID</th>
+					<th>name</th>
+					<th>theme</th>
+					<th>maxCapacity</th>
+					<th>level</th>
+					<th class='col-table-button'></th>
+					<th class='col-table-button'></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each rows}}
+				<tr>
+					<td>{{this.roomID}}</td>
+					<td>{{this.name}}</td>
+					<td>{{this.theme}}</td>
+					<td>{{this.maxCapacity}}</td>
+					<td>{{this.level}}</td>
+					<td>
+						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+					</td>
+					<td>
+						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+	<section>
+		<h1>Add Room</h1>
+		<form method='POST'>
+			<div class='form-field'>
+				<label for='' class='form-label'>Name</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Theme</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Max Capacity</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Level</label>
+				<select name=''>
+					<option value='1'>1 (Ground Floor)</option>
+					<option value='2'>2</option>
+					<option value='3'>3</option>
+					<option value='4'>4</option>
+				</select>
+			</div>
+			<div class='button-row'>
+				{{#if addRoomError}}
+					{{> notification message='Error! Room was not added.'}}
+				{{/if}}
+				<input type='submit' value='Add Room' />
+			</div>
+		</form>
+	</section>
+	<section>
+		<h1>Update Room</h1>
+		<h2 class='form-subtitle'>
+			Edit entry
+			<span id='roomID'>6</span>:
+			<span id='roomName'>Boudoir of Bones</span>
+		</h2>
+		<form method='POST'>
+			<div class='form-field'>
+				<label for='' class='form-label'>Name</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Theme</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Max Capacity</label>
+				<input type='text' name='' placeholder='' />
+			</div>
+			<div class='form-field'>
+				<label for='' class='form-label'>Level</label>
+				<select name=''>
+					<option value='1'>1 (Ground Floor)</option>
+					<option value='2'>2</option>
+					<option value='3'>3</option>
+					<option value='4'>4</option>
+				</select>
+			</div>
+			<div class='button-row'>
+				{{#if updateRoomSuccess}}
+					{{> notification type='success' message='Room updated successfully!'}}
+				{{/if}}
+				{{#if updateRoomError}}
+					{{> notification message='Error! Room was not updated.'}}
+				{{/if}}
+				<input type='submit' value='Update Room' />
+			</div>
+		</form>
+	</section>
+</main>

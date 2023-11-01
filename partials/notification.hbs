@@ -1,0 +1,9 @@
+<div class='notification {{#ifCond this.centered '===' 'true'}}centered{{/ifCond}} {{#ifCond this.type '===' 'success'}}success{{else}}error{{/ifCond}}'>
+	{{#ifCond this.type '===' 'success'}}
+	<i class='fa fa-check'></i>
+	{{else}}
+	<i class='fa fa-triangle-exclamation'></i>
+	{{/ifCond}}
+
+	<span>{{this.message}}</span>
+</div>
