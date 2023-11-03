@@ -28,7 +28,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{#each rows}}
+				{{#each data}}
 				<tr>
 					<td>{{this.customerID}}</td>
 					<td>{{this.firstName}}</td>
@@ -61,8 +61,8 @@
 				<input type='email' id='addCustomerEmail' name='email' />
 			</div>
 			<div class='button-row'>
-				{{#if addCustomerError}}
-					{{> notification message=addCustomerErrorMessage}}
+				{{#if error}}
+					{{> notification message=error.type}}
 				{{/if}}
 				<input type='submit' value='Add Customer' />
 			</div>
