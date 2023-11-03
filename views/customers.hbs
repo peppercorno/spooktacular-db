@@ -12,10 +12,6 @@
 			{{> notification centered='true' type='success' message='Customer successfully deleted.'}}
 		{{/if}}
 
-		{{#if retrievalError}}
-			{{> notification centered='true' message='Unable to retrieve Customers from database.'}}
-		{{/if}}
-
 		<table>
 			<thead>
 				<tr>
@@ -28,7 +24,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{#each data}}
+				{{#each customers}}
 				<tr>
 					<td>{{this.customerID}}</td>
 					<td>{{this.firstName}}</td>

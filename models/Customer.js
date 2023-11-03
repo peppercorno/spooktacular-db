@@ -29,38 +29,41 @@ class Customer {
 		})
 	}
 
-	// Create / Update
+	// Create or Update
 	save() {
 		return new Promise(resolve => {
-			// Validate
-			if (this.firstName.length === 0) throw new Error('customer.nofirstname')
-			if (this.firstName.length < 2) throw new Error('customer.firstnamelength')
-			// TODO: Validate the rest
+			// Validate form data
+			if (this.firstName.length === 0) throw new Error('customer.firstnamemissing')
+			if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error('customer.firstnamelength')
 
-			// Determine if we should create or update
+			if (this.lastName.length === 0) throw new Error('customer.lastnamemissing')
+			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error('customer.lastNamelength')
+
+			if (this.email.length === 0) throw new Error('customer.emailmissing')
+
+			// Determine whether we are creating or updating
 			if (this.customerID === undefined || this.customerID === null) {
 				// Create
 				// let startDate = this.startDate.format("YYYY-MM-DD HH:MM:SS")
-				dbConnection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, rows) => {
+				dbConnection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, res) => {
 					if (err) {
 						console.error(err)
 						throw new Error('customer.sql')
 					}
 
-					// TODO: Set this.customerID using the response
+					// TODO: Set this.customerID using the response, if you wish
 
 					resolve(this)
 				})
 			} else {
-				// Update
-				// TODO
+				// TODO: Update
 			}
 		})
 	}
 
 	// Delete
 	delete() {
-		// TODO
+		// TODO: Delete
 	}
 }
 
