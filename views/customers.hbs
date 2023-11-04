@@ -53,16 +53,16 @@
 		<h1>Add Customer</h1>
 		<form method="POST" action="/customers/add" id="formCustomerAdd">
 			<div class="form-field">
-				<label for="addCustomerFirstName" class="form-label">First Name</label>
-				<input type="text" id="addCustomerFirstName" name="firstName"/>
+				<label class="form-label">First Name</label>
+				<input type="text" name="firstName"/>
 			</div>
 			<div class="form-field">
-				<label for="addCustomerLastName" class="form-label">Last Name</label>
-				<input type="text" id="addCustomerLastName" name="lastName"/>
+				<label class="form-label">Last Name</label>
+				<input type="text" name="lastName"/>
 			</div>
 			<div class="form-field">
-				<label for="addCustomerEmail" class="form-label">Email</label>
-				<input type="email" id="addCustomerEmail" name="email"/>
+				<label class="form-label">Email</label>
+				<input type="email" name="email"/>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "add"}}
@@ -77,15 +77,15 @@
 		<form method="POST" id="formCustomerEdit">
 			<input type="text" name="customerID" hidden/>
 			<div class="form-field">
-				<label for="" class="form-label" class="form-label">First Name</label>
+				<label class="form-label" class="form-label">First Name</label>
 				<input type="text" name="firstName" />
 			</div>
 			<div class="form-field">
-				<label for="" class="form-label" class="form-label">Last Name</label>
+				<label class="form-label" class="form-label">Last Name</label>
 				<input type="text" name="lastName" />
 			</div>
 			<div class="form-field">
-				<label for="" class="form-label">Email</label>
+				<label class="form-label">Email</label>
 				<input type="email" name="email" />
 			</div>
 			<div class="button-row">

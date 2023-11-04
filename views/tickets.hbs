@@ -52,21 +52,10 @@
 	<section>
 		<h1>Add Ticket</h1>
 		<form method='POST'>
-			<!--For toggling the UI: doesn't get transmitted in form submission-->
-			<div class='form-field'>
-				<div class='radio-wrapper'>
-					<input type='radio' id='customerChoiceNew' />
-					<label for='customerChoiceNew'>New customer</label>
-				</div>
-				<div class='radio-wrapper'>
-					<input type='radio' id='customerChoiceExisting' />
-					<label for='customerChoiceExisting'>Existing customer</label>
-				</div>
-			</div>
 			<!--Enable if 'existing customer' option is toggled...?-->
 			<div class='form-field'>
-				<label for='' class='form-label disabled'>Choose customer</label>
-				<select disabled>
+				<label for='' class='form-label'>Choose customer</label>
+				<select>
 					<option>Customer name</option>
 				</select>
 			</div>

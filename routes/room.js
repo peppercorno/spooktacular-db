@@ -1,13 +1,13 @@
-const express = require('express')
+const express = require("express")
 const router = express.Router()
-const roomController = require('../controllers/roomController')
+const roomController = require("../controllers/roomController")
 
 // Routes
-router.get('/', roomController.findAll) // Retrieve all Rooms
+router.get("/", roomController.render)
+router.post("/add", roomController.add) // Create new Room
 
-// router.post('/add', roomController.create); // Create new Room
-// router.get('/update/:id', roomController.findById)  // Get Room data for update form
-// router.post('/update/:id', roomController.update)   // Update Room
-// router.delete('/delete/:id', roomController.delete);   // Delete a room
+// router.get("/:id", roomController.findById
+// router.post('/edit/:id', roomController.update)   // Update Room
+// router.delete('/delete/:id', roomController.delete);   // Delete a Room
 
 module.exports = router

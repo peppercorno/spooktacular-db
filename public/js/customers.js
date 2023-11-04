@@ -20,7 +20,7 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionCustomerEdit").classList.remove("display-none")
 		document.getElementById("sectionCustomerEdit").scrollIntoView()
 
-		// Populate edit form with existing data
+		// Populate edit form
 		document.getElementById("formCustomerEdit").querySelector("input[name=customerID]").value =
 			this.getAttribute("data-customerid") // Pass customerID to hidden input
 		document.getElementById("formCustomerEdit").querySelector("input[name=firstName]").value =

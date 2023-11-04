@@ -1,19 +1,15 @@
-{{> navigation admissionPrices='true' }}
+{{> navigation admissionPrices="true" }}
 
 <main>
 	<section>
 		<h1>Admission Prices</h1>
 
 		{{#if admissionPriceAdded}}
-			{{> notification centered='true' type='success' message='Admission Price successfully added!'}}
+			{{> notification centered="true" type="success" message="Admission Price successfully added!"}}
 		{{/if}}
 
 		{{#if admissionPriceDeleted}}
-			{{> notification centered='true' type='success' message='Admission Price successfully deleted.'}}
-		{{/if}}
-
-		{{#if retrievalError}}
-			{{> notification centered='true' message='Unable to retrieve Admission Prices from database.'}}
+			{{> notification centered="true" type="success" message="Admission Price successfully deleted."}}
 		{{/if}}
 
 		<table>
@@ -22,67 +18,71 @@
 					<th>priceID</th>
 					<th>year</th>
 					<th>basePrice</th>
-					<th class='col-table-button'></th>
-					<th class='col-table-button'></th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
 				</tr>
 			</thead>
 			<tbody>
-				{{#each rows}}
+				{{#each admissionPrices}}
 				<tr>
 					<td>{{this.priceID}}</td>
 					<td>{{this.year}}</td>
 					<td>${{this.basePrice}}</td>
 					<td>
-						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+						<button class="table-button edit"
+						data-priceid="{{this.priceID}}"
+						data-year="{{this.year}}"
+						data-baseprice="{{this.basePrice}}" type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
 					</td>
 					<td>
-						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
 					</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
+		<button id="buttonPriceAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
-	<section>
+	<section id="sectionPriceAdd" class="display-none">
 		<h1>Add Admission Price</h1>
-		<form method='POST' id='formAddAdmissionPrice'>
-			<div class='form-field'>
-				<label for='' class='form-label' class='form-label'>Year</label>
-				<input type='text' name='' placeholder='' />
+		<form method="POST" action="/" id="formAdmissionPriceAdd">
+			<div class="form-field">
+				<label class="form-label" class="form-label">Year</label>
+				<input type="text" name="year" />
 			</div>
-			<div class='form-field'>
-				<label for='' class='form-label' class='form-label'>Base Price</label>
-				<input type='text' name='' placeholder='' />
+			<div class="form-field">
+				<label class="form-label" class="form-label">Base Price</label>
+				<input type="text" name="basePrice" />
 			</div>
-			<div class='button-row'>
-				{{#if addAdmissionPriceError}}
-					{{> notification message='Error! Admission Price was not added.'}}
-				{{/if}}
-				<input type='submit' value='Add New Price' />
+			<div class="button-row">
+				{{#ifCond error.section "===" "add"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Add Admission Price" />
 			</div>
 		</form>
 	</section>
-	<section>
+	<section id="sectionPriceEdit" class="display-none">
 		<h1>Update Admission Price</h1>
-		<h2 class='form-subtitle'>
-			Edit entry
-			<span id='admissionPriceID'>1</span>: Year
-			<span id='admissionPriceYear'>2021</span>
+		<h2 class="form-subtitle">
+			Edit base price for the year <span id="admissionPriceYear"></span>
 		</h2>
-		<form method='POST' id='formUpdateAdmissionPrice'>
-			<div class='form-field'>
-				<label for='' class='form-label' class='form-label'>New Base Price</label>
-				<input type='text' name='' placeholder='' />
+		<form method="POST" id="formAdmissionPriceEdit">
+			<input type="text" name="priceID" hidden/>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Base Price</label>
+				<input type="text" name="basePrice" />
 			</div>
-			<div class='button-row'>
-				{{#if updateAdmissionPriceSuccess}}
-					{{> notification type='success' message='Admission Price updated successfully!'}}
-				{{/if}}
-				{{#if updateAdmissionPriceError}}
-					{{> notification message='Error! Admission Price was not updated.'}}
-				{{/if}}
-				<input type='submit' value='Update Price' />
+			<div class="button-row">
+				{{#ifCond error.section "===" "update"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Edit" />
 			</div>
 		</form>
 	</section>
 </main>
+
+<script type="text/javascript" src="../js/admissionPrices.js"></script>
