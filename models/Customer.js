@@ -12,7 +12,7 @@
 ------------------------------------------------------------------------*/
 
 // Get connection
-let dbConnection = require("./../db-config")
+let dbConnection = require("../db-config")
 
 class Customer {
 	constructor(id, firstName, lastName, email) {
@@ -22,7 +22,7 @@ class Customer {
 		this.email = email
 	}
 
-	// Read
+	// Read: get all rows
 	static findAll() {
 		return new Promise(resolve => {
 			dbConnection.query("SELECT * FROM Customers", (err, rows) => {
@@ -38,6 +38,24 @@ class Customer {
 					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email))
 				}
 				resolve(customers)
+			})
+		})
+	}
+
+	// Read: get one row by customerID
+	static findById(customerID) {
+		return new Promise(resolve => {
+			dbConnection.query(`SELECT * FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
+
+				let customer = []
+				customer.push(new this(row.customerID, row.firstName, row.lastName, row.email))
+
+				resolve(customer)
 			})
 		})
 	}

@@ -7,7 +7,7 @@
 ------------------------------------------------------------------------*/
 
 // Get model
-const Customer = require("./../models/Customer")
+const Customer = require("../models/Customer")
 
 // Render Customers view
 exports.render = async (req, res) => {
@@ -35,7 +35,7 @@ exports.render = async (req, res) => {
 // Add a new customer
 exports.add = async (req, res) => {
 	try {
-		// First param: null because we don't want to fill in customerID (it is a PK and auto-incremrent)
+		// First param: null because we don't want to fill in customerID (it is a PK and auto-increment)
 		let customer = new Customer(null, req.body.firstName, req.body.lastName, req.body.email)
 
 		await customer.save()
@@ -50,11 +50,10 @@ exports.add = async (req, res) => {
 	}
 }
 
-// Update existing customer
-exports.update = async (req, res) => {
+// Edit existing customer
+exports.edit = async (req, res) => {
 	try {
-		// First param: null because we don't want to fill in customerID (it is a PK and auto-incremrent)
-		let customer = new Customer(null, req.body.firstName, req.body.lastName, req.body.email)
+		let customer = await Customer.findById(id)
 
 		await customer.save()
 

@@ -1,6 +1,6 @@
 @font-face {
-	font-family: 'EuclidCircularB';
-	src: url('../fonts/EuclidCircularB-Regular.woff2') format('woff2');
+	font-family: "EuclidCircularB";
+	src: url("../fonts/EuclidCircularB-Regular.woff2") format("woff2");
 }
 
 body {
@@ -8,7 +8,7 @@ body {
 	padding: 0;
 	border: 0;
 	font-size: 1em;
-	font-family: 'EuclidCircularB';
+	font-family: "EuclidCircularB";
 	background: #181a1b;
 	color: #ffffff;
 	display: flex;
@@ -59,23 +59,27 @@ Nav items, buttons
 -------------------*/
 button,
 a.nav-item,
-input[type='submit'] {
+input[type="submit"] {
 	padding: 1em;
 	margin: 1em;
 	font-weight: bold;
 	color: #181a1b;
-	letter-spacing: 4px;
 	background-color: #02af54;
 	border: none;
 	border-radius: 5px;
 	text-transform: uppercase;
 	transition: all ease 0.3s;
+	cursor: pointer;
 }
 
 button:hover,
 a.nav-item:hover,
-input[type='submit']:hover {
+input[type="submit"]:hover {
 	background-color: #186a3e;
+}
+
+a.nav-item {
+	letter-spacing: 4px;
 }
 
 a.nav-item.selected {
@@ -84,7 +88,7 @@ a.nav-item.selected {
 }
 
 button:disabled,
-input[type='submit']:disabled {
+input[type="submit"]:disabled {
 	color: #616161;
 	background-color: #131313;
 }
@@ -253,15 +257,15 @@ Form Elements
 }
 
 .form-field select,
-.form-field input[type='text'],
-.form-field input[type='email'],
+.form-field input[type="text"],
+.form-field input[type="email"],
 .form-field textarea {
 	width: 100%;
 }
 
 select,
-input[type='text'],
-input[type='email'],
+input[type="text"],
+input[type="email"],
 textarea {
 	font-family: EuclidCircularB;
 	font-size: 16px;
@@ -274,8 +278,8 @@ textarea {
 }
 
 select:disabled,
-input[type='text']:disabled,
-input[type='email']:disabled,
+input[type="text"]:disabled,
+input[type="email"]:disabled,
 textarea:disabled {
 	color: #616161;
 	border: none;
@@ -287,7 +291,7 @@ textarea:disabled {
 	margin-bottom: 0.5em;
 }
 
-input[type='radio'] {
+input[type="radio"] {
 	margin: 0 0.5em 0 0;
 }
 
@@ -300,7 +304,7 @@ input[type='radio'] {
 	justify-content: flex-end;
 }
 
-input[type='submit'] {
+input[type="submit"] {
 	letter-spacing: 0;
 	margin: 0;
 	cursor: pointer;
