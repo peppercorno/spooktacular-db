@@ -1,19 +1,23 @@
-const mysql = require('mysql')
+// Get model
+const Ticket = require("../models/Ticket")
 
-// Get connection
-let dbConnection = require('./../db-config')
+// Render Tickets view
+exports.render = async (req, res) => {
+	// Get all tickets
+	let tickets = await Ticket.findAll()
 
-// Get all rows
-exports.findAll = (req, res) => {
-	dbConnection.query('SELECT * FROM Tickets', (err, rows) => {
-		if (err) {
-			console.log(err)
-			let retrievalError = true
-			res.render('tickets', { retrievalError })
-			return
-		}
+	// Define error messages
+	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add ticket." } // Default error message
+	// TODO: Define error messages after setting up validation in model
+	// if (error && req.query.error === "add") {
+	// 	error.section = "add"
+	// 	if (req.query.type === "firstnamemissing") error.message = "First name is missing."
+	// }
 
-		let ticketDeleted = req.query.removed // If a ticket was successfully deleted
-		res.render('tickets', { rows, ticketDeleted })
-	})
+	// Notification above table
+	let ticketAdded = req.query.added
+	let ticketDeleted = req.query.removed
+
+	// Render view
+	res.render("tickets", { tickets, error, ticketAdded, ticketDeleted })
 }

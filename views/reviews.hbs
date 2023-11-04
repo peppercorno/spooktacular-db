@@ -1,0 +1,181 @@
+{{> navigation reviews="true" }}
+
+<main>
+	<section>
+		<h1>Reviews</h1>
+
+		{{#if reviewAdded}}
+			{{> notification centered="true" type="success" message="Review successfully added!"}}
+		{{/if}}
+
+		{{#if reviewDeleted}}
+			{{> notification centered="true" type="success" message="Review successfully deleted."}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>reviewID</th>
+					<th>customerID</th>
+					<th>roomID</th>
+					<th>rating</th>
+					<th class="col-long-text">text</th>
+					<th>creationDate</th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each reviews}}
+				<tr>
+					<td>{{this.reviewID}}</td>
+					<td>{{this.customerID}}</td>
+					<td>{{this.roomID}}</td>
+					<td>{{this.rating}}</td>
+					<td>{{this.text}}</td>
+					<td>{{this.creationDate}}</td>
+					<td>
+						<button class="table-button edit" 
+						data-reviewid="{{this.reviewID}}" 
+						data-customerid="{{this.customerID}}" 
+						data-roomid="{{this.roomID}}" 
+						data-rating="{{this.rating}}" 
+						data-text="{{this.text}}" 
+						data-creationdate="{{this.creationDate}}" 
+						type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
+					</td>
+					<td>
+						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<button id="buttomReviewAdd" type="button">Add New <i class="fa fa-plus"></i></button>
+	</section>
+	<section id="sectionReviewAdd" class="display-none">
+		<h1>Add Review</h1>
+		<form method="POST" action="/reviews/add" id="formReviewAdd">
+			<div class="form-field">
+				<label class="form-label" class="form-label">Written by</label>
+				<select name="customer">
+					{{#each customers}}
+					<option value="{{this.customerID}}">#{{this.customerID}} {{this.customerFullName}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Reviewing a room?</label>
+				<select name="room">
+					{{#each rooms}}
+					<option value="{{this.roomID}}">{{this.name}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Rating</label>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating0" name="rating" value="0" />
+					<label for="reviewRating0">0</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating1" name="rating" value="1" />
+					<label for="reviewRating1">1</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating2" name="rating" value="2" />
+					<label for="reviewRating2">2</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating3" name="rating" value="3" />
+					<label for="reviewRating3">3</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating4" name="rating" value="4" />
+					<label for="reviewRating4">4</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating5" name="rating" value="5" />
+					<label for="reviewRating5">5</label>
+				</div>
+			</div>
+			<div class="form-field stacked">
+				<label class="form-label">Review Text</label>
+				<textarea name="text" rows="5"></textarea>
+			</div>
+			<div class="button-row">
+				{{#ifCond error.section "===" "add"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Add Review" />
+			</div>
+		</form>
+	</section>
+	<section id="sectionReviewEdit" class="display-none">
+		<h1>Edit Review</h1>
+		<h2 class="form-subtitle">
+			Edit review created on
+			<span id="reviewCreationDate"></span>
+		</h2>
+		<form method="POST" id="formReviewEdit">
+			<input type="text" name="reviewID" hidden/>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Written by</label>
+				<select name="customer">
+					{{#each customers}}
+					<option value="{{this.customerID}}">#{{this.customerID}} {{this.customerFullName}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Reviewing a room?</label>
+				<select name="room">
+					{{#each rooms}}
+					<option value="{{this.roomID}}">{{this.name}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Rating</label>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating0" name="reviewRating" value="0" />
+					<label for="reviewRating0">0</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating1" name="reviewRating" value="1" />
+					<label for="reviewRating1">1</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating2" name="reviewRating" value="2" />
+					<label for="reviewRating2">2</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating3" name="reviewRating" value="3" />
+					<label for="reviewRating3">3</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating4" name="reviewRating" value="4" />
+					<label for="reviewRating4">4</label>
+				</div>
+				<div class="radio-wrapper">
+					<input type="radio" id="reviewRating5" name="reviewRating" value="5" />
+					<label for="reviewRating5">5</label>
+				</div>
+			</div>
+			<div class="form-field stacked">
+				<label class="form-label">Review Text</label>
+				<textarea rows="5"></textarea>
+			</div>
+			<div class="button-row">
+				{{#ifCond error.section "===" "edit"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Edit" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="../js/reviews.js"></script>

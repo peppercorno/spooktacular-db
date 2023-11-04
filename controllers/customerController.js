@@ -1,69 +1,68 @@
-const mysql = require('mysql')
-
-// Get connection
-let dbConnection = require('./../db-config')
-
-// Get all rows
-exports.findAll = (req, res) => {
-	dbConnection.query('SELECT * FROM Customers', (err, rows) => {
-		if (err) {
-			console.log(err)
-			let retrievalError = true
-			res.render('customers', { retrievalError })
-			return
-		}
-
-		let customerAdded = req.query.added // If a customer was successfully added
-		let customerDeleted = req.query.removed // If a customer was successfully deleted
-		res.render('customers', { rows, customerDeleted, customerAdded })
-	})
-}
-
-// Add new row
-/*	Title: Reference for how to add new data
+/*Citations
+------------------------------------------------------------------------
+	Title: Partial reference for how to add new data, though we have since modified it to use an MVC structure.
 	Date: 30 Oct 2023
 	Adapted from URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
 	Author: CS 340 Instruction Team
-*/
-exports.create = (req, res) => {
+------------------------------------------------------------------------*/
+
+// Get model
+const Customer = require("../models/Customer")
+
+// Render Customers view
+exports.render = async (req, res) => {
+	// Get all customers
+	let customers = await Customer.findAll()
+
+	// Define error messages
+	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add customer." } // Default error message
+	// Add
+	if (error && req.query.error === "add") {
+		error.section = "add"
+		if (req.query.type === "firstnamemissing") error.message = "First name is missing."
+		if (req.query.type === "lastnamemissing") error.message = "Last name is missing."
+		if (req.query.type === "emailmissing") error.message = "Email is missing."
+	}
+
+	// Notification above table
+	let customerAdded = req.query.added
+	let customerDeleted = req.query.removed
+
+	// Render view
+	res.render("customers", { customers, error, customerAdded, customerDeleted })
+}
+
+// Add a new customer
+exports.add = async (req, res) => {
 	try {
-		// Validate incoming data
-		let firstName = req.body.firstName
-		if (firstName.length < 1) throw new Error('firstNameMissing')
-		if (firstName.length < 2 || firstName.length > 60) throw new Error('firstNameLength')
+		// First param: null because we don't want to fill in customerID (it is a PK and auto-increment)
+		let customer = new Customer(null, req.body.firstName, req.body.lastName, req.body.email)
 
-		let lastName = req.body.lastName
-		if (lastName.length < 1) throw new Error('lastNameMissing')
-		if (lastName.length < 2 || lastName.length > 60) throw new Error('lastNameLength')
+		await customer.save()
 
-		let email = req.body.email
-		if (email.length < 1) throw new Error('emailMissing')
-
-		// Perform SQL query
-		dbConnection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${firstName}', '${lastName}', '${email}')`, (err, rows) => {
-			if (err) {
-				console.log(err)
-				throw new Error('SQLError')
-			}
-
-			// Show success notification
-			// let customerAdded = true
-			res.redirect('/customers' + '/?added=' + firstName + lastName)
-		})
+		// If successful
+		res.redirect("/customers/?added=" + req.body.firstName + req.body.lastName)
 	} catch (err) {
-		console.log(err.message)
-		let addCustomerError = true
-		let addCustomerErrorMessage = 'Error! Customer was not added for an unknown reason.' // Default error message
+		// To detect one of our defined validation errors, check the prefix
+		if (err.message.substring(0, 12) === "customer.add") {
+			res.redirect("/customers/?error=add&type=" + err.message.substring(13))
+		} else res.redirect("/customers/?error=add&type=unknown")
+	}
+}
 
-		// Tailored error messages
-		if (err.message === 'firstNameMissing') addCustomerErrorMessage = 'First name is missing.'
-		if (err.message === 'firstNameLength') addCustomerErrorMessage = 'First name must be between 2 and 60 characters.'
-		if (err.message === 'lastNameMissing') addCustomerErrorMessage = 'Last name is missing.'
-		if (err.message === 'lastNameLength') addCustomerErrorMessage = 'Last name must be between 2 and 60 characters.'
-		if (err.message === 'emailMissing') addCustomerErrorMessage = 'Email is missing.'
-		if (err.message === 'SQLError') addCustomerErrorMessage = 'Unable to add customer due to SQL error.'
+// Edit existing customer
+exports.edit = async (req, res) => {
+	try {
+		let customer = await Customer.findById(id)
 
-		// Show error notification
-		res.render('customers', { addCustomerError, addCustomerErrorMessage })
+		await customer.save()
+
+		// If successful
+		res.redirect("/customers/?added=" + req.body.firstName + req.body.lastName)
+	} catch (err) {
+		// To detect one of our defined validation errors, check the prefix
+		if (err.message.substring(0, 12) === "customer.add") {
+			res.redirect("/customers/?error=add&type=" + err.message.substring(13))
+		} else res.redirect("/customers/?error=add&type=unknown")
 	}
 }

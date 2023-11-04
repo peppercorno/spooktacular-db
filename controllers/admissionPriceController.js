@@ -1,19 +1,23 @@
-const mysql = require('mysql')
+// Get model
+const AdmissionPrice = require("../models/AdmissionPrice")
 
-// Get connection
-let dbConnection = require('./../db-config')
+// Render AdmissionPrices view
+exports.render = async (req, res) => {
+	// Get all admission prices
+	let admissionPrices = await AdmissionPrice.findAll()
 
-// Get all rows
-exports.findAll = (req, res) => {
-	dbConnection.query('SELECT * FROM AdmissionPrices', (err, rows) => {
-		if (err) {
-			console.log(err)
-			let retrievalError = true
-			res.render('admission-prices', { retrievalError })
-			return
-		}
+	// Define error messages
+	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add admission price." } // Default error message
+	// Add
+	if (error && req.query.error === "add") {
+		error.section = "add"
+		if (req.query.type === "basepricemissing") error.message = "Base price is missing."
+	}
 
-		let admissionPriceDeleted = req.query.removed // If an Admission Price was successfully deleted
-		res.render('admission-prices', { rows, admissionPriceDeleted })
-	})
+	// Notification above table
+	let admissionPriceAdded = req.query.added
+	let admissionPriceDeleted = req.query.removed
+
+	// Render view
+	res.render("admission-prices", { admissionPrices, error, admissionPriceAdded, admissionPriceDeleted })
 }
