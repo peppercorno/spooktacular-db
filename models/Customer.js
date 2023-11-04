@@ -34,7 +34,6 @@ class Customer {
 
 				let customers = []
 				for (let row of rows) {
-					// let startDate = moment(row.startDate)
 					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email))
 				}
 				resolve(customers)

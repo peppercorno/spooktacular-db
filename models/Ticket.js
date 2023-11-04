@@ -4,13 +4,13 @@ const moment = require("moment")
 let dbConnection = require("../db-config")
 
 class Ticket {
-	constructor(ticketID, customerID, priceID, quantity) {
+	constructor(ticketID, customerID, priceID, quantity, purchaseDate, entryDate) {
 		this.ticketID = ticketID
 		this.customerID = customerID
 		this.priceID = priceID
 		this.quantity = quantity
-		this.purchaseDate = new Date()
-		this.entryDate = new Date()
+		this.purchaseDate = purchaseDate
+		this.entryDate = entryDate
 	}
 
 	// Read: get all rows
@@ -25,8 +25,9 @@ class Ticket {
 
 				let tickets = []
 				for (let row of rows) {
-					let purchaseDate = moment(row.purchaseDate)
-					let entryDate = moment(row.entryDate)
+					// Format date
+					let purchaseDate = moment(row.purchaseDate).format("MMM D YYYY, h:mm A")
+					let entryDate = moment(row.entryDate).format("MMM D YYYY, h:mm A")
 					tickets.push(
 						new this(row.ticketID, row.customerID, row.priceID, row.quantity, purchaseDate, entryDate)
 					)

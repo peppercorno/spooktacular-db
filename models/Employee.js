@@ -4,14 +4,14 @@ const moment = require("moment")
 let dbConnection = require("../db-config")
 
 class Employee {
-	constructor(id, firstName, lastName, email, jobTitle, salary) {
+	constructor(id, firstName, lastName, email, jobTitle, startDate, endDate, salary) {
 		this.employeeID = id
 		this.firstName = firstName
 		this.lastName = lastName
 		this.email = email
 		this.jobTitle = jobTitle
-		this.startDate = new Date()
-		this.endDate = new Date()
+		this.startDate = startDate
+		this.endDate = endDate
 		this.salary = salary
 	}
 
@@ -27,8 +27,9 @@ class Employee {
 
 				let employees = []
 				for (let row of rows) {
-					let startDate = moment(row.startDate)
-					let endDate = moment(row.endDate)
+					// Format dates
+					let startDate = moment(row.startDate).format("MMM D YYYY")
+					let endDate = moment(row.endDate).format("MMM D YYYY")
 					employees.push(
 						new this(
 							row.employeeID,

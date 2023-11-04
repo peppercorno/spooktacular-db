@@ -25,7 +25,8 @@ class Review {
 
 				let reviews = []
 				for (let row of rows) {
-					let creationDate = moment(row.creationDate)
+					// Format date
+					let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
 					reviews.push(new this(row.reviewID, row.customerID, row.roomID, row.rating, row.text, creationDate))
 				}
 				resolve(reviews)
