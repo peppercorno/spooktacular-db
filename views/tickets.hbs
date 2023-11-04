@@ -1,19 +1,15 @@
-{{> navigation tickets='true' }}
+{{> navigation tickets="true" }}
 
 <main>
 	<section>
 		<h1>Tickets</h1>
 
 		{{#if ticketAdded}}
-			{{> notification centered='true' type='success' message='Ticket added successfully!'}}
+			{{> notification centered="true" type="success" message="Ticket added successfully!"}}
 		{{/if}}
 
 		{{#if ticketDeleted}}
-			{{> notification centered='true' type='success' message='Ticket successfully deleted.'}}
-		{{/if}}
-
-		{{#if retrievalError}}
-			{{> notification centered='true' message='Unable to retrieve tickets from database.'}}
+			{{> notification centered="true" type="success" message="Ticket successfully deleted."}}
 		{{/if}}
 
 		<table>
@@ -25,12 +21,11 @@
 					<th>quantity</th>
 					<th>purchaseDate</th>
 					<th>entryDate</th>
-					<th class='col-table-button'></th>
-					<th class='col-table-button'></th>
+					<th class="col-table-button"></th>
 				</tr>
 			</thead>
 			<tbody>
-				{{#each rows}}
+				{{#each tickets}}
 				<tr>
 					<td>{{this.ticketID}}</td>
 					<td>{{this.customerID}}</td>
@@ -39,38 +34,41 @@
 					<td>{{this.purchaseDate}}</td>
 					<td>{{this.entryDate}}</td>
 					<td>
-						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
-					</td>
-					<td>
-						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
 					</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
+		<button id="buttonTicketAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
-	<section>
+	<section id="sectionTicketAdd" class="display-none">
 		<h1>Add Ticket</h1>
-		<form method='POST'>
-			<!--Enable if 'existing customer' option is toggled...?-->
-			<div class='form-field'>
-				<label for='' class='form-label'>Choose customer</label>
-				<select>
-					<option>Customer name</option>
+		<form method="POST" action="/tickets/add" id="formTicketAdd">
+			<div class="form-field">
+				<label class="form-label">Choose customer</label>
+				<select name="customer">
+					{{#each customers}}
+					<option value="{{this.customerID}}">#{{this.customerID}} {{this.customerFullName}}</option>
+					{{/each}}
 				</select>
 			</div>
-			<!--If 'new customer' option is toggled, show message asking user to create a customer first-->
-
-			<div class='form-field'>
-				<label for='' class='form-label' class='form-label'>Quantity</label>
-				<input type='text' name='' placeholder='' />
+			<div class="form-field">
+				<label class="form-label" class="form-label">Quantity</label>
+				<select name="quantity">
+					{{#each quantityOptions}}
+					<option value="{{this.number}}">{{this.number}}</option>
+					{{/each}}
+				</select>
 			</div>
-			<div class='button-row'>
-				{{#if addTicketError}}
-					{{> notification message='Error! Ticket was not added.'}}
-				{{/if}}
-				<input type='submit' value='Add Ticket' />
+			<div class="button-row">
+				{{#ifCond error.section "===" "add"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Add Ticket" />
 			</div>
 		</form>
 	</section>
 </main>
+
+<script type="text/javascript" src="../js/tickets.js"></script>

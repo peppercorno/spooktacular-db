@@ -4,7 +4,8 @@ const customerController = require("../controllers/customerController")
 
 // Routes
 router.get("/", customerController.render)
-router.post("/add", customerController.add) // Create new Customer
+
+// router.post("/add", customerController.add) // Create new Customer
 
 // router.get("/:id", customerController.findById
 // router.post('/edit/:id', customerController.update)   // Update Customer

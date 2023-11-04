@@ -4,6 +4,7 @@ const admissionPriceController = require("../controllers/admissionPriceControlle
 
 // Routes
 router.get("/", admissionPriceController.render)
+
 // router.post("/add", admissionPriceController.add) // Create new Admission Price
 
 // router.get('/update/:id', admissionPriceController.findById)  // Get Admission Price data for update form

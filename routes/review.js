@@ -4,7 +4,8 @@ const reviewController = require("../controllers/reviewController")
 
 // Routes
 router.get("/", reviewController.render)
-router.post("/add", reviewController.add) // Create new Review
+
+// router.post("/add", reviewController.add) // Create new Review
 
 // router.get("/:id", reviewController.findById
 // router.post('/edit/:id', reviewController.update)   // Update Review

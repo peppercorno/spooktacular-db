@@ -1,19 +1,23 @@
-const mysql = require('mysql')
+// Get model
+const Employee = require("../models/Employee")
 
-// Get connection
-let dbConnection = require('./../db-config')
+// Render Employees view
+exports.render = async (req, res) => {
+	// Get all employees
+	let employees = await Employee.findAll()
 
-// Get all rows
-exports.findAll = (req, res) => {
-	dbConnection.query('SELECT * FROM Employees', (err, rows) => {
-		if (err) {
-			console.log(err)
-			let retrievalError = true
-			res.render('employees', { retrievalError })
-			return
-		}
+	// Define error messages
+	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add employee." } // Default error message
+	// TODO: Define error messages after setting up validation in model
+	// if (error && req.query.error === "add") {
+	// 	error.section = "add"
+	// 	if (req.query.type === "firstnamemissing") error.message = "First name is missing."
+	// }
 
-		let employeeDeleted = req.query.removed // If an employee was successfully deleted
-		res.render('employees', { rows, employeeDeleted })
-	})
+	// Notification above table
+	let employeeAdded = req.query.added
+	let employeeDeleted = req.query.removed
+
+	// Render view
+	res.render("employees", { employees, error, employeeAdded, employeeDeleted })
 }

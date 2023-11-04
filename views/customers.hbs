@@ -36,7 +36,8 @@
 						data-customerid="{{this.customerID}}" 
 						data-firstname="{{this.firstName}}" 
 						data-lastname="{{this.lastName}}" 
-						data-email="{{this.email}}" type="button">
+						data-email="{{this.email}}" 
+						type="button">
 							<i class="fa fa-pen-to-square"></i>
 						</button>
 					</td>
@@ -89,7 +90,7 @@
 				<input type="email" name="email" />
 			</div>
 			<div class="button-row">
-				{{#ifCond error.section "===" "update"}}
+				{{#ifCond error.section "===" "edit"}}
 					{{> notification message=error.message}}
 				{{/ifCond}}
 				<input type="submit" value="Edit" />

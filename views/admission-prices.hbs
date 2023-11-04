@@ -76,7 +76,7 @@
 				<input type="text" name="basePrice" />
 			</div>
 			<div class="button-row">
-				{{#ifCond error.section "===" "update"}}
+				{{#ifCond error.section "===" "edit"}}
 					{{> notification message=error.message}}
 				{{/ifCond}}
 				<input type="submit" value="Edit" />

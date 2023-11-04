@@ -1,19 +1,23 @@
-const mysql = require('mysql')
+// Get model
+const Review = require("../models/Review")
 
-// Get connection
-let dbConnection = require('./../db-config')
+// Render Reviews view
+exports.render = async (req, res) => {
+	// Get all reviews
+	let reviews = await Review.findAll()
 
-// Get all rows
-exports.findAll = (req, res) => {
-	dbConnection.query('SELECT * FROM Reviews', (err, rows) => {
-		if (err) {
-			console.log(err)
-			let retrievalError = true
-			res.render('reviews', { retrievalError })
-			return
-		}
+	// Define error messages
+	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add review." } // Default error message
+	// TODO: Define error messages after setting up validation in model
+	// if (error && req.query.error === "add") {
+	// 	error.section = "add"
+	// 	if (req.query.type === "firstnamemissing") error.message = "First name is missing."
+	// }
 
-		let reviewDeleted = req.query.removed // If a review was successfully deleted
-		res.render('reviews', { rows, reviewDeleted })
-	})
+	// Notification above table
+	let reviewAdded = req.query.added
+	let reviewDeleted = req.query.removed
+
+	// Render view
+	res.render("reviews", { reviews, error, reviewAdded, reviewDeleted })
 }

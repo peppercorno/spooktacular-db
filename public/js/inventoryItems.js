@@ -16,7 +16,13 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemID]").value =
 			this.getAttribute("data-itemid") // Pass itemID to hidden input
 
-		// TODO: Populate Room and employee select?
+		// Select room
+		document.getElementById("formInventoryItemEdit").querySelector("select[name=room]").value =
+			this.getAttribute("data-roomid")
+
+		// TODO: Selecting multiple employees may not be straightforward
+		// document.getElementById("formInventoryItemEdit").querySelector("select[name=employee]").value =
+		// 	this.getAttribute("data-employeeid")
 
 		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemName]").value =
 			this.getAttribute("data-itemname")
@@ -24,3 +30,6 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 			this.getAttribute("data-itemcondition")
 	})
 })
+
+// TODO: Filter by room
+// TODO: Filter by employee

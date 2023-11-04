@@ -1,4 +1,4 @@
-{{> navigation inventoryItems='true' }}
+{{> navigation inventoryItems="true" }}
 
 <main>
 	<section>
@@ -13,15 +13,11 @@
 		</header>
 
 		{{#if inventoryItemAdded}}
-			{{> notification centered='true' type='success' message='Inventory Item successfully added.'}}
+			{{> notification centered="true" type="success" message="Inventory Item successfully added."}}
 		{{/if}}
 
 		{{#if inventoryItemDeleted}}
-			{{> notification centered='true' type='success' message='Inventory Item successfully deleted.'}}
-		{{/if}}
-
-		{{#if retrievalError}}
-			{{> notification centered='true' message='Unable to retrieve Inventory Items from database.'}}
+			{{> notification centered="true" type="success" message="Inventory Item successfully deleted."}}
 		{{/if}}
 
 		<table>
@@ -29,159 +25,154 @@
 				<tr>
 					<th>itemID</th>
 					<th>roomID</th>
-					<th>employeeID</th>
 					<th>name</th>
 					<th>itemCondition</th>
-					<th class='col-table-button'></th>
-					<th class='col-table-button'></th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
 				</tr>
 			</thead>
 			<tbody>
-				{{#each rows}}
+				{{#each inventoryItems}}
 				<tr>
 					<td>{{this.itemID}}</td>
 					<td>{{this.roomID}}</td>
-					<td>{{this.employeeID}}</td>
 					<td>{{this.name}}</td>
 					<td>{{this.itemCondition}}</td>
 					<td>
-						<button class='table-button'><i class='fa fa-pen-to-square'></i></button>
+						<button class="table-button edit" 
+						data-itemid="{{this.itemID}}"
+						data-roomid="{{this.roomID}}"
+						data-itemname="{{this.name}}"
+						data-itemcondition="{{this.itemCondition}}"
+						type="button"><i class="fa fa-pen-to-square"></i></button>
 					</td>
 					<td>
-						<button class='table-button delete'><i class='fa fa-trash-can'></i></button>
+						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
 					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<button id="buttonInventoryItemAdd" type="button">Add New <i class="fa fa-plus"></i></button>
+	</section>
+
+	<section>
+		<h1>Employees Responsible for Inventory Items</h1>
+		<div class="filter-wrapper">
+			<label>Filter by employee</label>
+			<select id="">
+				<option></option>
+			</select>
+		</div>
+		<table>
+			<thead>
+				<tr>
+					<th>Item Name</th>
+					<th>Employee</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each inventoryItemsEmployees}}
+				<tr>
+					<td>>{{this.itemName}}</td>
+					<td>>{{this.employeeName}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
 		</table>
 	</section>
 
-	<section>
-		<header class="header-row">
-			<h1>InventoryItems_Employees</h1>
-			<div class="filter-wrapper">
-				<label>Filter by employee</label>
-				<select id="">
-					<option></option>
-				</select>
-			</div>
-		</header>
-
-		<table>
-			<thead>
-				<tr>
-					<th>itemID</th>
-					<th>employeeID</th>
-				</tr>
-			</thead>
-			<tbody>
-				<!-- To be deleted once DB data can be loaded -->
-				<tr>
-					<td>2</td>
-					<td>5</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>2</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>3</td>
-				</tr>
-			</tbody>
-		</table>
-	</section>
-
-	<section>
+	<section id="sectionInventoryItemAdd" class="display-none">
 		<h1>Add Inventory Item</h1>
-		<form method='POST'>
-			<div class='form-field'>
-				<label for='' class='form-label'>Name</label>
-				<input type='text' name='' placeholder='' />
+		<form method="POST">
+			<div class="form-field">
+				<label class="form-label">Name</label>
+				<input type="text" name="itemName" />
 			</div>
-			<div class='form-field columns'>
-				<div class='column-label'>
-					<label for='' class='form-label'>Room</label>
-					<p class='form-field-explanation'>Optional</p>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Room</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
-				<div class='column-input'>
-					<select>
-						<option>Room name</option>
+				<div class="column-input">
+					<select name="room">
+						{{#each rooms}}
+						<option value="{{this.roomID}}">{{this.name}}</option>
+						{{/each}}
 					</select>
 				</div>
 			</div>
-			<div class='form-field columns'>
-				<div class='column-label'>
-					<label for='' class='form-label'>Employee</label>
-					<p class='form-field-explanation'>Optional. Employee(s) responsible for item. Can select multiple.</p>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Employee</label>
+					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
 				</div>
-				<div class='column-input'>
-					<select multiple>
-						<option>Employee name 1</option>
-						<option>Employee name 2</option>
+				<div class="column-input">
+					<select name="employee" multiple>
+						{{#each employees}}
+						<option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
+						{{/each}}
 					</select>
 				</div>
 			</div>
-			<div class='form-field'>
-				<label for='' class='form-label'>Item Condition</label>
-				<input type='text' name='' placeholder='' />
+			<div class="form-field">
+				<label class="form-label">Item Condition</label>
+				<input type="text" name="itemCondition" />
 			</div>
-			<div class='button-row'>
-				{{#if addInventoryItemError}}
-					{{> notification message='Error! Inventory Item was not added.'}}
-				{{/if}}
-				<input type='submit' value='Add Inventory Item' />
+			<div class="button-row">
+				{{#ifCond error.section "===" "add"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Add Inventory Item" />
 			</div>
 		</form>
 	</section>
-	<section>
-		<h1>Update Inventory Item</h1>
-		<h2 class='form-subtitle'>
-			Edit entry
-			<span id='inventoryItemID'>7</span>:
-			<span id='inventoryItemName'>Skeleton</span>
-		</h2>
-		<form method='POST'>
-			<div class='form-field'>
-				<label for='' class='form-label'>Name</label>
-				<input type='text' name='' placeholder='' />
+	<section id="sectionInventoryItemEdit" class="display-none">
+		<h1>Edit Inventory Item</h1>
+		<form method="POST" id="formInventoryItemEdit">
+			<input type="text" name="itemID" hidden/>
+			<div class="form-field">
+				<label class="form-label">Name</label>
+				<input type="text" name="itemName" />
 			</div>
-			<div class='form-field columns'>
-				<div class='column-label'>
-					<label for='' class='form-label'>Room</label>
-					<p class='form-field-explanation'>Optional</p>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Room</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
-				<div class='column-input'>
-					<select>
-						<option>Room name</option>
+				<div class="column-input">
+					<select name="room">
+						{{#each rooms}}
+						<option value="{{this.roomID}}">{{this.name}}</option>
+						{{/each}}
 					</select>
 				</div>
 			</div>
-			<div class='form-field columns'>
-				<div class='column-label'>
-					<label for='' class='form-label'>Employee</label>
-					<p class='form-field-explanation'>Optional. Employee(s) responsible for item. Can select multiple.</p>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Employee</label>
+					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
 				</div>
-				<div class='column-input'>
-					<select multiple>
-						<option>Employee name 1</option>
-						<option>Employee name 2</option>
+				<div class="column-input">
+					<select name="employee" multiple>
+						{{#each employees}}
+						<option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
+						{{/each}}
 					</select>
 				</div>
 			</div>
-			<div class='form-field'>
-				<label for='' class='form-label'>Item Condition</label>
-				<input type='text' name='' placeholder='' />
+			<div class="form-field">
+				<label class="form-label">Item Condition</label>
+				<input type="text" name="itemCondition" />
 			</div>
-			<div class='button-row'>
-				{{#if updateInventoryItemSuccess}}
-					{{> notification type='success' message='Inventory Item updated successfully!'}}
-				{{/if}}
-				{{#if updateInventoryItemError}}
-					{{> notification message='Error! Inventory Item was not updated.'}}
-				{{/if}}
-				<input type='submit' value='Add Inventory Item' />
+			<div class="button-row">
+				{{#ifCond error.section "===" "edit"}}
+					{{> notification message=error.message}}
+				{{/ifCond}}
+				<input type="submit" value="Edit" />
 			</div>
 		</form>
 	</section>
 </main>
+
+<script type="text/javascript" src="../js/inventoryItems.js"></script>
