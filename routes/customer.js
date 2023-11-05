@@ -6,8 +6,8 @@ const customerController = require("../controllers/customerController")
 router.get("/", customerController.render)
 router.post("/add", customerController.add) // Create new Customer
 router.post("/edit", customerController.edit) // Edit Customer
+router.get("/delete/:id", customerController.delete) // Delete a Customer
 
 // router.get("/:id", customerController.findById   // Might not need this
-// router.delete('/delete/:id', customerController.delete);   // Delete a Customer
 
 module.exports = router

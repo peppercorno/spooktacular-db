@@ -199,7 +199,8 @@ tbody tr:nth-child(odd) {
 	background-color: rgba(255, 255, 255, 0.05);
 }
 
-button.table-button {
+button.table-button,
+input[type="submit"].table-button {
 	width: 64px;
 	height: 38px;
 	margin: 0;
@@ -215,17 +216,40 @@ button.table-button i {
 	margin: auto;
 }
 
-button.table-button.delete {
+input[type="submit"].table-button.delete {
 	background-color: tomato;
 }
 
-button.table-button.delete:hover {
+input[type="submit"].table-button.delete:hover {
 	background-color: #b9402b;
+}
+
+.form-delete {
+	position: relative;
+}
+
+.icon-delete {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: calc((100% - 16px) / 2);
+	left: calc((100% - 16px) / 2);
+	cursor: pointer;
+	pointer-events: none;
+}
+
+.icon-delete i {
+	color: #181a1b;
+	font-size: 1.1em;
 }
 
 /*-------------------
 Form Elements
 ---------------------*/
+table form {
+	margin: 0;
+}
+
 .form-field {
 	padding: 0.5em 0;
 	display: flex;

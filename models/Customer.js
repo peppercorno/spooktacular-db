@@ -125,8 +125,19 @@ class Customer {
 	}
 
 	// Delete
-	delete() {
-		// TODO: Delete
+	delete(customerID) {
+		return new Promise(resolve => {
+			// TODO: Need to handle errors thrown when this row is a parent row
+
+			dbConnection.query(`DELETE FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					throw new Error("customer.sql")
+				}
+
+				resolve(this)
+			})
+		})
 	}
 }
 

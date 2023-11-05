@@ -74,3 +74,18 @@ exports.edit = async (req, res) => {
 		} else res.redirect("/customers/?error=edit&type=unknown" + "&id=" + req.body.customerID)
 	}
 }
+
+// Delete existing customer
+exports.delete = async (req, res) => {
+	try {
+		let customer = new Customer(req.params.id, "", "", "")
+
+		await customer.delete(req.params.id)
+
+		// If successful
+		res.redirect("/customers/?success=deleted")
+	} catch (err) {
+		console.log(err)
+		res.redirect("/customers/?error=notdeleted")
+	}
+}
