@@ -30,23 +30,41 @@ class Employee {
 					// Format dates
 					let startDate = moment(row.startDate).format("MMM D YYYY")
 					let endDate = moment(row.endDate).format("MMM D YYYY")
-					employees.push(
-						new this(
-							row.employeeID,
-							row.firstName,
-							row.lastName,
-							row.email,
-							row.jobTitle,
-							startDate,
-							endDate,
-							row.salary
-						)
-					)
+					employees.push(new this(row.employeeID, row.firstName, row.lastName, row.email, row.jobTitle, startDate, endDate, row.salary))
 				}
 				resolve(employees)
 			})
 		})
 	}
+
+	// Create or Update
+	/*save() {
+		return new Promise(resolve => {
+			// TODO: Validate form data
+
+			// Determine whether we are creating or updating
+			if (this.customerID === undefined || this.customerID === null) {
+				// Create
+
+				// TODO: Insert query
+				let sqlQuery = "INSERT INTO Employees ()"
+
+				// Format dates to fit DB requirements
+				// let startDate = this.startDate.format("YYYY-MM-DD HH:MM:SS")
+				// let endDate = this.endDate.format("YYYY-MM-DD HH:MM:SS")
+
+				dbConnection.query(sqlQuery, (err, res) => {
+					if (err) {
+						console.error(err)
+						throw new Error("employees.sql")
+					}
+					resolve(this)
+				})
+			} else {
+				// Update
+			}
+		})
+	}*/
 }
 
 module.exports = Employee

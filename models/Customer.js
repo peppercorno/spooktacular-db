@@ -72,8 +72,8 @@ class Customer {
 					return
 				}
 
-				let customer = []
-				customer.push(new this(row.customerID, row.firstName, row.lastName, row.email))
+				// res is an array. Create new class instance using data from first item in array
+				let customer = new this(res[0].customerID, res[0].firstName, res[0].lastName, res[0].email)
 
 				resolve(customer)
 			})
@@ -83,32 +83,43 @@ class Customer {
 	// Create or Update
 	save() {
 		return new Promise(resolve => {
-			// Validate form data
-			if (this.firstName.length === 0) throw new Error("customer.add.firstnamemissing")
-			if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("customer.add.firstnamelength")
-
-			if (this.lastName.length === 0) throw new Error("customer.add.lastnamemissing")
-			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("customer.add.lastNamelength")
-
-			if (this.email.length === 0) throw new Error("customer.add.emailmissing")
-			// TODO: Add email validation
-
 			// Determine whether we are creating or updating
 			if (this.customerID === undefined || this.customerID === null) {
 				// Create
-				// let startDate = this.startDate.format("YYYY-MM-DD HH:MM:SS")
-				dbConnection.query(
-					`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`,
-					(err, res) => {
-						if (err) {
-							console.error(err)
-							throw new Error("customer.sql")
-						}
-						resolve(this)
+				if (this.firstName.length === 0) throw new Error("customer.add.firstnamemissing")
+				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("customer.add.firstnamelength")
+
+				if (this.lastName.length === 0) throw new Error("customer.add.lastnamemissing")
+				if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("customer.add.lastNamelength")
+
+				if (this.email.length === 0) throw new Error("customer.add.emailmissing")
+				// TODO: Add email validation using regex
+
+				dbConnection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, res) => {
+					if (err) {
+						console.error(err)
+						throw new Error("customer.sql")
 					}
-				)
+					resolve(this)
+				})
 			} else {
 				// Update
+				if (this.firstName.length === 0) throw new Error("customer.edit.firstnamemissing")
+				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("customer.add.firstnamelength")
+
+				if (this.lastName.length === 0) throw new Error("customer.edit.lastnamemissing")
+				if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("customer.edit.lastNamelength")
+
+				if (this.email.length === 0) throw new Error("customer.edit.emailmissing")
+				// TODO: Add email validation using regex
+
+				dbConnection.query("UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?", [this.firstName, this.lastName, this.email, this.customerID], (err, res) => {
+					if (err) {
+						console.error(err)
+						throw new Error("customer.sql")
+					}
+					resolve(this)
+				})
 			}
 		})
 	}

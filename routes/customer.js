@@ -4,11 +4,10 @@ const customerController = require("../controllers/customerController")
 
 // Routes
 router.get("/", customerController.render)
+router.post("/add", customerController.add) // Create new Customer
+router.post("/edit", customerController.edit) // Edit Customer
 
-// router.post("/add", customerController.add) // Create new Customer
-
-// router.get("/:id", customerController.findById
-// router.post('/edit/:id', customerController.update)   // Update Customer
+// router.get("/:id", customerController.findById   // Might not need this
 // router.delete('/delete/:id', customerController.delete);   // Delete a Customer
 
 module.exports = router

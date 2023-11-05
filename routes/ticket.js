@@ -6,7 +6,6 @@ const ticketController = require("../controllers/ticketController")
 router.get("/", ticketController.render)
 
 // router.post("/add", ticketController.add) // Create new Ticket
-
 // router.get("/:id", ticketController.findById
 // router.delete('/delete/:id', ticketController.delete);   // Delete a Ticket
 
