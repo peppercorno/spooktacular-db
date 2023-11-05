@@ -28,6 +28,26 @@ class Room {
 			})
 		})
 	}
+
+	// Read: get all rows for dropdown menus. Limit to roomID and name only.
+	static findNames() {
+		return new Promise(resolve => {
+			let sqlQuery = "SELECT roomID, name FROM Rooms ORDER BY name ASC;"
+			dbConnection.query(sqlQuery, (err, rows) => {
+				if (err) {
+					console.error(err)
+					resolve([]) // No rows
+					return
+				}
+
+				let rooms = []
+				for (let row of rows) {
+					rooms.push(new this(row.roomID, row.name, null, null, null))
+				}
+				resolve(rooms)
+			})
+		})
+	}
 }
 
 module.exports = Room

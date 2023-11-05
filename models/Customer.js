@@ -41,7 +41,7 @@ class Customer {
 		})
 	}
 
-	// Read: get all rows, customerID and full name only, for dropdown menus
+	// Read: get all rows for dropdown menus. Limit to CustomerID and name details only.
 	static findFullNames() {
 		return new Promise(resolve => {
 			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
@@ -55,7 +55,7 @@ class Customer {
 
 				let customers = []
 				for (let row of rows) {
-					customers.push(new this(row.customerID, row.firstName, row.lastName, ""))
+					customers.push(new this(row.customerID, row.firstName, row.lastName, null))
 				}
 				resolve(customers)
 			})

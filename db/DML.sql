@@ -109,7 +109,7 @@ Rooms
 SELECT roomID, name, theme, maxCapacity, level FROM Rooms;
 
 -- Get all Room rows for dropdown menus. roomID and name only.
-SELECT roomID, name FROM Rooms;
+SELECT roomID, name FROM Rooms ORDER BY name ASC;
 
 -- Add a new Room
 INSERT INTO Rooms (name, theme, maxCapacity, level)
