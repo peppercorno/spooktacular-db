@@ -216,10 +216,12 @@ button.table-button i {
 	margin: auto;
 }
 
+button.table-button.delete,
 input[type="submit"].table-button.delete {
 	background-color: tomato;
 }
 
+button.table-button.delete:hover,
 input[type="submit"].table-button.delete:hover {
 	background-color: #b9402b;
 }
@@ -232,15 +234,16 @@ input[type="submit"].table-button.delete:hover {
 	width: 16px;
 	height: 16px;
 	position: absolute;
-	top: calc((100% - 16px) / 2);
+	top: 10px;
 	left: calc((100% - 16px) / 2);
 	cursor: pointer;
 	pointer-events: none;
+	margin: auto;
 }
 
 .icon-delete i {
 	color: #181a1b;
-	font-size: 1.1em;
+	font-size: 1.25em;
 }
 
 /*-------------------
