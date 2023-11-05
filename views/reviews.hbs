@@ -71,6 +71,7 @@
 			<div class="form-field columns">
 				<div class="column-label">
 					<label class="form-label">Reviewing a room?</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
 					<select name="room">
@@ -83,30 +84,14 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Rating</label>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating0" name="rating" value="0" />
-					<label for="reviewRating0">0</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating1" name="rating" value="1" />
-					<label for="reviewRating1">1</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating2" name="rating" value="2" />
-					<label for="reviewRating2">2</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating3" name="rating" value="3" />
-					<label for="reviewRating3">3</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating4" name="rating" value="4" />
-					<label for="reviewRating4">4</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating5" name="rating" value="5" />
-					<label for="reviewRating5">5</label>
-				</div>
+				<select name="rating">
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
 			</div>
 			<div class="form-field stacked">
 				<label class="form-label">Review Text</label>
@@ -123,8 +108,7 @@
 	<section id="sectionReviewEdit" class="display-none">
 		<h1>Edit Review</h1>
 		<h2 class="form-subtitle">
-			Edit review created on
-			<span id="reviewCreationDate"></span>
+			Review created on <span id="reviewCreationDate"></span>
 		</h2>
 		<form method="POST" id="formReviewEdit">
 			<input type="text" name="reviewID" hidden/>
@@ -139,6 +123,7 @@
 			<div class="form-field columns">
 				<div class="column-label">
 					<label class="form-label">Reviewing a room?</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
 					<select name="room">
@@ -151,34 +136,18 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Rating</label>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating0" name="reviewRating" value="0" />
-					<label for="reviewRating0">0</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating1" name="reviewRating" value="1" />
-					<label for="reviewRating1">1</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating2" name="reviewRating" value="2" />
-					<label for="reviewRating2">2</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating3" name="reviewRating" value="3" />
-					<label for="reviewRating3">3</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating4" name="reviewRating" value="4" />
-					<label for="reviewRating4">4</label>
-				</div>
-				<div class="radio-wrapper">
-					<input type="radio" id="reviewRating5" name="reviewRating" value="5" />
-					<label for="reviewRating5">5</label>
-				</div>
+				<select name="rating">
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
 			</div>
 			<div class="form-field stacked">
 				<label class="form-label">Review Text</label>
-				<textarea rows="5"></textarea>
+				<textarea name="text" rows="5"></textarea>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "edit"}}

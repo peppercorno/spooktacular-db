@@ -18,22 +18,19 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionReviewEdit").classList.remove("display-none")
 		document.getElementById("sectionReviewEdit").scrollIntoView()
 
-		// Set creation date
+		// Display creation date
 		document.getElementById("reviewCreationDate").innerHTML = this.getAttribute("data-creationdate")
 
 		// Populate edit form
-		document.getElementById("formReviewEdit").querySelector("input[name=reviewID]").value =
-			this.getAttribute("data-reviewid") // Pass reviewID to hidden input
+		document.getElementById("formReviewEdit").querySelector("input[name=reviewID]").value = this.getAttribute("data-reviewid") // Pass reviewID to hidden input
 
-		// Select correct option for room, customer and rating
-		document.getElementById("formReviewEdit").querySelector("select[name=customer]").value =
-			this.getAttribute("data-customerid")
-		document.getElementById("formReviewEdit").querySelector("select[name=room]").value =
-			this.getAttribute("data-roomid")
-		document.getElementById("formReviewEdit").querySelector("input[name=rating]").value =
-			this.getAttribute("data-rating")
+		// Select correct option for customer, room and rating
+		document.getElementById("formReviewEdit").querySelector("select[name=customer]").value = this.getAttribute("data-customerid")
+		// If null, select 'unselected' option
+		if (!this.getAttribute("data-roomid")) document.getElementById("formReviewEdit").querySelector("select[name=room]").value = "0"
+		else document.getElementById("formReviewEdit").querySelector("select[name=room]").value = this.getAttribute("data-roomid")
+		document.getElementById("formReviewEdit").querySelector("select[name=rating]").value = this.getAttribute("data-rating")
 
-		document.getElementById("formReviewEdit").querySelector("input[name=text]").value =
-			this.getAttribute("data-text")
+		document.getElementById("formReviewEdit").querySelector("textarea[name=text]").value = this.getAttribute("data-text")
 	})
 })
