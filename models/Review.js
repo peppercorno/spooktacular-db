@@ -47,6 +47,38 @@ class Review {
 			})
 		})
 	}
+
+	// Read: get one row by reviewID, along with associated Customer and Room info
+	static findById(reviewID) {
+		return new Promise(resolve => {
+			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
+			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
+			sqlQuery += "Rooms.name AS roomName "
+			sqlQuery += "FROM Reviews "
+			sqlQuery += "INNER JOIN Customers ON Customers.CustomerID = Reviews.customerID "
+			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID "
+			sqlQuery += "WHERE Reviews.reviewID = " + reviewID + ";"
+
+			dbConnection.query(`SELECT * FROM Reviews WHERE reviewID = ${reviewID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
+
+				// If roomID is null, set roomName to "--"
+				if (res[0].roomID === undefined || res[0].roomID === null) res[0].roomName = "--"
+
+				// Format date
+				let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
+
+				// res is an array. Create new class instance using data from first item in array
+				let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, res[0].roomName, res[0].rating, res[0].text, creationDate)
+
+				resolve(review)
+			})
+		})
+	}
 }
 
 module.exports = Review

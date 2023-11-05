@@ -36,42 +36,12 @@ class AdmissionPrice {
 					return
 				}
 
-				let admissionPrice = []
-				admissionPrice.push(new this(row.priceID, row.year, row.basePrice))
+				// res is an array. Create new class instance using data from first item in array
+				let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice)
 
 				resolve(admissionPrice)
 			})
 		})
-	}
-
-	// Create or Update
-	save() {
-		return new Promise(resolve => {
-			// Validate form data
-			if (this.basePrice.length === 0) throw new Error("admissionprice.add.basepricemissing")
-
-			// Determine whether we are creating or updating
-			if (this.priceID === undefined || this.priceID === null) {
-				// Create
-				dbConnection.query(
-					`INSERT INTO AdmissionPrices (basePrice) VALUES ('${this.basePrice}')`,
-					(err, res) => {
-						if (err) {
-							console.error(err)
-							throw new Error("admissionprice.sql")
-						}
-						resolve(this)
-					}
-				)
-			} else {
-				// Update
-			}
-		})
-	}
-
-	// Delete
-	delete() {
-		// TODO: Delete
 	}
 }
 

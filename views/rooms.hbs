@@ -4,13 +4,17 @@
 	<section>
 		<h1>Rooms</h1>
 
-		{{#if roomAdded}}
+		{{#ifCond success "===" "added"}}
 			{{> notification centered="true" type="success" message="Room successfully added!"}}
-		{{/if}}
+		{{/ifCond}}
 
-		{{#if roomDeleted}}
+		{{#ifCond success "===" "edited"}}
+			{{> notification centered="true" type="success" message="Room successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
 			{{> notification centered="true" type="success" message="Room successfully deleted."}}
-		{{/if}}
+		{{/ifCond}}
 
 		<table>
 			<thead>
@@ -52,7 +56,7 @@
 		</table>
 		<button id="buttonRoomAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
-	<section id="sectionRoomAdd" class="display-none">
+	<section id="sectionRoomAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Room</h1>
 		<form method="POST" action="/customers/add" id="formRoomAdd">
 			<div class="form-field">
@@ -84,25 +88,25 @@
 			</div>
 		</form>
 	</section>
-	<section id="sectionRoomEdit" class="display-none">
+	<section id="sectionRoomEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Room</h1>
 		<form method="POST" id="formRoomEdit">
 			<input type="text" name="roomID" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
-				<input type="text" name="roomName" />
+				<input type="text" name="roomName" value="{{roomBeingEdited.name}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Theme</label>
-				<input type="text" name="theme" />
+				<input type="text" name="theme" value="{{roomBeingEdited.theme}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Max Capacity</label>
-				<input type="text" name="maxCapacity" />
+				<input type="text" name="maxCapacity" value="{{roomBeingEdited.maxCapacity}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Level</label>
-				<select name="level">
+				<select name="level" value="{{roomBeingEdited.level}}">
 					<option value="1">1 (Ground Floor)</option>
 					<option value="2">2</option>
 					<option value="3">3</option>

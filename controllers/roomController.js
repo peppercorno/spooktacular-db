@@ -5,6 +5,7 @@ const Room = require("../models/Room")
 exports.render = async (req, res) => {
 	// Get all rooms
 	let rooms = await Room.findAll()
+	let roomBeingEdited = ""
 
 	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add customer." } // Default error message
 	if (error) {
@@ -14,12 +15,14 @@ exports.render = async (req, res) => {
 	// Errors from 'add' form
 	if (error && req.query.error === "add") error.section = "add"
 	// Errors from 'edit' form
-	if (error && req.query.error === "edit") error.section = "edit"
+	if (error && req.query.error === "edit") {
+		roomBeingEdited = await Room.findById(req.query.id)
+		error.section = "edit"
+	}
 
 	// Whether to show notification above table
-	let roomAdded = req.query.added
-	let roomDeleted = req.query.removed
+	let success = req.query.success
 
 	// Render view
-	res.render("rooms", { rooms, error, roomAdded, roomDeleted })
+	res.render("rooms", { rooms, error, success, roomBeingEdited })
 }

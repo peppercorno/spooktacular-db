@@ -19,21 +19,15 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionEmployeeEdit").scrollIntoView()
 
 		// Populate edit form
-		document.getElementById("formEmployeeEdit").querySelector("input[name=employeeID]").value =
-			this.getAttribute("data-employeeID") // Pass employeeID to hidden input
-		document.getElementById("formEmployeeEdit").querySelector("input[name=firstName]").value =
-			this.getAttribute("data-firstname")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=lastName]").value =
-			this.getAttribute("data-lastname")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=email]").value =
-			this.getAttribute("data-email")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=jobTitle]").value =
-			this.getAttribute("data-jobtitle")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=startDate]").value =
-			this.getAttribute("data-startdate")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=endDate]").value =
-			this.getAttribute("data-enddate")
-		document.getElementById("formEmployeeEdit").querySelector("input[name=salary]").value =
-			this.getAttribute("data-salary")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=employeeID]").value = this.getAttribute("data-employeeID") // Pass employeeID to hidden input
+		document.getElementById("formEmployeeEdit").querySelector("input[name=firstName]").value = this.getAttribute("data-firstname")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=lastName]").value = this.getAttribute("data-lastname")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=email]").value = this.getAttribute("data-email")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=jobTitle]").value = this.getAttribute("data-jobtitle")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=salary]").value = this.getAttribute("data-salary")
+
+		// TODO: Make sure dates are populated correctly
+		document.getElementById("formEmployeeEdit").querySelector("input[name=startDate]").value = this.getAttribute("data-startdate")
+		document.getElementById("formEmployeeEdit").querySelector("input[name=endDate]").value = this.getAttribute("data-enddate")
 	})
 })

@@ -37,6 +37,24 @@ class Employee {
 		})
 	}
 
+	// Read: get one row by priceID
+	static findById(employeeID) {
+		return new Promise(resolve => {
+			dbConnection.query(`SELECT * FROM Employees WHERE employeeID = ${employeeID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
+
+				// res is an array. Create new class instance using data from first item in array
+				let employee = new this(res[0].employeeID, res[0].firstName, res[0].lastName, res[0].email, res[0].jobTitle, res[0].startDate, res[0].endDate, res[0].salary)
+
+				resolve(employee)
+			})
+		})
+	}
+
 	// Create or Update
 	/*save() {
 		return new Promise(resolve => {

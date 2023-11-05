@@ -27,6 +27,24 @@ class InventoryItem {
 			})
 		})
 	}
+
+	// Read: get one row by itemID
+	static findById(itemID) {
+		return new Promise(resolve => {
+			dbConnection.query(`SELECT * FROM InventoryItems WHERE itemID = ${itemID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
+
+				// res is an array. Create new class instance using data from first item in array
+				let inventoryItem = new this(res[0].itemID, res[0].roomID, res[0].name, res[0].itemCondition)
+
+				resolve(inventoryItem)
+			})
+		})
+	}
 }
 
 module.exports = InventoryItem

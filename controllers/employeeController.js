@@ -5,6 +5,7 @@ const Employee = require("../models/Employee")
 exports.render = async (req, res) => {
 	// Get all employees
 	let employees = await Employee.findAll()
+	let employeeBeingEdited = ""
 
 	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add customer." } // Default error message
 	if (error) {
@@ -14,12 +15,14 @@ exports.render = async (req, res) => {
 	// Errors from 'add' form
 	if (error && req.query.error === "add") error.section = "add"
 	// Errors from 'edit' form
-	if (error && req.query.error === "edit") error.section = "edit"
+	if (error && req.query.error === "edit") {
+		employeeBeingEdited = await Employee.findById(req.query.id)
+		error.section = "edit"
+	}
 
 	// Whether to show notification above table
-	let employeeAdded = req.query.added
-	let employeeDeleted = req.query.removed
+	let success = req.query.success
 
 	// Render view
-	res.render("employees", { employees, error, employeeAdded, employeeDeleted })
+	res.render("employees", { employees, error, success, employeeBeingEdited })
 }

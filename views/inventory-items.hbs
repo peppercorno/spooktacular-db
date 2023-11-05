@@ -12,13 +12,17 @@
 			</div>
 		</header>
 
-		{{#if inventoryItemAdded}}
-			{{> notification centered="true" type="success" message="Inventory Item successfully added."}}
-		{{/if}}
+		{{#ifCond success "===" "added"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
+		{{/ifCond}}
 
-		{{#if inventoryItemDeleted}}
-			{{> notification centered="true" type="success" message="Inventory Item successfully deleted."}}
-		{{/if}}
+		{{#ifCond success "===" "edited"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
+		{{/ifCond}}
 
 		<table>
 			<thead>
@@ -82,7 +86,7 @@
 		</table>
 	</section>
 
-	<section id="sectionInventoryItemAdd" class="display-none">
+	<section id="sectionInventoryItemAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Inventory Item</h1>
 		<form method="POST">
 			<div class="form-field">
@@ -127,13 +131,13 @@
 			</div>
 		</form>
 	</section>
-	<section id="sectionInventoryItemEdit" class="display-none">
+	<section id="sectionInventoryItemEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Inventory Item</h1>
 		<form method="POST" id="formInventoryItemEdit">
 			<input type="text" name="itemID" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
-				<input type="text" name="itemName" />
+				<input type="text" name="itemName" value="{{itemBeingEdited.name}}"/>
 			</div>
 			<div class="form-field columns">
 				<div class="column-label">
@@ -141,7 +145,7 @@
 					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
-					<select name="room">
+					<select name="room" value="{{itemBeingEdited.roomID}}">
 						{{#each rooms}}
 						<option value="{{this.roomID}}">{{this.name}}</option>
 						{{/each}}
@@ -154,6 +158,7 @@
 					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
 				</div>
 				<div class="column-input">
+					{{!-- TODO: Figure out how to select multiple  --}}
 					<select name="employee" multiple>
 						{{#each employees}}
 						<option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
@@ -163,7 +168,7 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Item Condition</label>
-				<input type="text" name="itemCondition" />
+				<input type="text" name="itemCondition" value="{{itemBeingEdited.itemCondition}}"/>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "edit"}}

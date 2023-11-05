@@ -278,6 +278,7 @@ Form Elements
 select,
 input[type="text"],
 input[type="email"],
+input[type="date"],
 textarea {
 	font-family: EuclidCircularB;
 	font-size: 16px;
@@ -292,6 +293,7 @@ textarea {
 select:disabled,
 input[type="text"]:disabled,
 input[type="email"]:disabled,
+input[type="date"]:disabled,
 textarea:disabled {
 	color: #616161;
 	border: none;

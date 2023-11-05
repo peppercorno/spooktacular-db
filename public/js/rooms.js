@@ -19,16 +19,11 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionRoomEdit").scrollIntoView()
 
 		// Populate edit form
-		document.getElementById("formRoomEdit").querySelector("input[name=roomID]").value =
-			this.getAttribute("data-roomid") // Pass roomID to hidden input
-		document.getElementById("formRoomEdit").querySelector("input[name=roomName]").value =
-			this.getAttribute("data-roomname")
-		document.getElementById("formRoomEdit").querySelector("input[name=theme]").value =
-			this.getAttribute("data-theme")
-		document.getElementById("formRoomEdit").querySelector("input[name=capacity]").value =
-			this.getAttribute("data-maxcapacity")
+		document.getElementById("formRoomEdit").querySelector("input[name=roomID]").value = this.getAttribute("data-roomid") // Pass roomID to hidden input
+		document.getElementById("formRoomEdit").querySelector("input[name=roomName]").value = this.getAttribute("data-roomname")
+		document.getElementById("formRoomEdit").querySelector("input[name=theme]").value = this.getAttribute("data-theme")
+		document.getElementById("formRoomEdit").querySelector("input[name=maxCapacity]").value = this.getAttribute("data-maxcapacity")
 		// Select the correct option for level
-		document.getElementById("formRoomEdit").querySelector("select[name=level]").value =
-			this.getAttribute("data-level")
+		document.getElementById("formRoomEdit").querySelector("select[name=level]").value = this.getAttribute("data-level")
 	})
 })

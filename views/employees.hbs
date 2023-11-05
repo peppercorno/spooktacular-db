@@ -4,13 +4,18 @@
 	<section>
 		<h1>Employees</h1>
 
-		{{#if employeeAdded}}
+		{{#ifCond success "===" "added"}}
 			{{> notification centered="true" type="success" message="Employee successfully added!"}}
-		{{/if}}
+		{{/ifCond}}
 
-		{{#if employeeDeleted}}
+		{{#ifCond success "===" "edited"}}
+			{{> notification centered="true" type="success" message="Employee successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
 			{{> notification centered="true" type="success" message="Employee successfully deleted."}}
-		{{/if}}
+		{{/ifCond}}
+
 
 		<table>
 			<thead>
@@ -61,7 +66,7 @@
 		</table>
 		<button id="buttonEmployeeAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
-	<section id="sectionEmployeeAdd" class="display-none">
+	<section id="sectionEmployeeAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Employee</h1>
 		<form method="POST" action="/employees/add" id="formEmployeeAdd">
 			<div class="form-field">
@@ -100,37 +105,37 @@
 			</div>
 		</form>
 	</section>
-	<section id="sectionEmployeeEdit" class="display-none">
+	<section id="sectionEmployeeEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Employee</h1>
 		<form method="POST" id="formEmployeeEdit">
 			<input type="text" name="employeeID" hidden/>
 			<div class="form-field">
 				<label class="form-label">First Name</label>
-				<input type="text" name="firstName" />
+				<input type="text" name="firstName" value="{{employeeBeingEdited.firstName}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Last Name</label>
-				<input type="text" name="lastName" />
+				<input type="text" name="lastName" value="{{employeeBeingEdited.lastName}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Email</label>
-				<input type="text" name="email" />
+				<input type="text" name="email" value="{{employeeBeingEdited.email}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Job Title</label>
-				<input type="text" name="jobTitle" />
+				<input type="text" name="jobTitle" value="{{employeeBeingEdited.jobTitle}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Start Date</label>
-				<input type="date" name="startDate" />
+				<input type="date" name="startDate" value="{{employeeBeingEdited.startDate}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">End Date</label>
-				<input type="date" name="endDate" />
+				<input type="date" name="endDate" value="{{employeeBeingEdited.endDate}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Salary</label>
-				<input type="text" name="salary" />
+				<input type="text" name="salary" value="{{employeeBeingEdited.salary}}"/>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "edit"}}

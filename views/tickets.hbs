@@ -4,13 +4,17 @@
 	<section>
 		<h1>Tickets</h1>
 
-		{{#if ticketAdded}}
-			{{> notification centered="true" type="success" message="Ticket added successfully!"}}
-		{{/if}}
+		{{#ifCond success "===" "added"}}
+			{{> notification centered="true" type="success" message="Ticket successfully added!"}}
+		{{/ifCond}}
 
-		{{#if ticketDeleted}}
+		{{#ifCond success "===" "edited"}}
+			{{> notification centered="true" type="success" message="Ticket successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
 			{{> notification centered="true" type="success" message="Ticket successfully deleted."}}
-		{{/if}}
+		{{/ifCond}}
 
 		<table>
 			<thead>
@@ -42,7 +46,7 @@
 		</table>
 		<button id="buttonTicketAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
-	<section id="sectionTicketAdd" class="display-none">
+	<section id="sectionTicketAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Ticket</h1>
 		<form method="POST" action="/tickets/add" id="formTicketAdd">
 			<div class="form-field">

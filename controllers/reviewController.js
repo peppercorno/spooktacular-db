@@ -7,6 +7,7 @@ const Room = require("../models/Room")
 exports.render = async (req, res) => {
 	// Get all reviews
 	let reviews = await Review.findAll()
+	let reviewBeingEdited = ""
 
 	// For dropdown menus: Get names for Customers and Rooms
 	let customers = await Customer.findFullNames()
@@ -20,12 +21,14 @@ exports.render = async (req, res) => {
 	// Errors from 'add' form
 	if (error && req.query.error === "add") error.section = "add"
 	// Errors from 'edit' form
-	if (error && req.query.error === "edit") error.section = "edit"
+	if (error && req.query.error === "edit") {
+		reviewBeingEdited = await Review.findById(req.query.id)
+		error.section = "edit"
+	}
 
 	// Whether to show notification above table
-	let reviewAdded = req.query.added
-	let reviewDeleted = req.query.removed
+	let success = req.query.success
 
 	// Render view
-	res.render("reviews", { reviews, customers, rooms, error, reviewAdded, reviewDeleted })
+	res.render("reviews", { reviews, customers, rooms, error, success, reviewBeingEdited })
 }

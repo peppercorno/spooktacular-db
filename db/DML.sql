@@ -90,6 +90,15 @@ INNER JOIN Customers ON Customers.CustomerID = Reviews.customerID
 LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID 
 ORDER BY creationDate DESC;
 
+-- Get one Review row by reviewID, along with associated Customer and Room information
+SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, 
+    CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, 
+    Rooms.name AS roomName 
+FROM Reviews 
+INNER JOIN Customers ON Customers.CustomerID = Reviews.customerID 
+LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID 
+WHERE Reviews.reviewID = :reviewID;
+
 -- Add a new Review
 INSERT INTO Reviews (customerID, roomID, rating, text, creationDate)
 VALUES (:customerID, :roomID, :rating, :text, NOW()); -- Use the current date and time

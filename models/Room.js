@@ -48,6 +48,24 @@ class Room {
 			})
 		})
 	}
+
+	// Read: get one row by roomID
+	static findById(roomID) {
+		return new Promise(resolve => {
+			dbConnection.query(`SELECT * FROM Rooms WHERE roomID = ${roomID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
+
+				// res is an array. Create new class instance using data from first item in array
+				let room = new this(res[0].roomID, res[0].name, res[0].theme, res[0].maxCapacity, res[0].level)
+
+				resolve(room)
+			})
+		})
+	}
 }
 
 module.exports = Room
