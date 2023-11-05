@@ -108,7 +108,7 @@
 	<section id="sectionEmployeeEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Employee</h1>
 		<form method="POST" id="formEmployeeEdit">
-			<input type="text" name="employeeID" hidden/>
+			<input type="text" name="employeeID" value="{{employeeBeingEdited.employeeID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">First Name</label>
 				<input type="text" name="firstName" value="{{employeeBeingEdited.firstName}}"/>

@@ -134,7 +134,7 @@
 	<section id="sectionInventoryItemEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Inventory Item</h1>
 		<form method="POST" id="formInventoryItemEdit">
-			<input type="text" name="itemID" hidden/>
+			<input type="text" name="itemID" value="{{itemBeingEdited.itemID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
 				<input type="text" name="itemName" value="{{itemBeingEdited.name}}"/>

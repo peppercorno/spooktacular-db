@@ -75,7 +75,7 @@
 			Change base price for the year <span id="admissionPriceYear">{{priceBeingEdited.year}}</span>
 		</h2>
 		<form method="POST" id="formAdmissionPriceEdit">
-			<input type="text" name="priceID" hidden/>
+			<input type="text" name="priceID" value="{{priceBeingEdited.priceID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label" class="form-label">Base Price</label>
 				<input type="text" name="basePrice" value="{{priceBeingEdited.basePrice}}"/>

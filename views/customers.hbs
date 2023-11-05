@@ -83,7 +83,7 @@
 	<section id="sectionCustomerEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Customer</h1>
 		<form method="POST" action="/customers/edit" id="formCustomerEdit">
-			<input type="text" name="customerID" hidden/>
+			<input type="text" name="customerID" value="{{customerBeingEdited.customerID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label" class="form-label">First Name</label>
 				<input type="text" name="firstName" value="{{customerBeingEdited.firstName}}"/>

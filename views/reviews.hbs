@@ -115,7 +115,7 @@
 			Review created on <span id="reviewCreationDate">{{reviewBeingEdited.creationDate}}</span>
 		</h2>
 		<form method="POST" id="formReviewEdit">
-			<input type="text" name="reviewID" hidden/>
+			<input type="text" name="reviewID" value="{{reviewBeingEdited.reviewID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label" class="form-label">By Customer</label>
 				<select name="customer" value="{{reviewBeingEdited.customerID}}">
