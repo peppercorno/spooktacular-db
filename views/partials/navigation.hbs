@@ -1,26 +1,26 @@
 <nav>
-	<a href='/' class='nav-item {{#if home }}selected{{/if}}'>
+	<a href='/' class='nav-item {{#ifCond this.currentView '===' 'home'}}selected{{/ifCond}}'>
 		Home <i class='fa fa-bugs'></i>
 	</a>
-	<a href='/customers' class='nav-item {{#if customers }}selected{{/if}}'>
+	<a href='/customers' class='nav-item {{#ifCond this.currentView '===' 'customers'}}selected{{/ifCond}}'>
 		Customers <i class='fa fa-ghost'></i>
 	</a>
-	<a href='/admission-prices' class='nav-item {{#if admissionPrices }}selected{{/if}}'>
+	<a href='/admission-prices' class='nav-item {{#ifCond this.currentView '===' 'admissionPrices'}}selected{{/ifCond}}'>
 		Admission Prices <i class='fa fa-money-check'></i>
 	</a>
-	<a href='/tickets' class='nav-item {{#if tickets }}selected{{/if}}'>
+	<a href='/tickets' class='nav-item {{#ifCond this.currentView '===' 'tickets'}}selected{{/ifCond}}'>
 		Tickets <i class='fa fa-ticket'></i>
 	</a>
-	<a href='/rooms' class='nav-item {{#if rooms }}selected{{/if}}'>
+	<a href='/rooms' class='nav-item {{#ifCond this.currentView '===' 'rooms'}}selected{{/ifCond}}'>
 		Rooms <i class='fa fa-broom'></i>
 	</a>
-	<a href='/inventory-items' class='nav-item {{#if inventoryItems }}selected{{/if}}'>
+	<a href='/inventory-items' class='nav-item {{#ifCond this.currentView '===' 'inventoryItems'}}selected{{/ifCond}}'>
 		Inventory Items <i class='fa fa-hat-wizard'></i>
 	</a>
-	<a href='/reviews' class='nav-item {{#if reviews }}selected{{/if}}'>
+	<a href='/reviews' class='nav-item {{#ifCond this.currentView '===' 'reviews'}}selected{{/ifCond}}'>
 		Reviews <i class='fa fa-book-skull'></i>
 	</a>
-	<a href='/employees' class='nav-item {{#if employees }}selected{{/if}}'>
+	<a href='/employees' class='nav-item {{#ifCond this.currentView '===' 'employees'}}selected{{/ifCond}}'>
 		Employees <i class='fa fa-skull-crossbones'></i>
 	</a>
 </nav>
