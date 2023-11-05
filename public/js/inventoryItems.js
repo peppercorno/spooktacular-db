@@ -1,5 +1,8 @@
 // When 'add new' button is clicked, show 'add' section
 document.getElementById("buttonInventoryItemAdd").addEventListener("click", function (event) {
+	// Hide section with edit form
+	document.getElementById("sectionInventoryItemEdit").classList.add("display-none")
+
 	// Show section with add form, scroll down to it
 	document.getElementById("sectionInventoryItemAdd").classList.toggle("display-none")
 	document.getElementById("sectionInventoryItemAdd").scrollIntoView()
@@ -8,6 +11,9 @@ document.getElementById("buttonInventoryItemAdd").addEventListener("click", func
 // When 'edit' button in table is clicked, show 'edit' section
 document.querySelectorAll(".table-button.edit").forEach(function (el) {
 	el.addEventListener("click", function () {
+		// Hide section with add form
+		document.getElementById("sectionInventoryItemAdd").classList.add("display-none")
+
 		// Show section with edit form, scroll down to it
 		document.getElementById("sectionInventoryItemEdit").classList.remove("display-none")
 		document.getElementById("sectionInventoryItemEdit").scrollIntoView()

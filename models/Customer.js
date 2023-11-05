@@ -41,6 +41,27 @@ class Customer {
 		})
 	}
 
+	// Read: get all rows, customerID and full name only, for dropdown menus
+	static findFullNames() {
+		return new Promise(resolve => {
+			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
+
+			dbConnection.query(sqlQuery, (err, rows) => {
+				if (err) {
+					console.error(err)
+					resolve([]) // No customer rows
+					return
+				}
+
+				let customers = []
+				for (let row of rows) {
+					customers.push(new this(row.customerID, row.firstName, row.lastName, ""))
+				}
+				resolve(customers)
+			})
+		})
+	}
+
 	// Read: get one row by customerID
 	static findById(customerID) {
 		return new Promise(resolve => {

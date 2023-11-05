@@ -1,5 +1,8 @@
 // When 'add new' button is clicked, show 'add' section
 document.getElementById("buttonReviewAdd").addEventListener("click", function (event) {
+	// Hide section with edit form
+	document.getElementById("sectionReviewEdit").classList.add("display-none")
+
 	// Show section with add form, scroll down to it
 	document.getElementById("sectionReviewAdd").classList.toggle("display-none")
 	document.getElementById("sectionReviewAdd").scrollIntoView()
@@ -8,6 +11,9 @@ document.getElementById("buttonReviewAdd").addEventListener("click", function (e
 // When 'edit' button in table is clicked, show 'edit' section
 document.querySelectorAll(".table-button.edit").forEach(function (el) {
 	el.addEventListener("click", function () {
+		// Hide section with add form
+		document.getElementById("sectionReviewAdd").classList.add("display-none")
+
 		// Show section with edit form, scroll down to it
 		document.getElementById("sectionReviewEdit").classList.remove("display-none")
 		document.getElementById("sectionReviewEdit").scrollIntoView()
