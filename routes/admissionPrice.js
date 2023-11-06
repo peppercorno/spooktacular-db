@@ -4,11 +4,8 @@ const admissionPriceController = require("../controllers/admissionPriceControlle
 
 // Routes
 router.get("/", admissionPriceController.render)
-
-// router.post("/add", admissionPriceController.add) // Create new Admission Price
-
-// router.get('/update/:id', admissionPriceController.findById)  // Get Admission Price data for update form
-// router.post('/update/:id', admissionPriceController.update)   // Update Admission Price
-// router.delete('/delete/:id', admissionPriceController.delete);   // Delete an Admission Price
+router.post("/add", admissionPriceController.add) // Create new Admission Price
+router.post("/edit", admissionPriceController.edit) // Edit Admission Price
+// router.post("/delete/:id", customerController.delete) // Delete an Admission Price
 
 module.exports = router

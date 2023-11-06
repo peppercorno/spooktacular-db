@@ -43,6 +43,62 @@ class AdmissionPrice {
 			})
 		})
 	}
+
+	// Create or Update
+	save() {
+    	return new Promise(resolve => {
+        	// Determine whether we are creating or updating
+        	if (this.priceID === undefined || this.priceID === null) {
+            	// Create
+            	if (this.year.length === 0) throw new Error("admission.add.yearmissing");
+            	// Add other validation rules as needed
+
+            	if (this.basePrice.length === 0) throw new Error("admission.add.basepricemissing");
+            	// Add other validation rules as needed
+
+            	// TODO: Add email validation using regex if needed
+
+            	dbConnection.query(`INSERT INTO AdmissionPrices (year, basePrice) VALUES ('${this.year}', '${this.basePrice}')`, (err, res) => {
+                	if (err) {
+                    	console.error(err);
+                    	throw new Error("admission.sql");
+                	}
+                	resolve(this);
+            	});
+        	} else {
+            	// Update
+            	if (this.year.length === 0) throw new Error("admission.edit.yearmissing");
+
+            	if (this.basePrice.length === 0) throw new Error("admission.edit.basepricemissing");
+
+            	// TODO: Add email validation using regex
+
+            	dbConnection.query("UPDATE AdmissionPrices SET year = ?, basePrice = ? WHERE priceID = ?", [this.year, this.basePrice, this.priceID], (err, res) => {
+                	if (err) {
+                    	console.error(err);
+                    	throw new Error("admission-prices.sql");
+               		}
+                	resolve(this);
+            	});
+        	}
+    	});
+	}
+
+	// Delete
+	delete(priceID) {
+    	return new Promise(resolve => {
+        	// TODO: Handle errors if this row is a parent row
+
+        	dbConnection.query(`DELETE FROM AdmissionPrices WHERE priceID = ${priceID}`, (err, res) => {
+            	if (err) {
+                	console.error(err);
+                	throw new Error("admission.sql");
+            	}
+
+            	resolve(this);
+        	});
+    	});
+  	}
 }
 
 module.exports = AdmissionPrice

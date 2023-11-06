@@ -52,7 +52,7 @@
 	</section>
 	<section id="sectionPriceAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Admission Price</h1>
-		<form method="POST" action="/" id="formAdmissionPriceAdd">
+		<form method="POST" action="/admission-prices/add" id="formAdmissionPriceAdd">
 			<div class="form-field">
 				<label class="form-label" class="form-label">Year</label>
 				<input type="text" name="year" />
@@ -74,7 +74,7 @@
 		<h2 class="form-subtitle">
 			Change base price for the year <span id="admissionPriceYear">{{priceBeingEdited.year}}</span>
 		</h2>
-		<form method="POST" id="formAdmissionPriceEdit">
+		<form method="POST" action="/admission-prices/edit" id="formAdmissionPriceEdit">
 			<input type="text" name="priceID" value="{{priceBeingEdited.priceID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label" class="form-label">Base Price</label>
