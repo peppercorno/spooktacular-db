@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS AdmissionPrices (
 ) ENGINE = InnoDB;
 
 -- Create Tickets table
--- dateFirstEntry defaults to epoch time
 -- M:1 mandatory relationship with Customers
 -- M:1 mandatory relationship with AdmissionPrices
 CREATE TABLE IF NOT EXISTS Tickets (
@@ -38,7 +37,6 @@ CREATE TABLE IF NOT EXISTS Tickets (
     priceID int NOT NULL,
     quantity int NOT NULL DEFAULT 1,
     purchaseDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    entryDate datetime DEFAULT '1970-01-01 07:30:00',
     FOREIGN KEY (customerID) REFERENCES Customers(customerID) ON DELETE RESTRICT,
     FOREIGN KEY (priceID) REFERENCES AdmissionPrices(priceID) ON DELETE RESTRICT
 ) ENGINE = InnoDB;
@@ -172,13 +170,13 @@ INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES
         4
     );
 
--- NOTE: Usually we would let the DB automatically fill 'purchaseDate' and 'entryDate' with default values, but here, we want to seed data from past years.
-INSERT INTO Tickets (customerID, priceID, quantity, purchaseDate, entryDate) VALUES
-    (1, 1, 2, "2021-10-05 11:32:12", "2021-10-17 07:44:01"),
-    (2, 2, 1, "2022-09-22 15:21:03", "2022-10-08 18:48:14"),
-    (3, 2, 3, "2022-09-28 09:40:10", "2022-10-12 17:58:21"),
-    (4, 3, 1, "2023-10-01 18:33:10", "2023-10-01 18:36:02"),
-    (1, 3, 1, "2023-09-25 23:15:40", "2023-10-01 20:30:05");
+-- NOTE: Usually we would let the DB automatically fill 'purchaseDate' with a default value, but here, we want to seed data from past years.
+INSERT INTO Tickets (customerID, priceID, quantity, purchaseDate) VALUES
+    (1, 1, 2, "2021-10-05 11:32:12"),
+    (2, 2, 1, "2022-09-22 15:21:03"),
+    (3, 2, 3, "2022-09-28 09:40:10"),
+    (4, 3, 1, "2023-10-01 18:33:10"),
+    (1, 3, 1, "2023-09-25 23:15:40");
 
 INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate, salary) VALUES 
     (

@@ -19,12 +19,12 @@
 		<table>
 			<thead>
 				<tr>
-					<th>ticketID</th>
-					<th>customerID</th>
-					<th>priceID</th>
-					<th>quantity</th>
-					<th>purchaseDate</th>
-					<th>entryDate</th>
+					<th>ID</th>
+					<th>Customer</th>
+					<th>Quantity</th>
+					<th>Unit Price</th>
+					<th>Total Price</th>
+					<th>Purchase Date</th>
 					<th class="col-table-button"></th>
 				</tr>
 			</thead>
@@ -32,11 +32,11 @@
 				{{#each tickets}}
 				<tr>
 					<td>{{this.ticketID}}</td>
-					<td>{{this.customerID}}</td>
-					<td>{{this.priceID}}</td>
+					<td>{{this.customerFullName}}</td>
 					<td>{{this.quantity}}</td>
+					<td>${{this.unitPrice}}</td>
+					<td>${{this.totalPrice}}</td>
 					<td>{{this.purchaseDate}}</td>
-					<td>{{this.entryDate}}</td>
 					<td>
 						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
 					</td>
