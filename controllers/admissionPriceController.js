@@ -1,6 +1,7 @@
 // Get model
 const AdmissionPrice = require("../models/AdmissionPrice")
 
+
 // Render AdmissionPrices view
 exports.render = async (req, res) => {
 	// Get all admission prices

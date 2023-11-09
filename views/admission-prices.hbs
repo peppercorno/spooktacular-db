@@ -77,6 +77,10 @@
 		<form method="POST" action="/admission-prices/edit" id="formAdmissionPriceEdit">
 			<input type="text" name="priceID" value="{{priceBeingEdited.priceID}}" hidden/>
 			<div class="form-field">
+				<label class="form-label" class="form-label">Year</label>
+				<input type="text" name="year" value="{{yearBeingEdited.year}}"/>
+			</div>
+			<div class="form-field">
 				<label class="form-label" class="form-label">Base Price</label>
 				<input type="text" name="basePrice" value="{{priceBeingEdited.basePrice}}"/>
 			</div>
