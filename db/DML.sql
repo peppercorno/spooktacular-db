@@ -7,13 +7,17 @@
 Admission Prices
 ------------------------------*/
 -- For table: Get all Admission Price rows
-SELECT priceID, year, basePrice FROM AdmissionPrices;
+SELECT * FROM AdmissionPrices;
 
 -- Add a new Admission Price 
 INSERT INTO AdmissionPrices (year, basePrice) 
 VALUES (:yearInput, :basePriceInput);
 
--- Update existing Admission Price
+-- To populate update form fields:
+-- Get one Admission Price row by priceID
+SELECT * FROM AdmissionPrices WHERE priceID = :priceIDToUpdate;
+
+-- Update existing Admission Price (only allow basePrice to be updated, not year)
 UPDATE AdmissionPrices SET basePrice = :newBasePriceInput 
 WHERE priceID = :priceIDToUpdate;
 
@@ -24,13 +28,17 @@ DELETE FROM AdmissionPrices WHERE priceID = :priceIDToDelete;
 Customers
 ------------------------------*/
 -- For table: Get all Customer rows
-SELECT customerID, firstName, lastName, email FROM Customers;
+SELECT * FROM Customers;
 
 -- For dropdown menus: Get all Customer rows-- customerID and name-related details only
 SELECT customerID, firstName, lastName FROM Customers ORDER BY customerID ASC;
 
 -- Add a new Customer
 INSERT INTO Customers (firstName, lastName, email) VALUES (:newFirstName, :newLastName, :newEmail);
+
+-- To populate update form fields:
+-- Get one Customer row by customerID
+SELECT * FROM Customers WHERE customerID = :customerIDToUpdate;
 
 -- Update a new Customer
 UPDATE Customers SET firstName = :newFirstName, lastName = :newLastName, email = :newEmail WHERE customerID = :customerIDToUpdate;
@@ -42,7 +50,7 @@ DELETE FROM Customers WHERE customerID = :customerIDToDelete;
 Employees
 ------------------------------*/
 -- For table: Get all Employee rows
-SELECT employeeID, firstName, lastName, email, jobTitle, startDate, endDate, salary FROM Employees;
+SELECT * FROM Employees;
 
 -- For dropdown menus: Get all Employee rows-- employeeID and name-related details only
 SELECT employeeID, firstName, lastName FROM Employees ORDER BY employeeID ASC;
@@ -50,6 +58,10 @@ SELECT employeeID, firstName, lastName FROM Employees ORDER BY employeeID ASC;
 -- Add a new Employee
 INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate, salary)
 VALUES (:newFirstName, :newLastName, :newEmail, :newJobTitle, :newStartDate, :newEndDate, :newSalary);
+
+-- To populate update form fields:
+-- Get one Employee row by employeeID
+SELECT * FROM Employees WHERE employeeID = :employeeIDToUpdate;
 
 -- Update an Employee
 UPDATE Employees
@@ -68,25 +80,30 @@ SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, Invent
 FROM InventoryItems
 LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;
 
--- For update form after an error notification:
+-- To populate update form fields:
 -- Get one Inventory Item row by itemID, along with associated Room data
-SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, Rooms.name AS roomName
+SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, 
+	Rooms.name AS roomName
 FROM InventoryItems 
 LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID; 
 WHERE InventoryItems.itemID = :itemID;
 
+-- For the dropdown menu: get associated Employees from intersection table to know which select options to mark as selected
+SELECT InventoryItems_Employees.employeeID, CONCAT(Employees.firstName, ' ', Employees.lastName) as EmployeeFullName 
+FROM InventoryItems_Employees 
+INNER JOIN Employees ON InventoryItems_Employees.employeeID = Employees.employeeID
+WHERE itemID = :itemIDToUpdate;
+
 -- Add a new Inventory Item
 INSERT INTO InventoryItems (name, roomID, itemCondition)
 VALUES (:newName, :newRoomID, :newItemCondition);
--- At the same time, update intersection table InventoryItems_Employees
--- Use a loop in JS to perform as many inserts as there are Employees being associated with the Inventory Item:
-INSERT INTO InventoryItems_Employees (itemID, employeeID)
-VALUES (:itemID, :employeeID);
+-- At the same time, if relevant, add or update intersection table InventoryItems_Employees (see next section). Use a JS loop to perform add or update.
 
 -- Update an Inventory Item
 UPDATE InventoryItems
 SET name = :newName, roomID = :newRoomID, itemCondition = :newItemCondition
 WHERE itemID = :itemIDToUpdate;
+-- At the same time, if relevant, update intersection table InventoryItems_Employees
 
 -- Delete an Inventory Item
 DELETE FROM InventoryItems WHERE itemID = :itemIDToDelete;
@@ -95,9 +112,13 @@ DELETE FROM InventoryItems WHERE itemID = :itemIDToDelete;
 InventoryItems_Employees
 ------------------------------*/
 -- For table: get all InventoryItems_Employees rows
-SELECT itemID, employeeID FROM InventoryItems_Employees;
+SELECT * FROM InventoryItems_Employees;
 
--- NOTE: Add is shown in line 83. No Update.
+-- Add a relationship between Inventory Items and Employees
+INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:itemID, :employeeID);
+
+-- Update a relationship by itemID
+UPDATE InventoryItems_Employees SET employeeID = :newEmployeeID WHERE itemID = :itemIDToUpdate;
 
 -- Delete a relationship between Inventory Items and Employees
 DELETE FROM InventoryItems_Employees WHERE (itemID = :itemIDToDelete AND employeeID = :employeeIDToDelete);
@@ -115,7 +136,7 @@ INNER JOIN Customers ON Customers.CustomerID = Reviews.customerID
 LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID 
 ORDER BY creationDate DESC;
 
--- For update form after an error notification:
+-- To populate update form fields
 -- Get one Review row by reviewID, along with associated Customer and Room data
 SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, 
     CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, 
@@ -141,14 +162,18 @@ DELETE FROM Reviews WHERE reviewID = :reviewIDToDelete;
 Rooms
 ------------------------------*/
 -- For table: Get all Room rows
-SELECT roomID, name, theme, maxCapacity, level FROM Rooms;
+SELECT * FROM Rooms;
 
--- For dropdown menus: Get all Room rows-- roomID and name only
+-- For dropdown menus: Get all Room rows-- roomID and name only. Order by name.
 SELECT roomID, name FROM Rooms ORDER BY name ASC;
 
 -- Add a new Room
 INSERT INTO Rooms (name, theme, maxCapacity, level)
 VALUES (:name, :theme, :maxCapacity, :level);
+
+-- To populate update form fields:
+-- Get one Room row by roomID
+SELECT * FROM Rooms WHERE roomID = :roomIDToUpdate;
 
 -- Update a Room
 UPDATE Rooms
@@ -171,14 +196,22 @@ INNER JOIN Customers ON Customers.CustomerID = Tickets.customerID
 INNER JOIN AdmissionPrices ON AdmissionPrices.priceID = Tickets.priceID
 ORDER BY purchaseDate DESC;
 
+-- To populate update form fields
+-- Get one Ticket row by ticketID, along with associated Customer and Room data
+SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate,
+    CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
+    AdmissionPrices.basePrice AS unitPrice,
+    (AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice
+FROM Tickets
+INNER JOIN Customers ON Customers.CustomerID = Tickets.customerID 
+INNER JOIN AdmissionPrices ON AdmissionPrices.priceID = Tickets.priceID
+WHERE Tickets.ticketID = :ticketID;
+
 -- Add a new Ticket
 INSERT INTO Tickets (customerID, priceID, quantity)
 VALUES (:customerID, :priceID, :quantity);
 
--- Update a Ticket
-UPDATE Tickets
-SET customerID = :customerID, priceID = :priceID, quantity = :quantity
-WHERE ticketID = :ticketIDToUpdate;
+-- No update as we are not allowing users to update tickets
 
 -- Delete a Ticket
 DELETE FROM Tickets WHERE ticketID = :ticketIDToDelete;

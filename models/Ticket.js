@@ -18,7 +18,8 @@ class Ticket {
 	// Read: get all rows
 	static findAll() {
 		return new Promise(resolve => {
-			let sqlQuery = "SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
+			let sqlQuery =
+				"SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "AdmissionPrices.basePrice AS unitPrice, "
 			sqlQuery += "(AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice "
@@ -39,7 +40,18 @@ class Ticket {
 					// Format date
 					let purchaseDate = moment(row.purchaseDate).format("MMM D YYYY, h:mm A")
 
-					tickets.push(new this(row.ticketID, row.customerID, row.customerFullName, row.priceID, row.unitPrice, row.totalPrice, row.quantity, purchaseDate))
+					tickets.push(
+						new this(
+							row.ticketID,
+							row.customerID,
+							row.customerFullName,
+							row.priceID,
+							row.unitPrice,
+							row.totalPrice,
+							row.quantity,
+							purchaseDate
+						)
+					)
 				}
 				resolve(tickets)
 			})
@@ -60,7 +72,16 @@ class Ticket {
 				let purchaseDate = moment(res[0].purchaseDate).format("MMM D YYYY, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
-				let ticket = new this(res[0].ticketID, res[0].customerID, res[0].customerFullName, res[0].priceID, res[0].unitPrice, res[0].totalPrice, res[0].quantity, purchaseDate)
+				let ticket = new this(
+					res[0].ticketID,
+					res[0].customerID,
+					res[0].customerFullName,
+					res[0].priceID,
+					res[0].unitPrice,
+					res[0].totalPrice,
+					res[0].quantity,
+					purchaseDate
+				)
 
 				resolve(ticket)
 			})
