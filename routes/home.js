@@ -1,10 +1,14 @@
 const express = require("express")
 const router = express.Router()
 
-// Routes
+const homeController = require("../controllers/homeController")
+
+// Show index page
 router.get("/", (req, res) => {
-	// Show index page
 	res.render("index")
 })
+
+// Button to reset database
+router.get("/reset-db", homeController.resetDB)
 
 module.exports = router

@@ -43,7 +43,6 @@ class Customer {
 				for (let row of rows) {
 					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email, row.hasChildRows))
 				}
-				console.log(customers)
 				resolve(customers)
 			})
 		})
