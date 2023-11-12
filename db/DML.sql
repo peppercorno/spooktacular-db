@@ -85,11 +85,11 @@ LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;
 SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, 
 	Rooms.name AS roomName
 FROM InventoryItems 
-LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID; 
+LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID
 WHERE InventoryItems.itemID = :itemID;
 
 -- For the dropdown menu: get associated Employees from intersection table to know which select options to mark as selected
-SELECT InventoryItems_Employees.employeeID, CONCAT(Employees.firstName, ' ', Employees.lastName) as EmployeeFullName 
+SELECT InventoryItems_Employees.employeeID, CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName 
 FROM InventoryItems_Employees 
 INNER JOIN Employees ON InventoryItems_Employees.employeeID = Employees.employeeID
 WHERE itemID = :itemIDToUpdate;
@@ -111,8 +111,13 @@ DELETE FROM InventoryItems WHERE itemID = :itemIDToDelete;
 /*------------------------------
 InventoryItems_Employees
 ------------------------------*/
--- For table: get all InventoryItems_Employees rows
-SELECT * FROM InventoryItems_Employees;
+-- For table: get all InventoryItems_Employees rows and associated names from InventoryItems and Employees
+SELECT InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, 
+    InventoryItems.name AS itemName, 
+    CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName 
+FROM InventoryItems_Employees
+INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.itemID 
+INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;
 
 -- Add a relationship between Inventory Items and Employees
 INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:itemID, :employeeID);

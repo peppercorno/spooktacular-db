@@ -286,6 +286,7 @@ table form {
 	color: #616161;
 }
 
+label.disabled,
 .form-label.disabled {
 	opacity: 0.2;
 }
