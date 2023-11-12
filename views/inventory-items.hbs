@@ -5,8 +5,8 @@
 		<header class="header-row">
 			<h1>Inventory Items</h1>
 			<div class="filter-wrapper">
-				<label>Filter by room</label>
-				<select id="">
+				<label class="disabled">Filter by room</label>
+				<select id="" disabled>
 					<option></option>
 				</select>
 			</div>
@@ -27,10 +27,10 @@
 		<table>
 			<thead>
 				<tr>
-					<th>itemID</th>
-					<th>roomID</th>
-					<th>name</th>
-					<th>itemCondition</th>
+					<th>ID</th>
+					<th>Room</th>
+					<th>Name</th>
+					<th>Item Condition</th>
 					<th class="col-table-button"></th>
 					<th class="col-table-button"></th>
 				</tr>
@@ -39,13 +39,14 @@
 				{{#each inventoryItems}}
 				<tr>
 					<td>{{this.itemID}}</td>
-					<td>{{this.roomID}}</td>
+					<td>{{this.roomName}}</td>
 					<td>{{this.name}}</td>
 					<td>{{this.itemCondition}}</td>
 					<td>
 						<button class="table-button edit" 
 						data-itemid="{{this.itemID}}"
 						data-roomid="{{this.roomID}}"
+						data-roomname="{{this.roomName}}"
 						data-itemname="{{this.name}}"
 						data-itemcondition="{{this.itemCondition}}"
 						type="button"><i class="fa fa-pen-to-square"></i></button>
@@ -63,8 +64,8 @@
 	<section>
 		<h1>Employees Responsible for Inventory Items</h1>
 		<div class="filter-wrapper">
-			<label>Filter by employee</label>
-			<select id="">
+			<label class="disabled">Filter by employee</label>
+			<select id="" disabled>
 				<option></option>
 			</select>
 		</div>
@@ -78,8 +79,8 @@
 			<tbody>
 				{{#each inventoryItemsEmployees}}
 				<tr>
-					<td>>{{this.itemName}}</td>
-					<td>>{{this.employeeName}}</td>
+					<td>#{{this.itemID}} - {{this.itemName}}</td>
+					<td>{{this.employeeFullName}}</td>
 				</tr>
 				{{/each}}
 			</tbody>
