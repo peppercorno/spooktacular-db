@@ -30,6 +30,7 @@ exports.render = async (req, res) => {
 		customerBeingEdited = await Customer.findById(req.query.id)
 		error.section = "edit"
 	}
+	if (error && req.query.error === "notdeleted") error.section = "notdeleted"
 
 	// Whether to show notification above table
 	let success = req.query.success

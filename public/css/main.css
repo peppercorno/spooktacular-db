@@ -187,7 +187,7 @@ th.col-long-text {
 	width: 400px;
 }
 th.col-table-button {
-	width: 72px;
+	width: 120px;
 }
 
 /* Alternating table row colors */
@@ -201,7 +201,7 @@ tbody tr:nth-child(odd) {
 
 button.table-button,
 input[type="submit"].table-button {
-	width: 64px;
+	width: 100%;
 	height: 38px;
 	margin: 0;
 	padding: 0;
@@ -244,6 +244,16 @@ input[type="submit"].table-button.delete:hover {
 .icon-delete i {
 	color: #181a1b;
 	font-size: 1.25em;
+}
+
+.text-cannot-delete {
+	font-size: 10px;
+	line-height: 14px;
+	text-align: center;
+	background: #212121;
+	padding: 3px;
+	border-radius: 6px;
+	color: #6b6b6b;
 }
 
 /*-------------------

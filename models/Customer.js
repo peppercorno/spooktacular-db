@@ -15,17 +15,24 @@
 let dbConnection = require("../db-config")
 
 class Customer {
-	constructor(id, firstName, lastName, email) {
+	constructor(id, firstName, lastName, email, hasChildRows) {
 		this.customerID = id
 		this.firstName = firstName
 		this.lastName = lastName
 		this.email = email
+		this.hasChildRows = hasChildRows
 	}
 
 	// Read: get all rows
 	static findAll() {
 		return new Promise(resolve => {
-			dbConnection.query("SELECT * FROM Customers", (err, rows) => {
+			let sqlQuery = "SELECT customerID, firstName, lastName, email, "
+			sqlQuery += "(EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID) "
+			sqlQuery += "OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID)) "
+			sqlQuery += "AS hasChildRows "
+			sqlQuery += "FROM Customers;"
+
+			dbConnection.query(sqlQuery, (err, rows) => {
 				if (err) {
 					console.error(err)
 					resolve([]) // No customer rows
@@ -34,8 +41,9 @@ class Customer {
 
 				let customers = []
 				for (let row of rows) {
-					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email))
+					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email, row.hasChildRows))
 				}
+				console.log(customers)
 				resolve(customers)
 			})
 		})
@@ -55,7 +63,7 @@ class Customer {
 
 				let customers = []
 				for (let row of rows) {
-					customers.push(new this(row.customerID, row.firstName, row.lastName, null))
+					customers.push(new this(row.customerID, row.firstName, row.lastName, null, null))
 				}
 				resolve(customers)
 			})
@@ -73,7 +81,7 @@ class Customer {
 				}
 
 				// res is an array. Create new class instance using data from first item in array
-				let customer = new this(res[0].customerID, res[0].firstName, res[0].lastName, res[0].email)
+				let customer = new this(res[0].customerID, res[0].firstName, res[0].lastName, res[0].email, res[0].hasChildRows)
 
 				resolve(customer)
 			})
@@ -95,13 +103,16 @@ class Customer {
 				if (this.email.length === 0) throw new Error("customer.add.emailmissing")
 				// TODO: Add email validation using regex
 
-				dbConnection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, res) => {
-					if (err) {
-						console.error(err)
-						throw new Error("customer.sql")
+				dbConnection.query(
+					`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`,
+					(err, res) => {
+						if (err) {
+							console.error(err)
+							throw new Error("customer.sql.add")
+						}
+						resolve(this)
 					}
-					resolve(this)
-				})
+				)
 			} else {
 				// Update
 				if (this.firstName.length === 0) throw new Error("customer.edit.firstnamemissing")
@@ -113,13 +124,17 @@ class Customer {
 				if (this.email.length === 0) throw new Error("customer.edit.emailmissing")
 				// TODO: Add email validation using regex
 
-				dbConnection.query("UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?", [this.firstName, this.lastName, this.email, this.customerID], (err, res) => {
-					if (err) {
-						console.error(err)
-						throw new Error("customer.sql")
+				dbConnection.query(
+					"UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?",
+					[this.firstName, this.lastName, this.email, this.customerID],
+					(err, res) => {
+						if (err) {
+							console.error(err)
+							throw new Error("customer.sql.update")
+						}
+						resolve(this)
 					}
-					resolve(this)
-				})
+				)
 			}
 		})
 	}
@@ -132,7 +147,7 @@ class Customer {
 			dbConnection.query(`DELETE FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
 				if (err) {
 					console.error(err)
-					throw new Error("customer.sql")
+					throw new Error("customer.sql.delete")
 				}
 
 				resolve(this)

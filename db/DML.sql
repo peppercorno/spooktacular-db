@@ -7,9 +7,12 @@
 Admission Prices
 ------------------------------*/
 -- For table: Get all Admission Price rows
-SELECT * FROM AdmissionPrices;
+-- Indicate whether each row has any child rows
+SELECT priceID, year, basePrice,
+EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows
+FROM AdmissionPrices;
 
--- Add a new Admission Price 
+-- Add a new Admission Price
 INSERT INTO AdmissionPrices (year, basePrice) 
 VALUES (:yearInput, :basePriceInput);
 
@@ -28,7 +31,12 @@ DELETE FROM AdmissionPrices WHERE priceID = :priceIDToDelete;
 Customers
 ------------------------------*/
 -- For table: Get all Customer rows
-SELECT * FROM Customers;
+-- Indicate whether each row has any child rows
+SELECT customerID, firstName, lastName, email, 
+(EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID)
+    OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID))
+    AS hasChildRows
+FROM Customers;
 
 -- For dropdown menus: Get all Customer rows-- customerID and name-related details only
 SELECT customerID, firstName, lastName FROM Customers ORDER BY customerID ASC;
@@ -167,7 +175,10 @@ DELETE FROM Reviews WHERE reviewID = :reviewIDToDelete;
 Rooms
 ------------------------------*/
 -- For table: Get all Room rows
-SELECT * FROM Rooms;
+-- Indicate whether each row has any child rows
+SELECT roomID, name, theme, maxCapacity, level, 
+EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows
+FROM Rooms;
 
 -- For dropdown menus: Get all Room rows-- roomID and name only. Order by name.
 SELECT roomID, name FROM Rooms ORDER BY name ASC;
@@ -220,3 +231,10 @@ VALUES (:customerID, :priceID, :quantity);
 
 -- Delete a Ticket
 DELETE FROM Tickets WHERE ticketID = :ticketIDToDelete;
+
+
+-- Citation
+-- 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows
+-- Date: 12 Nov 2023
+-- Adapted from URL: https://stackoverflow.com/a/58886829
+-- Author: GMB

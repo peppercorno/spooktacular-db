@@ -9,7 +9,6 @@ exports.render = async (req, res) => {
 
 	// Get all rows from InventoryItems_Employees
 	let inventoryItemsEmployees = await InventoryItemEmployee.findAll()
-	console.log(inventoryItemsEmployees)
 
 	let itemBeingEdited = ""
 

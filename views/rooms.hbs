@@ -48,7 +48,14 @@
 						</button>
 					</td>
 					<td>
-						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
+						{{#ifCond this.hasChildRows "==" "0"}}
+							<form method="DELETE" action="/customers/delete/{{this.customerID}}" class="form-delete">
+								<input type="submit" class="table-button delete" value=""/>
+								<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+							</form>
+						{{else}}
+							<p class="text-cannot-delete">Cannot delete.<br/>Has a Review.</p>
+						{{/ifCond}}
 					</td>
 				</tr>
 				{{/each}}
