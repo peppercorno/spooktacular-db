@@ -1,14 +1,9 @@
-@font-face {
-	font-family: "EuclidCircularB";
-	src: url("../fonts/EuclidCircularB-Regular.woff2") format("woff2");
-}
-
 body {
 	margin: 0;
 	padding: 0;
 	border: 0;
 	font-size: 1em;
-	font-family: "EuclidCircularB";
+	font-family: "Euclid Circular B", sans-serif;
 	background: #181a1b;
 	color: #ffffff;
 	display: flex;
