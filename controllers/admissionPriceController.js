@@ -12,6 +12,8 @@ exports.render = async (req, res) => {
 		// Custom error messages
 		if (req.query.type === "yearmissing") error.message = "Year is required."
 		if (req.query.type === "basepricemissing") error.message = "Base Price is required."
+		if (req.query.type === "yearnan") error.message = "Year must be a number."
+		if (req.query.type === "basepricenan") error.message = "Base Price must be a number."
 	}
 	// Errors from 'add' form
 	if (error && req.query.error === "add") {

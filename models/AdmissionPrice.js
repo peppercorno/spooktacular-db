@@ -54,7 +54,6 @@ class AdmissionPrice {
 
 					// res is an array. Create new class instance using data from first item in array
 					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, null)
-					console.log(admissionPrice)
 
 					resolve(admissionPrice)
 				})
@@ -69,8 +68,10 @@ class AdmissionPrice {
 			if (this.priceID === undefined || this.priceID === null) {
 				// Create
 				if (!this.year || this.year.length === 0) throw new Error("admission.add.yearmissing")
+				if (isNaN(this.year)) throw new Error("admission.add.yearnan")
 
 				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.add.basepricemissing")
+				if (isNaN(this.basePrice)) throw new Error("admission.add.basepricenan")
 
 				let year = parseInt(this.year)
 				let basePrice = parseInt(this.basePrice)
@@ -93,8 +94,10 @@ class AdmissionPrice {
 			} else {
 				// Update
 				if (!this.year || this.year.length === 0) throw new Error("admission.edit.yearmissing")
+				if (isNaN(this.year)) throw new Error("admission.edit.yearnan")
 
 				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.edit.basepricemissing")
+				if (isNaN(this.basePrice)) throw new Error("admission.edit.basepricenan")
 
 				let year = parseInt(this.year)
 				let basePrice = parseInt(this.basePrice)

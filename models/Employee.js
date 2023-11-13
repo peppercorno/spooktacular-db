@@ -31,8 +31,8 @@ class Employee {
 					let employees = []
 					for (let row of rows) {
 						// Format dates
-						let startDate = moment(row.startDate).format("MMM D YYYY")
-						let endDate = moment(row.endDate).format("MMM D YYYY")
+						let startDate = moment(row.startDate).format("YYYY-MM-DD")
+						let endDate = moment(row.endDate).format("YYYY-MM-DD")
 						employees.push(new this(row.employeeID, row.firstName, row.lastName, row.email, row.jobTitle, startDate, endDate, row.salary))
 					}
 					resolve(employees)
@@ -103,13 +103,19 @@ class Employee {
 				if (this.email.length === 0) throw new Error("employee.add.emailmissing")
 				// TODO: Add email validation using regex
 
-				// TODO: Parse startDate and endDate
-				let startDate = this.startDate
-				let endDate = this.endDate
+				if (this.jobTitle.length === 0) throw new Error("employee.add.jobtitlemissing")
+				if (this.salary.length === 0) throw new Error("employee.add.salarymissing")
+				if (isNaN(this.salary)) throw new Error("admission.add.salarynan")
+
+				let salary = parseInt(this.salary)
+
+				// Format startDate and endDate for DB
+				let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
+				let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
 
 				let sqlQuery = "INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate, salary) "
 				sqlQuery += " VALUES ('" + this.firstName + "', '" + this.lastName + "', '" + this.email
-				sqlQuery += "', '" + this.jobTitle + "', '" + startDate + "', '" + endDate + "', " + this.salary + "');"
+				sqlQuery += "', '" + this.jobTitle + "', '" + startDate + "', '" + endDate + "', " + salary + ");"
 
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
@@ -129,7 +135,7 @@ class Employee {
 			} else {
 				// Update
 				if (this.firstName.length === 0) throw new Error("employee.edit.firstnamemissing")
-				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("employee.add.firstnamelength")
+				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("employee.edit.firstnamelength")
 
 				if (this.lastName.length === 0) throw new Error("employee.edit.lastnamemissing")
 				if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("employee.edit.lastNamelength")
@@ -137,20 +143,34 @@ class Employee {
 				if (this.email.length === 0) throw new Error("employee.edit.emailmissing")
 				// TODO: Add email validation using regex
 
+				if (this.jobTitle.length === 0) throw new Error("employee.edit.jobtitlemissing")
+				if (this.salary.length === 0) throw new Error("employee.edit.salarymissing")
+				if (isNaN(this.salary)) throw new Error("admission.edit.salarynan")
+
+				let salary = parseInt(this.salary)
+
+				// Format startDate and endDate for DB
+				let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
+				let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
+
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query("UPDATE Employees SET firstName = ?, lastName = ?, email = ? WHERE employeeID = ?", [this.firstName, this.lastName, this.email, this.employeeID], (err, res) => {
-						connection.release() // When done with the connection, release
+					connection.query(
+						"UPDATE Employees SET firstName = ?, lastName = ?, email = ?, jobTitle = ?, startDate = ?, endDate = ?, salary = ? WHERE employeeID = ?",
+						[this.firstName, this.lastName, this.email, this.jobTitle, startDate, endDate, salary, this.employeeID],
+						(err, res) => {
+							connection.release() // When done with the connection, release
 
-						// If there is an SQL error
-						if (err) {
-							reject(err)
-							return
+							// If there is an SQL error
+							if (err) {
+								reject(err)
+								return
+							}
+
+							resolve(this)
 						}
-
-						resolve(this)
-					})
+					)
 				})
 			}
 		})
@@ -162,7 +182,7 @@ class Employee {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
-				connection.query(`DELETE FROM Customers WHERE employeeID = ${employeeID}`, (err, res) => {
+				connection.query(`DELETE FROM Employees WHERE employeeID = ${employeeID}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
 					// If there is an SQL error

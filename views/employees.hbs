@@ -58,7 +58,10 @@
 						</button>
 					</td>
 					<td>
-						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
+						<form method="DELETE" action="/employees/delete/{{this.employeeID}}" class="form-delete">
+							<input type="submit" class="table-button delete" value=""/>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
 					</td>
 				</tr>
 				{{/each}}
@@ -107,7 +110,7 @@
 	</section>
 	<section id="sectionEmployeeEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Employee</h1>
-		<form method="POST" id="formEmployeeEdit">
+		<form method="POST" action="/employees/edit" id="formEmployeeEdit">
 			<input type="text" name="employeeID" value="{{employeeBeingEdited.employeeID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">First Name</label>
