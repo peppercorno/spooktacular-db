@@ -4,9 +4,7 @@ const router = express.Router()
 const homeController = require("../controllers/homeController")
 
 // Show index page
-router.get("/", (req, res) => {
-	res.render("index")
-})
+router.get("/", homeController.render)
 
 // Button to reset database
 router.get("/reset-db", homeController.resetDB)

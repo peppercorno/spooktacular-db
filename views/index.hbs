@@ -6,10 +6,22 @@
 			<h1>Spooktacular Haunted House</h1>
 			<p>Enter if you dare, our ghostly lair, where spooky sights and chills are everywhere! 👻</p>
 			<p>Please reset the database before poking around!</p>
-
 			<div class="action-button-wrapper">
-				<a href="/reset-db" class="action-button">Reset Database <i class="fa fa-refresh"></i></a>
+				<button class="action-button" onClick="resetDB()" {{#if success}}disabled{{/if}}>Reset Database <i class="fa fa-refresh"></i></button>
+				
+				{{#if success}}
+					{{> notification centered="true" type="success" message="Database successfully reset!"}}
+				{{/if}}
+				{{#if error}}
+					{{> notification centered="true" message="Connection error. Unable to reset database."}}
+				{{/if}}
 			</div>
 		</header>
 	</section>
 </main>
+
+<script>
+	function resetDB() {
+		location.assign('/reset-db');
+	}
+</script>
