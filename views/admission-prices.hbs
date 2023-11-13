@@ -43,7 +43,7 @@
 					</td>
 					<td>
 						{{#ifCond this.hasChildRows "==" "0"}}
-							<form method="DELETE" action="/customers/delete/{{this.customerID}}" class="form-delete">
+							<form method="DELETE" action="/admission-prices/delete/{{this.priceID}}" class="form-delete">
 								<input type="submit" class="table-button delete" value=""/>
 								<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
 							</form>
@@ -78,14 +78,11 @@
 	</section>
 	<section id="sectionPriceEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Admission Price</h1>
-		<h2 class="form-subtitle">
-			Change base price for the year <span id="admissionPriceYear">{{priceBeingEdited.year}}</span>
-		</h2>
 		<form method="POST" action="/admission-prices/edit" id="formAdmissionPriceEdit">
 			<input type="text" name="priceID" value="{{priceBeingEdited.priceID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label" class="form-label">Year</label>
-				<input type="text" name="year" value="{{yearBeingEdited.year}}"/>
+				<input type="text" name="year" value="{{priceBeingEdited.year}}"/>
 			</div>
 			<div class="form-field">
 				<label class="form-label" class="form-label">Base Price</label>

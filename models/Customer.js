@@ -25,15 +25,15 @@ class Customer {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
-			let sqlQuery = "SELECT customerID, firstName, lastName, email, "
-			sqlQuery += "(EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID) "
-			sqlQuery += "OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID)) "
-			sqlQuery += "AS hasChildRows "
-			sqlQuery += "FROM Customers;"
-
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
+
+				let sqlQuery = "SELECT customerID, firstName, lastName, email, "
+				sqlQuery += "(EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID) "
+				sqlQuery += "OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID)) "
+				sqlQuery += "AS hasChildRows "
+				sqlQuery += "FROM Customers;"
 
 				connection.query(sqlQuery, (err, rows) => {
 					connection.release() // When done with the connection, release
@@ -56,11 +56,11 @@ class Customer {
 
 	// Read: get all rows for dropdown menus. Limit to CustomerID and name details only.
 	static findFullNames() {
-		return new Promise(resolve => {
-			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
-
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
+
+				let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
 
 				connection.query(sqlQuery, (err, rows) => {
 					connection.release() // When done with the connection, release
@@ -83,7 +83,7 @@ class Customer {
 
 	// Read: get one row by customerID
 	static findById(customerID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -107,7 +107,7 @@ class Customer {
 
 	// Create or Update
 	save() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			// Determine whether we are creating or updating
 			if (this.customerID === undefined || this.customerID === null) {
 				// Create
@@ -126,10 +126,12 @@ class Customer {
 					connection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, res) => {
 						connection.release() // When done with the connection, release
 
+						// If there is an SQL error
 						if (err) {
-							console.error(err)
-							throw new Error("customer.sql.add")
+							reject(err)
+							return
 						}
+
 						resolve(this)
 					})
 				})
@@ -150,9 +152,10 @@ class Customer {
 					connection.query("UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?", [this.firstName, this.lastName, this.email, this.customerID], (err, res) => {
 						connection.release() // When done with the connection, release
 
+						// If there is an SQL error
 						if (err) {
-							console.error(err)
-							throw new Error("customer.sql.update")
+							reject(err)
+							return
 						}
 
 						resolve(this)
@@ -164,16 +167,17 @@ class Customer {
 
 	// Delete
 	delete(customerID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
 				connection.query(`DELETE FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
+					// If there is an SQL error
 					if (err) {
-						console.error(err)
-						throw new Error("customer.sql.delete")
+						reject(err)
+						return
 					}
 
 					resolve(this)

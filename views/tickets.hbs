@@ -48,6 +48,9 @@
 	</section>
 	<section id="sectionTicketAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Ticket</h1>
+		<h2 class="form-subtitle">
+			Current unit price for <span id="sectionTicketAddYear"></span>: <span id="sectionTicketAddPrice"></span>
+		</h2>
 		<form method="POST" action="/tickets/add" id="formTicketAdd">
 			<div class="form-field">
 				<label class="form-label">Choose customer</label>
@@ -60,9 +63,16 @@
 			<div class="form-field">
 				<label class="form-label" class="form-label">Quantity</label>
 				<select name="quantity">
-					{{#each quantityOptions}}
-					<option value="{{this.number}}">{{this.number}}</option>
-					{{/each}}
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
 				</select>
 			</div>
 			<div class="button-row">

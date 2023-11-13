@@ -17,7 +17,7 @@ class Employee {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -43,7 +43,7 @@ class Employee {
 
 	// Read: get all rows for dropdown menus. Limit to employeeID and name details.
 	static findNames() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -66,7 +66,7 @@ class Employee {
 
 	// Read: get one row by priceID
 	static findById(employeeID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -90,7 +90,7 @@ class Employee {
 
 	// Create or Update
 	save() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			// Determine whether we are creating or updating
 			if (this.employeeID === undefined || this.employeeID === null) {
 				// Create
@@ -117,10 +117,12 @@ class Employee {
 					connection.query(sqlQuery, (err, res) => {
 						connection.release() // When done with the connection, release
 
+						// If there is an SQL error
 						if (err) {
-							console.error(err)
-							throw new Error("employee.sql.add")
+							reject(err)
+							return
 						}
+
 						resolve(this)
 					})
 				})
@@ -141,10 +143,12 @@ class Employee {
 					connection.query("UPDATE Employees SET firstName = ?, lastName = ?, email = ? WHERE employeeID = ?", [this.firstName, this.lastName, this.email, this.employeeID], (err, res) => {
 						connection.release() // When done with the connection, release
 
+						// If there is an SQL error
 						if (err) {
-							console.error(err)
-							throw new Error("employee.sql.update")
+							reject(err)
+							return
 						}
+
 						resolve(this)
 					})
 				})
@@ -154,16 +158,17 @@ class Employee {
 
 	// Delete
 	delete(employeeID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
 				connection.query(`DELETE FROM Customers WHERE employeeID = ${employeeID}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
+					// If there is an SQL error
 					if (err) {
-						console.error(err)
-						throw new Error("employee.sql.delete")
+						reject(err)
+						return
 					}
 
 					resolve(this)

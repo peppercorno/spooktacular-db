@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Customers (
 -- 1:M optional relationship with Tickets
 CREATE TABLE IF NOT EXISTS AdmissionPrices (
     priceID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    year int NOT NULL,
+    year int NOT NULL UNIQUE,
     basePrice decimal(9,2) NOT NULL
 ) ENGINE = InnoDB;
 

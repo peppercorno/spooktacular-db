@@ -13,7 +13,7 @@ class Room {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT roomID, name, theme, maxCapacity, level, "
 			sqlQuery += "EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows "
 			sqlQuery += "FROM Rooms;"
@@ -42,7 +42,7 @@ class Room {
 
 	// Read: get all rows for dropdown menus. Limit to roomID and name only.
 	static findNames() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -67,7 +67,7 @@ class Room {
 
 	// Read: get one row by roomID
 	static findById(roomID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 

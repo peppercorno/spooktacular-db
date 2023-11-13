@@ -17,7 +17,7 @@ class Review {
 
 	// Read: get all rows and associated data for Customers and Rooms. Include rows where roomID is null.
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "Rooms.name AS roomName "
@@ -56,7 +56,7 @@ class Review {
 
 	// Read: get one row by reviewID, along with associated Customer and Room info
 	static findById(reviewID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "Rooms.name AS roomName "

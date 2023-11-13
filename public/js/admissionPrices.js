@@ -19,12 +19,8 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionPriceEdit").scrollIntoView()
 
 		// Populate edit form
-		document.getElementById("formAdmissionPriceEdit").querySelector("input[name=priceID]").value =
-			this.getAttribute("data-priceid") // Pass priceID to hidden input
-		document.getElementById("formAdmissionPriceEdit").querySelector("input[name=basePrice]").value =
-			this.getAttribute("data-baseprice")
-
-		// Fill in year in subtitle
-		document.getElementById("admissionPriceYear").innerHTML = this.getAttribute("data-year")
+		document.getElementById("formAdmissionPriceEdit").querySelector("input[name=priceID]").value = this.getAttribute("data-priceid") // Pass priceID to hidden input
+		document.getElementById("formAdmissionPriceEdit").querySelector("input[name=year]").value = this.getAttribute("data-year")
+		document.getElementById("formAdmissionPriceEdit").querySelector("input[name=basePrice]").value = this.getAttribute("data-baseprice")
 	})
 })

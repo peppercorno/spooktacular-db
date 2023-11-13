@@ -17,7 +17,7 @@ class Ticket {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "AdmissionPrices.basePrice AS unitPrice, "
@@ -54,7 +54,7 @@ class Ticket {
 
 	// Read: get one row by ticketID
 	static findById(ticketID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "AdmissionPrices.basePrice AS unitPrice, "

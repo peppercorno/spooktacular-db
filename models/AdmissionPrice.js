@@ -11,13 +11,13 @@ class AdmissionPrice {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
-			let sqlQuery = "SELECT priceID, year, basePrice, "
-			sqlQuery += "EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows "
-			sqlQuery += "FROM AdmissionPrices;"
-
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
+
+				let sqlQuery = "SELECT priceID, year, basePrice, "
+				sqlQuery += "EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows "
+				sqlQuery += "FROM AdmissionPrices;"
 
 				connection.query(sqlQuery, (err, rows) => {
 					connection.release() // When done with the connection, release
@@ -39,7 +39,7 @@ class AdmissionPrice {
 
 	// Read: get one row by priceID
 	static findById(priceID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
@@ -53,7 +53,8 @@ class AdmissionPrice {
 					}
 
 					// res is an array. Create new class instance using data from first item in array
-					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, res[0].hasChildRows)
+					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, null)
+					console.log(admissionPrice)
 
 					resolve(admissionPrice)
 				})
@@ -61,66 +62,109 @@ class AdmissionPrice {
 		})
 	}
 
-	
+	// Read: get one row by year
+	static findByYear(year) {
+		return new Promise((resolve, reject) => {
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
+
+				connection.query(`SELECT * FROM AdmissionPrices WHERE year = ${year}`, (err, res) => {
+					connection.release() // When done with the connection, release
+
+					if (err) {
+						console.error(err)
+						resolve([])
+						return
+					}
+
+					// res is an array. Create new class instance using data from first item in array
+					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, null)
+					console.log(admissionPrice)
+
+					resolve(admissionPrice)
+				})
+			})
+		})
+	}
 
 	// Create or Update
 	save() {
-    	return new Promise(resolve => {
-        	// Determine whether we are creating or updating
-        	if (this.priceID === undefined || this.priceID === null) {
-            	// Create
-            	if (!this.year || this.year.length === 0) {
-                	throw new Error("admission.add.yearmissing");
-            	}
+		return new Promise((resolve, reject) => {
+			// Determine whether we are creating or updating
+			if (this.priceID === undefined || this.priceID === null) {
+				// Create
+				if (!this.year || this.year.length === 0) throw new Error("admission.add.yearmissing")
 
-            	if (!this.basePrice || this.basePrice.length === 0) {
-                	throw new Error("admission.add.basepricemissing");
-            	}
+				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.add.basepricemissing")
 
-            	dbConnection.query(`INSERT INTO AdmissionPrices (year, basePrice) VALUES ('${this.year}', '${this.basePrice}')`, (err, res) => {
-                	if (err) {
-                    	console.error(err);
-                    	throw new Error("admission.sql");
-                	}
-                	resolve(this);
-            	});
-        	} else {
-            	// Update
-            	if (!this.year || this.year.length === 0) {
-                	throw new Error("admission.edit.yearmissing");
-            	}
+				let year = parseInt(this.year)
+				let basePrice = parseInt(this.basePrice)
 
-            	if (!this.basePrice || this.basePrice.length === 0) {
-                	throw new Error("admission.edit.basepricemissing");
-				}
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
 
-           		dbConnection.query("UPDATE AdmissionPrices SET year = ?, basePrice = ? WHERE priceID = ?", [this.year, this.basePrice, this.priceID], (err, res) => {
-                	if (err) {
-                    	console.error(err);
-                    	throw new Error("admission-prices.sql");
-                	}
-                	resolve(this);
-            	});
-        	}
-    	});
+					connection.query(`INSERT INTO AdmissionPrices (year, basePrice) VALUES (${year}, ${basePrice})`, (err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			} else {
+				// Update
+				if (!this.year || this.year.length === 0) throw new Error("admission.edit.yearmissing")
+
+				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.edit.basepricemissing")
+
+				let year = parseInt(this.year)
+				let basePrice = parseInt(this.basePrice)
+
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query("UPDATE AdmissionPrices SET year = ?, basePrice = ? WHERE priceID = ?", [year, basePrice, this.priceID], (err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			}
+		})
 	}
-
 
 	// Delete
 	delete(priceID) {
-    	return new Promise(resolve => {
-        	// TODO: Handle errors if this row is a parent row
+		return new Promise((resolve, reject) => {
+			// TODO: Handle errors if this row is a parent row
 
-        	dbConnection.query(`DELETE FROM AdmissionPrices WHERE priceID = ${priceID}`, (err, res) => {
-            	if (err) {
-                	console.error(err);
-                	throw new Error("admission.sql");
-            	}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-            	resolve(this);
-        	});
-    	});
-  	}
+				connection.query(`DELETE FROM AdmissionPrices WHERE priceID = ${priceID}`, (err, res) => {
+					connection.release() // When done with the connection, release
+
+					// If there is an SQL error
+					if (err) {
+						reject(err)
+						return
+					}
+
+					resolve(this)
+				})
+			})
+		})
+	}
 }
 
 module.exports = AdmissionPrice

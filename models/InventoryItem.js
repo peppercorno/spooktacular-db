@@ -12,7 +12,7 @@ class InventoryItem {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;"
@@ -44,7 +44,7 @@ class InventoryItem {
 
 	// Read: get one row by itemID
 	static findById(itemID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID "

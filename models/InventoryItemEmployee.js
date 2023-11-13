@@ -13,7 +13,7 @@ class InventoryItemEmployee {
 
 	// Read: get all rows
 	static findAll() {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, "
 			sqlQuery += "InventoryItems.name AS itemName, "
 			sqlQuery += "CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName  "
@@ -44,7 +44,7 @@ class InventoryItemEmployee {
 
 	// Read: get one row by composite PK
 	static findByIDs(itemID, employeeID) {
-		return new Promise(resolve => {
+		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
