@@ -12,7 +12,7 @@
 ------------------------------------------------------------------------*/
 
 // Get connection
-let dbConnection = require("../db-config")
+let db = require("../db-config")
 
 class Customer {
 	constructor(id, firstName, lastName, email, hasChildRows) {
@@ -32,18 +32,24 @@ class Customer {
 			sqlQuery += "AS hasChildRows "
 			sqlQuery += "FROM Customers;"
 
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No customer rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let customers = []
-				for (let row of rows) {
-					customers.push(new this(row.customerID, row.firstName, row.lastName, row.email, row.hasChildRows))
-				}
-				resolve(customers)
+				connection.query(sqlQuery, (err, rows) => {
+					connection.release() // When done with the connection, release
+
+					if (err) {
+						console.error(err)
+						resolve([]) // No customer rows
+						return
+					}
+
+					let customers = []
+					for (let row of rows) {
+						customers.push(new this(row.customerID, row.firstName, row.lastName, row.email, row.hasChildRows))
+					}
+					resolve(customers)
+				})
 			})
 		})
 	}
@@ -53,18 +59,24 @@ class Customer {
 		return new Promise(resolve => {
 			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
 
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No customer rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let customers = []
-				for (let row of rows) {
-					customers.push(new this(row.customerID, row.firstName, row.lastName, null, null))
-				}
-				resolve(customers)
+				connection.query(sqlQuery, (err, rows) => {
+					connection.release() // When done with the connection, release
+
+					if (err) {
+						console.error(err)
+						resolve([]) // No customer rows
+						return
+					}
+
+					let customers = []
+					for (let row of rows) {
+						customers.push(new this(row.customerID, row.firstName, row.lastName, null, null))
+					}
+					resolve(customers)
+				})
 			})
 		})
 	}
@@ -72,17 +84,23 @@ class Customer {
 	// Read: get one row by customerID
 	static findById(customerID) {
 		return new Promise(resolve => {
-			dbConnection.query(`SELECT * FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
-				if (err) {
-					console.error(err)
-					resolve([])
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				// res is an array. Create new class instance using data from first item in array
-				let customer = new this(res[0].customerID, res[0].firstName, res[0].lastName, res[0].email, res[0].hasChildRows)
+				connection.query(`SELECT * FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
+					connection.release() // When done with the connection, release
 
-				resolve(customer)
+					if (err) {
+						console.error(err)
+						resolve([])
+						return
+					}
+
+					// res is an array. Create new class instance using data from first item in array
+					let customer = new this(res[0].customerID, res[0].firstName, res[0].lastName, res[0].email, res[0].hasChildRows)
+
+					resolve(customer)
+				})
 			})
 		})
 	}
@@ -102,16 +120,19 @@ class Customer {
 				if (this.email.length === 0) throw new Error("customer.add.emailmissing")
 				// TODO: Add email validation using regex
 
-				dbConnection.query(
-					`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`,
-					(err, res) => {
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${this.firstName}', '${this.lastName}', '${this.email}')`, (err, res) => {
+						connection.release() // When done with the connection, release
+
 						if (err) {
 							console.error(err)
 							throw new Error("customer.sql.add")
 						}
 						resolve(this)
-					}
-				)
+					})
+				})
 			} else {
 				// Update
 				if (this.firstName.length === 0) throw new Error("customer.edit.firstnamemissing")
@@ -123,17 +144,20 @@ class Customer {
 				if (this.email.length === 0) throw new Error("customer.edit.emailmissing")
 				// TODO: Add email validation using regex
 
-				dbConnection.query(
-					"UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?",
-					[this.firstName, this.lastName, this.email, this.customerID],
-					(err, res) => {
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query("UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?", [this.firstName, this.lastName, this.email, this.customerID], (err, res) => {
+						connection.release() // When done with the connection, release
+
 						if (err) {
 							console.error(err)
 							throw new Error("customer.sql.update")
 						}
+
 						resolve(this)
-					}
-				)
+					})
+				})
 			}
 		})
 	}
@@ -141,15 +165,19 @@ class Customer {
 	// Delete
 	delete(customerID) {
 		return new Promise(resolve => {
-			// TODO: Need to handle errors thrown when this row is a parent row
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-			dbConnection.query(`DELETE FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
-				if (err) {
-					console.error(err)
-					throw new Error("customer.sql.delete")
-				}
+				connection.query(`DELETE FROM Customers WHERE customerID = ${customerID}`, (err, res) => {
+					connection.release() // When done with the connection, release
 
-				resolve(this)
+					if (err) {
+						console.error(err)
+						throw new Error("customer.sql.delete")
+					}
+
+					resolve(this)
+				})
 			})
 		})
 	}

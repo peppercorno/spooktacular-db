@@ -1,5 +1,5 @@
 // Get connection
-let dbConnection = require("../db-config")
+let db = require("../db-config")
 
 // Represents a row in intersection table, InventoryItem_Employees
 // ie. a relationship between one Inventory Item and one Employee
@@ -21,18 +21,23 @@ class InventoryItemEmployee {
 			sqlQuery += "INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.itemID "
 			sqlQuery += "INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;"
 
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let inventoryItems = []
-				for (let row of rows)
-					inventoryItems.push(new this(row.itemID, row.employeeID, row.itemName, row.employeeFullName))
+				connection.query(sqlQuery, (err, rows) => {
+					connection.release() // When done with the connection, release
 
-				resolve(inventoryItems)
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
+
+					let inventoryItems = []
+					for (let row of rows) inventoryItems.push(new this(row.itemID, row.employeeID, row.itemName, row.employeeFullName))
+
+					resolve(inventoryItems)
+				})
 			})
 		})
 	}
@@ -40,9 +45,12 @@ class InventoryItemEmployee {
 	// Read: get one row by composite PK
 	static findByIDs(itemID, employeeID) {
 		return new Promise(resolve => {
-			dbConnection.query(
-				`SELECT * FROM InventoryItems WHERE (itemID = ${itemID} AND employeeID = ${employeeID}`,
-				(err, res) => {
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
+
+				connection.query(`SELECT * FROM InventoryItems WHERE (itemID = ${itemID} AND employeeID = ${employeeID}`, (err, res) => {
+					connection.release() // When done with the connection, release
+
 					if (err) {
 						console.error(err)
 						resolve([])
@@ -53,8 +61,8 @@ class InventoryItemEmployee {
 					let row = new this(res[0].itemID, res[0].roomID, res[0].itemName, res[0].employeeFullName)
 
 					resolve(row)
-				}
-			)
+				})
+			})
 		})
 	}
 }

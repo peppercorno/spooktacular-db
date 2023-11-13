@@ -1,5 +1,5 @@
 // Get connection
-let dbConnection = require("../db-config")
+let db = require("../db-config")
 
 class Room {
 	constructor(id, name, theme, maxCapacity, level, hasChildRows) {
@@ -18,18 +18,24 @@ class Room {
 			sqlQuery += "EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows "
 			sqlQuery += "FROM Rooms;"
 
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let rooms = []
-				for (let row of rows) {
-					rooms.push(new this(row.roomID, row.name, row.theme, row.maxCapacity, row.level, row.hasChildRows))
-				}
-				resolve(rooms)
+				connection.query(sqlQuery, (err, rows) => {
+					connection.release() // When done with the connection, release
+
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
+
+					let rooms = []
+					for (let row of rows) {
+						rooms.push(new this(row.roomID, row.name, row.theme, row.maxCapacity, row.level, row.hasChildRows))
+					}
+					resolve(rooms)
+				})
 			})
 		})
 	}
@@ -37,19 +43,24 @@ class Room {
 	// Read: get all rows for dropdown menus. Limit to roomID and name only.
 	static findNames() {
 		return new Promise(resolve => {
-			let sqlQuery = "SELECT roomID, name FROM Rooms ORDER BY name ASC;"
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let rooms = []
-				for (let row of rows) {
-					rooms.push(new this(row.roomID, row.name, null, null, null, null))
-				}
-				resolve(rooms)
+				connection.query("SELECT roomID, name FROM Rooms ORDER BY name ASC;", (err, rows) => {
+					connection.release() // When done with the connection, release
+
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
+
+					let rooms = []
+					for (let row of rows) {
+						rooms.push(new this(row.roomID, row.name, null, null, null, null))
+					}
+					resolve(rooms)
+				})
 			})
 		})
 	}
@@ -57,24 +68,23 @@ class Room {
 	// Read: get one row by roomID
 	static findById(roomID) {
 		return new Promise(resolve => {
-			dbConnection.query(`SELECT * FROM Rooms WHERE roomID = ${roomID}`, (err, res) => {
-				if (err) {
-					console.error(err)
-					resolve([])
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				// res is an array. Create new class instance using data from first item in array
-				let room = new this(
-					res[0].roomID,
-					res[0].name,
-					res[0].theme,
-					res[0].maxCapacity,
-					res[0].level,
-					res[0].hasChildRows
-				)
+				connection.query(`SELECT * FROM Rooms WHERE roomID = ${roomID}`, (err, res) => {
+					connection.release() // When done with the connection, release
 
-				resolve(room)
+					if (err) {
+						console.error(err)
+						resolve([])
+						return
+					}
+
+					// res is an array. Create new class instance using data from first item in array
+					let room = new this(res[0].roomID, res[0].name, res[0].theme, res[0].maxCapacity, res[0].level, res[0].hasChildRows)
+
+					resolve(room)
+				})
 			})
 		})
 	}

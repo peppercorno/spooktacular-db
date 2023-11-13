@@ -8,7 +8,8 @@
 
 const express = require("express")
 const exphbs = require("express-handlebars")
-const dotenv = require("dotenv").config()
+const path = require("path")
+const dotenv = require("dotenv").config({ path: path.resolve(__dirname, ".env") })
 
 // Import routes
 const homeRoutes = require("./routes/home")

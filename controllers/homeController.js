@@ -44,5 +44,6 @@ exports.resetDB = (req, res) => {
 		res.redirect("/?success=reset")
 	})
 
+	// Close connection
 	dbConnection.end()
 }

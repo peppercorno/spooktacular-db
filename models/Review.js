@@ -1,7 +1,7 @@
 const moment = require("moment")
 
 // Get connection
-let dbConnection = require("../db-config")
+let db = require("../db-config")
 
 class Review {
 	constructor(reviewID, customerID, customerFullName, roomID, roomName, rating, text, creationDate) {
@@ -26,24 +26,30 @@ class Review {
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID "
 			sqlQuery += "ORDER BY creationDate DESC;"
 
-			dbConnection.query(sqlQuery, (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No rows
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				let reviews = []
-				for (let row of rows) {
-					// If roomID is null, set roomName to "--"
-					if (row.roomID === undefined || row.roomID === null) row.roomName = "--"
+				connection.query(sqlQuery, (err, rows) => {
+					connection.release() // When done with the connection, release
 
-					// Format date
-					let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
 
-					reviews.push(new this(row.reviewID, row.customerID, row.customerFullName, row.roomID, row.roomName, row.rating, row.text, creationDate))
-				}
-				resolve(reviews)
+					let reviews = []
+					for (let row of rows) {
+						// If roomID is null, set roomName to "--"
+						if (row.roomID === undefined || row.roomID === null) row.roomName = "--"
+
+						// Format date
+						let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
+
+						reviews.push(new this(row.reviewID, row.customerID, row.customerFullName, row.roomID, row.roomName, row.rating, row.text, creationDate))
+					}
+					resolve(reviews)
+				})
 			})
 		})
 	}
@@ -59,23 +65,29 @@ class Review {
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = Reviews.roomID "
 			sqlQuery += "WHERE Reviews.reviewID = " + reviewID + ";"
 
-			dbConnection.query(`SELECT * FROM Reviews WHERE reviewID = ${reviewID}`, (err, res) => {
-				if (err) {
-					console.error(err)
-					resolve([])
-					return
-				}
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
 
-				// If roomID is null, set roomName to "--"
-				if (res[0].roomID === undefined || res[0].roomID === null) res[0].roomName = "--"
+				connection.query(sqlQuery, (err, res) => {
+					connection.release() // When done with the connection, release
 
-				// Format date
-				let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
+					if (err) {
+						console.error(err)
+						resolve([])
+						return
+					}
 
-				// res is an array. Create new class instance using data from first item in array
-				let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, res[0].roomName, res[0].rating, res[0].text, creationDate)
+					// If roomID is null, set roomName to "--"
+					if (res[0].roomID === undefined || res[0].roomID === null) res[0].roomName = "--"
 
-				resolve(review)
+					// Format date
+					let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
+
+					// res is an array. Create new class instance using data from first item in array
+					let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, res[0].roomName, res[0].rating, res[0].text, creationDate)
+
+					resolve(review)
+				})
 			})
 		})
 	}
