@@ -1,10 +1,17 @@
 // Get model
 const Ticket = require("../models/Ticket")
+const Customer = require("../models/Customer")
+const AdmissionPrice = require("../models/AdmissionPrice")
 
 // Render Tickets view
 exports.render = async (req, res) => {
 	// Get all tickets
 	let tickets = await Ticket.findAll()
+
+	// For dropdown menus
+	let customers = await Customer.findFullNames()
+	let admissionPrices = await AdmissionPrice.findAll()
+
 	let ticketBeingEdited = ""
 
 	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add customer." } // Default error message
@@ -24,5 +31,5 @@ exports.render = async (req, res) => {
 	let success = req.query.success
 
 	// Render view
-	res.render("tickets", { tickets, error, success, ticketBeingEdited })
+	res.render("tickets", { tickets, customers, admissionPrices, error, success, ticketBeingEdited })
 }

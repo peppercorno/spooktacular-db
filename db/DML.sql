@@ -10,7 +10,7 @@ Admission Prices
 -- Indicate whether each row has any child rows
 SELECT priceID, year, basePrice,
 EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows
-FROM AdmissionPrices;
+FROM AdmissionPrices ORDER BY year DESC;
 
 -- Add a new Admission Price
 INSERT INTO AdmissionPrices (year, basePrice) 

@@ -17,7 +17,7 @@ class AdmissionPrice {
 
 				let sqlQuery = "SELECT priceID, year, basePrice, "
 				sqlQuery += "EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows "
-				sqlQuery += "FROM AdmissionPrices;"
+				sqlQuery += "FROM AdmissionPrices ORDER BY year DESC;"
 
 				connection.query(sqlQuery, (err, rows) => {
 					connection.release() // When done with the connection, release
@@ -44,31 +44,6 @@ class AdmissionPrice {
 				if (err) console.error(err) // Not connected
 
 				connection.query(`SELECT * FROM AdmissionPrices WHERE priceID = ${priceID}`, (err, res) => {
-					connection.release() // When done with the connection, release
-
-					if (err) {
-						console.error(err)
-						resolve([])
-						return
-					}
-
-					// res is an array. Create new class instance using data from first item in array
-					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, null)
-					console.log(admissionPrice)
-
-					resolve(admissionPrice)
-				})
-			})
-		})
-	}
-
-	// Read: get one row by year
-	static findByYear(year) {
-		return new Promise((resolve, reject) => {
-			db.pool.getConnection((err, connection) => {
-				if (err) console.error(err) // Not connected
-
-				connection.query(`SELECT * FROM AdmissionPrices WHERE year = ${year}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
 					if (err) {

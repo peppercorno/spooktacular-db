@@ -64,9 +64,14 @@
 				<label class="form-label" class="form-label">Year</label>
 				<input type="text" name="year" />
 			</div>
-			<div class="form-field">
-				<label class="form-label" class="form-label">Base Price</label>
-				<input type="text" name="basePrice" />
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Base Price</label>
+					<p class="form-field-explanation">in USD</p>
+				</div>
+				<div class="column-input">
+					<input type="text" name="basePrice"/>
+				</div>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "add"}}
@@ -84,9 +89,14 @@
 				<label class="form-label" class="form-label">Year</label>
 				<input type="text" name="year" value="{{priceBeingEdited.year}}"/>
 			</div>
-			<div class="form-field">
-				<label class="form-label" class="form-label">Base Price</label>
-				<input type="text" name="basePrice" value="{{priceBeingEdited.basePrice}}"/>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Base Price</label>
+					<p class="form-field-explanation">in USD</p>
+				</div>
+				<div class="column-input">
+					<input type="text" name="basePrice" value="{{priceBeingEdited.basePrice}}"/>
+				</div>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "edit"}}

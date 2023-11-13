@@ -48,15 +48,20 @@
 	</section>
 	<section id="sectionTicketAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Ticket</h1>
-		<h2 class="form-subtitle">
-			Current unit price for <span id="sectionTicketAddYear"></span>: <span id="sectionTicketAddPrice"></span>
-		</h2>
 		<form method="POST" action="/tickets/add" id="formTicketAdd">
 			<div class="form-field">
-				<label class="form-label">Choose customer</label>
+				<label class="form-label">Customer</label>
 				<select name="customer">
 					{{#each customers}}
-					<option value="{{this.customerID}}">#{{this.customerID}} {{this.customerFullName}}</option>
+					<option value="{{this.customerID}}">#{{this.customerID}}: {{this.firstName}} {{this.lastName}}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Unit Price</label>
+				<select name="price">
+					{{#each admissionPrices}}
+					<option value="{{this.priceID}}">{{this.year}}: ${{this.basePrice}}</option>
 					{{/each}}
 				</select>
 			</div>
