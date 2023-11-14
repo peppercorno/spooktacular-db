@@ -125,12 +125,18 @@ INSERT INTO Customers (firstName, lastName, email) VALUES
         "Donnie",
         "Darko",
         "donnyd@email.com"
+    ),
+    (
+        "Lily",
+        "Lycanthrope",
+        "lilyl@email.com"
     );
 
 INSERT INTO AdmissionPrices (year, basePrice) VALUES
     (2021, 15.00),
     (2022, 20.00),
-    (2023, 25.00);
+    (2023, 25.00),
+    (2024, 28.00);
 
 INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES 
     (
@@ -183,7 +189,7 @@ INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate,
         "Vincent",
         "Vampire",
         "vincentv@email.com",
-        "Count von Canapes",
+        "Charismatic Count",
         "2022-09-15 12:00:00",
         "2022-11-05 12:00:00",
         60000
@@ -201,7 +207,7 @@ INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate,
         "Greta",
         "Gravestone",
         "gretag@email.com",
-        "Lady Carnelian",
+        "Zany Zombie",
         "2022-09-15 12:00:00",
         "2022-11-05 12:00:00",
         60000
