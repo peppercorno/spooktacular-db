@@ -5,9 +5,9 @@ const roomController = require("../controllers/roomController")
 // Routes
 router.get("/", roomController.render)
 
-// router.post("/add", roomController.add) // Create new Room
-// router.get("/:id", roomController.findById
-// router.post('/edit/:id', roomController.edit)   // Edit Room
-// router.delete('/delete/:id', roomController.delete);   // Delete a Room
+router.post("/add", roomController.add) // Create new Room
+//router.get("/:id", roomController.findById)
+router.post('/edit/:id', roomController.edit)   // Edit Room
+router.delete('/delete/:id', roomController.delete);   // Delete a Room
 
 module.exports = router

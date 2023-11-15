@@ -22,7 +22,7 @@ const roomRoutes = require("./routes/room")
 const ticketRoutes = require("./routes/ticket")
 
 const app = express() // Create Express app
-const PORT = process.env.PORT || 5000 // Define port
+const PORT = process.env.PORT || 5003 // Define port
 
 // Parse requests
 app.use(express.urlencoded({ extended: true })) // content-type - application/x-www-form-urlencoded

@@ -4,8 +4,7 @@ const reviewController = require("../controllers/reviewController")
 
 // Routes
 router.get("/", reviewController.render)
-
-// router.post("/add", reviewController.add) // Create new Review
+router.post("/add", reviewController.add) // Create new Review
 // router.post('/edit/:id', reviewController.edit)   // Edit Review
 // router.delete('/delete/:id', reviewController.delete);   // Delete a Review
 
