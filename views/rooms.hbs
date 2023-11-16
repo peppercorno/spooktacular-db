@@ -97,7 +97,7 @@
 	</section>
 	<section id="sectionRoomEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Room</h1>
-		<form method="POST" action="/rooms/edit/{{roomBeingEdited.roomID}}" id="formRoomEdit">
+		<form method="POST" action="/rooms/edit" id="formRoomEdit">
     		<input type="text" name="roomID" value="{{roomBeingEdited.roomID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>

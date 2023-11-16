@@ -135,7 +135,10 @@ class Room {
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query("UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", [this.roomName, this.theme, this.maxCapacity, this.level, this.roomID], (err, res) => {
+					connection.query(
+						"UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", 
+						[this.name, this.theme, this.maxCapacity, this.level, this.roomID], 
+						(err, res) => {
 						connection.release() // When done with the connection, release
 
 						// If there is an SQL error
