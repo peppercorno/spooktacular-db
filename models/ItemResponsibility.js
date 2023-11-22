@@ -3,7 +3,7 @@ let db = require("../db-config")
 
 // Represents a row in intersection table, InventoryItem_Employees
 // ie. a relationship between one Inventory Item and one Employee
-class InventoryItemEmployee {
+class ItemResponsibility {
 	constructor(itemID, employeeID, itemName, employeeFullName) {
 		this.itemID = itemID
 		this.employeeID = employeeID
@@ -33,10 +33,10 @@ class InventoryItemEmployee {
 						return
 					}
 
-					let inventoryItems = []
-					for (let row of rows) inventoryItems.push(new this(row.itemID, row.employeeID, row.itemName, row.employeeFullName))
+					let relationships = []
+					for (let row of rows) relationships.push(new this(row.itemID, row.employeeID, row.itemName, row.employeeFullName))
 
-					resolve(inventoryItems)
+					resolve(relationships)
 				})
 			})
 		})
@@ -67,4 +67,4 @@ class InventoryItemEmployee {
 	}
 }
 
-module.exports = InventoryItemEmployee
+module.exports = ItemResponsibility

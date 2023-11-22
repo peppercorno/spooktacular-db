@@ -20,6 +20,7 @@ const inventoryItemRoutes = require("./routes/inventoryItem")
 const reviewRoutes = require("./routes/review")
 const roomRoutes = require("./routes/room")
 const ticketRoutes = require("./routes/ticket")
+const itemResponsibilityRoutes = require("./routes/itemResponsibility")
 
 const app = express() // Create Express app
 const PORT = process.env.PORT || 5000 // Define port
@@ -73,6 +74,7 @@ app.use("/inventory-items", inventoryItemRoutes)
 app.use("/reviews", reviewRoutes)
 app.use("/rooms", roomRoutes)
 app.use("/tickets", ticketRoutes)
+app.use("/item-resps", itemResponsibilityRoutes)
 
 // Listener
 app.listen(PORT, function () {

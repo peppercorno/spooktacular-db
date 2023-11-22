@@ -1,15 +1,9 @@
-{{> navigation currentView="inventoryItems" }}
+{{> navigation currentView="itemResponsibilities" }}
 
 <main>
 	<section>
-		<header class="header-row">
-			<h1>Inventory Items</h1>
-			<div class="filter-wrapper">
-				<label class="disabled">Filter by room</label>
-				<select id="" disabled>
-					<option></option>
-				</select>
-			</div>
+		<header>
+			<h1>Employees Responsible for Inventory Items</h1>
 		</header>
 
 		{{#ifCond success "===" "added"}}
@@ -27,28 +21,23 @@
 		<table>
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Room</th>
-					<th>Name</th>
-					<th>Item Condition</th>
+					<th>Item Name</th>
+					<th>Employee</th>
 					<th class="col-table-button"></th>
 					<th class="col-table-button"></th>
 				</tr>
 			</thead>
 			<tbody>
-				{{#each inventoryItems}}
+				{{#each relationships}}
 				<tr>
-					<td>{{this.itemID}}</td>
-					<td>{{this.roomName}}</td>
-					<td>{{this.name}}</td>
-					<td>{{this.itemCondition}}</td>
+					<td>#{{this.itemID}} - {{this.itemName}}</td>
+					<td>{{this.employeeFullName}}</td>
 					<td>
 						<button class="table-button edit" 
 						data-itemid="{{this.itemID}}"
-						data-roomid="{{this.roomID}}"
-						data-roomname="{{this.roomName}}"
-						data-itemname="{{this.name}}"
-						data-itemcondition="{{this.itemCondition}}"
+						data-employeeid="{{this.employeeID}}"
+						data-itemname="{{this.itemName}}"
+						data-employeefullname="{{this.employeeFullName}}"
 						type="button"><i class="fa fa-pen-to-square"></i></button>
 					</td>
 					<td>
@@ -58,10 +47,10 @@
 				{{/each}}
 			</tbody>
 		</table>
-		<button id="buttonInventoryItemAdd" type="button">Add New <i class="fa fa-plus"></i></button>
+		<button id="buttonItemRespAdd" type="button">Add New <i class="fa fa-plus"></i></button>
 	</section>
 
-	<section id="sectionInventoryItemAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
+	<section id="sectionItemRespAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Inventory Item</h1>
 		<form method="POST">
 			<div class="form-field">
@@ -106,9 +95,9 @@
 			</div>
 		</form>
 	</section>
-	<section id="sectionInventoryItemEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
+	<section id="sectionItemRespEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Inventory Item</h1>
-		<form method="POST" id="formInventoryItemEdit">
+		<form method="POST" id="formItemRespEdit">
 			<input type="text" name="itemID" value="{{itemBeingEdited.itemID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
@@ -130,7 +119,7 @@
 			<div class="form-field columns">
 				<div class="column-label">
 					<label class="form-label">Employee</label>
-					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
+					<p class="form-field-explanation">Optional.</p>
 				</div>
 				<div class="column-input">
 					{{!-- TODO: Figure out how to select multiple  --}}
@@ -155,4 +144,4 @@
 	</section>
 </main>
 
-<script type="text/javascript" src="../js/inventoryItems.js"></script>
+<script type="text/javascript" src="../js/ItemResponsibility.js"></script>

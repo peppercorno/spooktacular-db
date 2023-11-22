@@ -1,14 +1,10 @@
 // Get models
 const InventoryItem = require("../models/InventoryItem")
-const InventoryItemEmployee = require("../models/InventoryItemEmployee")
 
 // Render InventoryItems view
 exports.render = async (req, res) => {
 	// Get all inventoryItems
 	let inventoryItems = await InventoryItem.findAll()
-
-	// Get all rows from InventoryItems_Employees
-	let inventoryItemsEmployees = await InventoryItemEmployee.findAll()
 
 	let itemBeingEdited = ""
 
@@ -29,5 +25,5 @@ exports.render = async (req, res) => {
 	let success = req.query.success
 
 	// Render view
-	res.render("inventory-items", { inventoryItems, inventoryItemsEmployees, error, success, itemBeingEdited })
+	res.render("inventory-items", { inventoryItems, error, success, itemBeingEdited })
 }

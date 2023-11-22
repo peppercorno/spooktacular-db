@@ -4,10 +4,8 @@ const inventoryItemController = require("../controllers/inventoryItemController"
 
 // Routes
 router.get("/", inventoryItemController.render)
-
 // router.post("/add", inventoryItemController.add) // Create new Inventory Item
-
-// router.post('/edit/:id', inventoryItemController.edit)   // Edit Inventory Item
-// router.delete('/delete/:id', inventoryItemController.delete);   // Delete a Inventory Item
+// router.post("/edit", inventoryItemController.edit) // Edit an Inventory Item
+// router.get("/delete/:id", inventoryItemController.delete) // Delete an Inventory Item
 
 module.exports = router
