@@ -81,7 +81,7 @@ class InventoryItem {
 			// Determine whether we are creating or updating
 			if (this.itemID === undefined || this.itemID === null) {
 				// Create
-				if (this.name.length === 0) throw new Error("item.add.namemissing")
+				if (this.name.length === 0) throw new Error("nameMissing")
 
 				// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
 				let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
@@ -106,7 +106,7 @@ class InventoryItem {
 				})
 			} else {
 				// Update
-				if (this.name.length === 0) throw new Error("item.edit.namemissing")
+				if (this.name.length === 0) throw new Error("nameMissing")
 
 				// Parse itemID
 				let itemID = parseInt(this.itemID)

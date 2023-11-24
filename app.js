@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true })) // content-type - application/x-
 app.use(express.json()) // content-type - application/json
 
 // Indicate where static files are
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, "/public")))
 
 // Handlebars as templating engine
 const handlebars = exphbs.create({
