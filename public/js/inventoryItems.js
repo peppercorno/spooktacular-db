@@ -19,23 +19,17 @@ document.querySelectorAll(".table-button.edit").forEach(function (el) {
 		document.getElementById("sectionInventoryItemEdit").scrollIntoView()
 
 		// Populate edit form
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemID]").value =
-			this.getAttribute("data-itemid") // Pass itemID to hidden input
+		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemID]").value = this.getAttribute("data-itemid") // Pass itemID to hidden input
 
 		// Select room
-		document.getElementById("formInventoryItemEdit").querySelector("select[name=room]").value =
-			this.getAttribute("data-roomid")
+		document.getElementById("formInventoryItemEdit").querySelector("select[name=room]").value = this.getAttribute("data-roomid")
 
-		// TODO: Selecting multiple employees may not be straightforward
-		// document.getElementById("formInventoryItemEdit").querySelector("select[name=employee]").value =
-		// 	this.getAttribute("data-employeeid")
+		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemName]").value = this.getAttribute("data-itemname")
 
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemName]").value =
-			this.getAttribute("data-itemname")
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemCondition]").value =
-			this.getAttribute("data-itemcondition")
+		let itemCondition = this.getAttribute("data-itemcondition")
+		if (this.getAttribute("data-itemcondition") === "--") itemCondition = ""
+		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemCondition]").value = itemCondition
 	})
 })
 
-// TODO: Filter by room
-// TODO: Filter by employee
+// TODO: Filter

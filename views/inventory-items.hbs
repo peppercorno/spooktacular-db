@@ -28,9 +28,9 @@
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>Room</th>
-					<th>Name</th>
+					<th>Item Name</th>
 					<th>Item Condition</th>
+					<th>Room</th>
 					<th class="col-table-button"></th>
 					<th class="col-table-button"></th>
 				</tr>
@@ -39,9 +39,9 @@
 				{{#each inventoryItems}}
 				<tr>
 					<td>{{this.itemID}}</td>
-					<td>{{this.roomName}}</td>
 					<td>{{this.name}}</td>
 					<td>{{this.itemCondition}}</td>
+					<td>{{this.roomName}}</td>
 					<td>
 						<button class="table-button edit" 
 						data-itemid="{{this.itemID}}"
@@ -52,7 +52,10 @@
 						type="button"><i class="fa fa-pen-to-square"></i></button>
 					</td>
 					<td>
-						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
+						<form method="DELETE" action="/inventory-items/delete/{{this.itemID}}" class="form-delete">
+							<input type="submit" class="table-button delete" value=""/>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
 					</td>
 				</tr>
 				{{/each}}
@@ -63,7 +66,7 @@
 
 	<section id="sectionInventoryItemAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Inventory Item</h1>
-		<form method="POST">
+		<form method="POST" action="/inventory-items/add" id="formInventoryItemAdd">
 			<div class="form-field">
 				<label class="form-label">Name</label>
 				<input type="text" name="itemName" />
@@ -75,6 +78,7 @@
 				</div>
 				<div class="column-input">
 					<select name="room">
+						<option value="0">--</option>
 						{{#each rooms}}
 						<option value="{{this.roomID}}">{{this.name}}</option>
 						{{/each}}
@@ -83,20 +87,12 @@
 			</div>
 			<div class="form-field columns">
 				<div class="column-label">
-					<label class="form-label">Employee</label>
-					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
+					<label class="form-label">Item Condition</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
-					<select name="employee" multiple>
-						{{#each employees}}
-						<option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
-						{{/each}}
-					</select>
+					<input type="text" name="itemCondition" />
 				</div>
-			</div>
-			<div class="form-field">
-				<label class="form-label">Item Condition</label>
-				<input type="text" name="itemCondition" />
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "add"}}
@@ -108,7 +104,7 @@
 	</section>
 	<section id="sectionInventoryItemEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Inventory Item</h1>
-		<form method="POST" id="formInventoryItemEdit">
+		<form method="POST" action="/inventory-items/edit" id="formInventoryItemEdit">
 			<input type="text" name="itemID" value="{{itemBeingEdited.itemID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
@@ -121,6 +117,7 @@
 				</div>
 				<div class="column-input">
 					<select name="room" value="{{itemBeingEdited.roomID}}">
+						<option value="0">--</option>
 						{{#each rooms}}
 						<option value="{{this.roomID}}">{{this.name}}</option>
 						{{/each}}
@@ -129,21 +126,12 @@
 			</div>
 			<div class="form-field columns">
 				<div class="column-label">
-					<label class="form-label">Employee</label>
-					<p class="form-field-explanation">Optional. Employee(s) responsible for item. Can select multiple.</p>
+					<label class="form-label">Item Condition</label>
+					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
-					{{!-- TODO: Figure out how to select multiple  --}}
-					<select name="employee" multiple>
-						{{#each employees}}
-						<option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
-						{{/each}}
-					</select>
+					<input type="text" name="itemCondition" />
 				</div>
-			</div>
-			<div class="form-field">
-				<label class="form-label">Item Condition</label>
-				<input type="text" name="itemCondition" value="{{itemBeingEdited.itemCondition}}"/>
 			</div>
 			<div class="button-row">
 				{{#ifCond error.section "===" "edit"}}

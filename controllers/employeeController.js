@@ -24,6 +24,8 @@ exports.render = async (req, res) => {
 		employeeBeingEdited = await Employee.findById(req.query.id)
 		error.section = "edit"
 	}
+
+	// Whether to show 'not deleted' notification
 	if (error && req.query.error === "notdeleted") error.section = "notdeleted"
 
 	// Whether to show notification above table

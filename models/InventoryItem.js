@@ -15,7 +15,8 @@ class InventoryItem {
 		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "
-			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;"
+			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID "
+			sqlQuery += "ORDER BY itemID desc;"
 
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
@@ -33,6 +34,9 @@ class InventoryItem {
 					for (let row of rows) {
 						// If roomID is null, set roomName to "--"
 						if (row.roomID === undefined || row.roomID === null) row.roomName = "--"
+
+						// If item condition is an empty string or null, set roomName to "--"
+						if (row.itemCondition === "" || row.itemCondition === null) row.itemCondition = "--"
 
 						inventoryItems.push(new this(row.itemID, row.roomID, row.roomName, row.name, row.itemCondition))
 					}
@@ -66,6 +70,88 @@ class InventoryItem {
 					let inventoryItem = new this(res[0].itemID, res[0].roomID, res[0].roomName, res[0].name, res[0].itemCondition)
 
 					resolve(inventoryItem)
+				})
+			})
+		})
+	}
+
+	// Create or Update
+	save() {
+		return new Promise((resolve, reject) => {
+			// Determine whether we are creating or updating
+			if (this.itemID === undefined || this.itemID === null) {
+				// Create
+				if (this.name.length === 0) throw new Error("item.add.namemissing")
+
+				// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
+				let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
+
+				// If no item condition was entered, make sure we pass an empty string
+				if (!this.itemCondition || this.itemCondition.length === 0) this.itemCondition = ""
+
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query(`INSERT INTO InventoryItems (name, roomID, itemCondition) VALUES ('${this.name}', ${roomID}, '${this.itemCondition}')`, (err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			} else {
+				// Update
+				if (this.name.length === 0) throw new Error("item.edit.namemissing")
+
+				// Parse itemID
+				let itemID = parseInt(this.itemID)
+
+				// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
+				let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
+
+				// If no item condition was entered, make sure we pass an empty string
+				if (!this.itemCondition || this.itemCondition.length === 0 || this.itemCondition === "--") this.itemCondition = ""
+
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query("UPDATE InventoryItems SET name = ?, roomID = ?, itemCondition = ? WHERE itemID = ?", [this.name, roomID, this.itemCondition, itemID], (err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			}
+		})
+	}
+
+	// Delete
+	delete(itemID) {
+		return new Promise((resolve, reject) => {
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
+
+				connection.query(`DELETE FROM InventoryItems WHERE itemID = ${itemID}`, (err, res) => {
+					connection.release() // When done with the connection, release
+
+					// If there is an SQL error
+					if (err) {
+						reject(err)
+						return
+					}
+
+					resolve(this)
 				})
 			})
 		})

@@ -86,7 +86,8 @@ Inventory Items
 -- For table: Get all Inventory Item rows with associated Room data
 SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, Rooms.name AS roomName
 FROM InventoryItems
-LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;
+LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID 
+ORDER BY itemID desc;
 
 -- To populate update form fields:
 -- Get one Inventory Item row by itemID, along with associated Room data
