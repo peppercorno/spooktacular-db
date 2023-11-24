@@ -131,8 +131,13 @@ INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employee
 -- Add a relationship between Inventory Items and Employees
 INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:itemID, :employeeID);
 
--- Update a relationship by itemID
-UPDATE InventoryItems_Employees SET employeeID = :newEmployeeID WHERE itemID = :itemIDToUpdate;
+-- To populate update form fields:
+-- Get one relationship by composite PK
+SELECT * FROM InventoryItems_Employees WHERE itemID = :itemIDToUpdate AND employeeID = :employeeIDToUpdate;
+
+-- Update a relationship by composite PK
+UPDATE InventoryItems_Employees SET itemID = :newItemID, employeeID = :newEmployeeID 
+WHERE itemID = :itemIDToUpdate AND employeeID = :employeeIDToUpdate;
 
 -- Delete a relationship between Inventory Items and Employees
 DELETE FROM InventoryItems_Employees WHERE (itemID = :itemIDToDelete AND employeeID = :employeeIDToDelete);

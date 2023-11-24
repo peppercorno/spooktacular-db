@@ -1,28 +1,27 @@
-// When 'add new' button is clicked, show 'add' section
-document.getElementById("buttonItemRespAdd").addEventListener("click", function (event) {
-	// Hide section with edit form
-	// document.getElementById("sectionItemRespEdit").classList.add("display-none")
-	// // Show section with add form, scroll down to it
-	// document.getElementById("sectionItemRespAdd").classList.toggle("display-none")
-	// document.getElementById("sectionItemRespAdd").scrollIntoView()
-})
+function goToAddForm() {
+	location.assign("/item-resps/add")
+}
 
-// When 'edit' button in table is clicked, show 'edit' section
-document.querySelectorAll(".table-button.edit").forEach(function (el) {
-	el.addEventListener("click", function () {
-		// // Hide section with add form
-		// document.getElementById("sectionItemRespAdd").classList.add("display-none")
-		// // Show section with edit form, scroll down to it
-		// document.getElementById("sectionItemRespEdit").classList.remove("display-none")
-		// document.getElementById("sectionItemRespEdit").scrollIntoView()
-		// // Populate edit form
-		// document.getElementById("formItemRespEdit").querySelector("input[name=ItemRespID]").value =
-		// 	this.getAttribute("data-ItemRespid") // Pass ItemRespID to hidden input
-		// document.getElementById("formItemRespEdit").querySelector("input[name=firstName]").value =
-		// 	this.getAttribute("data-firstname")
-		// document.getElementById("formItemRespEdit").querySelector("input[name=lastName]").value =
-		// 	this.getAttribute("data-lastname")
-		// document.getElementById("formItemRespEdit").querySelector("input[name=email]").value =
-		// 	this.getAttribute("data-email")
-	})
+function goToEditForm(itemID, employeeID) {
+	location.assign("/item-resps/edit/" + itemID + "_" + employeeID)
+}
+
+function goBack() {
+	location.assign("/item-resps")
+}
+
+document.addEventListener("DOMContentLoaded", function (event) {
+	// If editing, or when re-rendering the 'add' form after an error, select the correct options
+	let selectedItemID = document.getElementById("formItemResponsibility").querySelector("select[name=itemID]").getAttribute("value")
+	let selectedEmployeeID = document.getElementById("formItemResponsibility").querySelector("select[name=employeeID]").getAttribute("value")
+
+	let itemOptions = document.getElementById("formItemResponsibility").querySelector("select[name=itemID]").children
+	for (var i = 0; i < itemOptions.length; i++) {
+		if (itemOptions[i].getAttribute("value") === selectedItemID) itemOptions[i].setAttribute("selected", "selected")
+	}
+
+	let employeeOptions = document.getElementById("formItemResponsibility").querySelector("select[name=employeeID]").children
+	for (var i = 0; i < itemOptions.length; i++) {
+		if (employeeOptions[i].getAttribute("value") === selectedEmployeeID) employeeOptions[i].setAttribute("selected", "selected")
+	}
 })
