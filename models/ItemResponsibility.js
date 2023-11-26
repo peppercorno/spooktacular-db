@@ -22,23 +22,17 @@ class ItemResponsibility {
 			sqlQuery += "INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.itemID "
 			sqlQuery += "INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;"
 
-			db.pool.getConnection((err, connection) => {
-				if (err) console.error(err) // Not connected
+			db.pool.query(sqlQuery, (err, rows) => {
+				if (err) {
+					console.error(err)
+					resolve([]) // No rows
+					return
+				}
 
-				connection.query(sqlQuery, (err, rows) => {
-					connection.release() // When done with the connection, release
+				let relationships = []
+				for (let row of rows) relationships.push(new this(row.relationshipID, row.itemID, row.employeeID, row.itemName, row.employeeFullName))
 
-					if (err) {
-						console.error(err)
-						resolve([]) // No rows
-						return
-					}
-
-					let relationships = []
-					for (let row of rows) relationships.push(new this(row.relationshipID, row.itemID, row.employeeID, row.itemName, row.employeeFullName))
-
-					resolve(relationships)
-				})
+				resolve(relationships)
 			})
 		})
 	}
@@ -46,23 +40,32 @@ class ItemResponsibility {
 	// Read: get one row by relationshipID
 	static findByID(relationshipID) {
 		return new Promise((resolve, reject) => {
-			db.pool.getConnection((err, connection) => {
-				if (err) console.error(err) // Not connected
+			db.pool.query(`SELECT * FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
+				if (err) {
+					console.error(err)
+					resolve([])
+					return
+				}
 
-				connection.query(`SELECT * FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
-					connection.release() // When done with the connection, release
+				// res is an array. Create new class instance using data from first item in array
+				let row = new this(res[0].relationshipID, res[0].itemID, res[0].employeeID, null, null)
 
-					if (err) {
-						console.error(err)
-						resolve([])
-						return
-					}
+				resolve(row)
+			})
+		})
+	}
 
-					// res is an array. Create new class instance using data from first item in array
-					let row = new this(res[0].relationshipID, res[0].itemID, res[0].employeeID, null, null)
+	// Check whether this itemID employeeID combination already exists
+	checkIfExists() {
+		return new Promise((resolve, reject) => {
+			db.pool.query(`SELECT COUNT(1) AS count FROM InventoryItems_Employees WHERE itemID = ${this.itemID} AND employeeID = ${this.employeeID}`, (err, res) => {
+				if (err) {
+					reject(err)
+					return
+				}
 
-					resolve(row)
-				})
+				// res[0].count is either zero or one. Resolve with true or false
+				resolve(res[0].count === 1)
 			})
 		})
 	}
@@ -78,20 +81,14 @@ class ItemResponsibility {
 				let itemID = parseInt(this.itemID)
 				let employeeID = parseInt(this.employeeID)
 
-				db.pool.getConnection((err, connection) => {
-					if (err) console.error(err) // Not connected
+				db.pool.query(`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${itemID}, ${employeeID})`, (err, res) => {
+					// If there is an SQL error
+					if (err) {
+						reject(err)
+						return
+					}
 
-					connection.query(`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${itemID}, ${employeeID})`, (err, res) => {
-						connection.release() // When done with the connection, release
-
-						// If there is an SQL error
-						if (err) {
-							reject(err)
-							return
-						}
-
-						resolve(this)
-					})
+					resolve(this)
 				})
 			} else {
 				// Update
@@ -101,34 +98,7 @@ class ItemResponsibility {
 				let itemID = parseInt(this.itemID)
 				let employeeID = parseInt(this.employeeID)
 
-				db.pool.getConnection((err, connection) => {
-					if (err) console.error(err) // Not connected
-
-					connection.query("UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE relationshipID = ?;", [itemID, employeeID, relationshipID], (err, res) => {
-						connection.release() // When done with the connection, release
-
-						// If there is an SQL error
-						if (err) {
-							reject(err)
-							return
-						}
-
-						resolve(this)
-					})
-				})
-			}
-		})
-	}
-
-	// Delete
-	delete(relationshipID) {
-		return new Promise((resolve, reject) => {
-			db.pool.getConnection((err, connection) => {
-				if (err) console.error(err) // Not connected
-
-				connection.query(`DELETE FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
-					connection.release() // When done with the connection, release
-
+				db.pool.query("UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE relationshipID = ?;", [itemID, employeeID, relationshipID], (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -137,6 +107,21 @@ class ItemResponsibility {
 
 					resolve(this)
 				})
+			}
+		})
+	}
+
+	// Delete
+	delete(relationshipID) {
+		return new Promise((resolve, reject) => {
+			db.pool.query(`DELETE FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
+				// If there is an SQL error
+				if (err) {
+					reject(err)
+					return
+				}
+
+				resolve(this)
 			})
 		})
 	}

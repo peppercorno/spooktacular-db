@@ -268,8 +268,9 @@ button.table-button.delete:disabled i {
 	width: 140px;
 	height: 38px;
 	padding: 4px;
+	border: 1px solid #424242;
 	border-radius: 6px;
-	background: #141414;
+	background: #1f1f1f;
 	position: absolute;
 	top: 0;
 	left: 100px;
