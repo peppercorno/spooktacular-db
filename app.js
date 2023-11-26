@@ -23,7 +23,7 @@ const ticketRoutes = require("./routes/ticket")
 const itemResponsibilityRoutes = require("./routes/itemResponsibility")
 
 const app = express() // Create Express app
-const PORT = process.env.PORT || 5000 // Define port
+const PORT = process.env.PORT || 5003 // Define port
 
 // Parse requests
 app.use(express.urlencoded({ extended: true })) // content-type - application/x-www-form-urlencoded

@@ -49,7 +49,7 @@
 					</td>
 					<td>
 						{{#ifCond this.hasChildRows "==" "0"}}
-							<form method="DELETE" action="/customers/delete/{{this.customerID}}" class="form-delete">
+							<form method="DELETE" action="/rooms/delete/{{this.roomID}}" class="form-delete">
 								<input type="submit" class="table-button delete" value=""/>
 								<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
 							</form>
@@ -65,7 +65,7 @@
 	</section>
 	<section id="sectionRoomAdd" class="{{#ifCond error.section "!==" "add"}}display-none{{/ifCond}}">
 		<h1>Add Room</h1>
-		<form method="POST" action="/customers/add" id="formRoomAdd">
+		<form method="POST" action="/rooms/add" id="formRoomAdd">
 			<div class="form-field">
 				<label class="form-label">Name</label>
 				<input type="text" name="roomName" />
@@ -76,7 +76,7 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Max Capacity</label>
-				<input type="text" name="maxCapacity" />
+				<input type="number" name="maxCapacity" />
 			</div>
 			<div class="form-field">
 				<label class="form-label">Level</label>
@@ -97,8 +97,8 @@
 	</section>
 	<section id="sectionRoomEdit" class="{{#ifCond error.section "!==" "edit"}}display-none{{/ifCond}}">
 		<h1>Edit Room</h1>
-		<form method="POST" id="formRoomEdit">
-			<input type="text" name="roomID" value="{{roomBeingEdited.roomID}}" hidden/>
+		<form method="POST" action="/rooms/edit" id="formRoomEdit">
+    		<input type="text" name="roomID" value="{{roomBeingEdited.roomID}}" hidden/>
 			<div class="form-field">
 				<label class="form-label">Name</label>
 				<input type="text" name="roomName" value="{{roomBeingEdited.name}}"/>

@@ -14,7 +14,7 @@ class Room {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT roomID, name, theme, maxCapacity, level, "
+			let sqlQuery = "SELECT roomID,name, theme, maxCapacity, level, "
 			sqlQuery += "EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows "
 			sqlQuery += "FROM Rooms;"
 
@@ -84,6 +84,92 @@ class Room {
 					let room = new this(res[0].roomID, res[0].name, res[0].theme, res[0].maxCapacity, res[0].level, res[0].hasChildRows)
 
 					resolve(room)
+				})
+			})
+		})
+	}
+
+	// Create or Update 
+	save() {
+		return new Promise((resolve, reject) => {
+			// Determine whether we are creating or updating
+			if (this.roomID === undefined || this.roomID === null) {
+				// Create
+				if (!this.name || this.name.length === 0) throw new Error("room.add.roomnamemissing");
+        		if (!this.theme || this.theme.length === 0) throw new Error("room.add.thememissing");
+        		if (isNaN(this.maxCapacity)) throw new Error("room.add.maxCapacitynan");
+        		if (isNaN(this.level)) throw new Error("room.add.levelnan");
+
+
+				// Convert maxCapacity and level to integers
+				let maxCapacity = parseInt(this.maxCapacity);
+				let level = parseInt(this.level);
+
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query(`INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES ('${this.name}', '${this.theme}', ${this.maxCapacity}, ${this.level})`, (err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			} else {
+				// Update
+				if (!this.name || this.name.length === 0) throw new Error("room.edit.roomnamemissing");
+        		if (!this.theme || this.theme.length === 0) throw new Error("room.edit.thememissing");
+        		if (isNaN(this.maxCapacity)) throw new Error("room.edit.maxCapacitynan");
+        		if (isNaN(this.level)) throw new Error("room.edit.levelnan");
+
+				// Convert maxCapacity and level to integers
+				let maxCapacity = parseInt(this.maxCapacity);
+				let level = parseInt(this.level);
+
+
+				db.pool.getConnection((err, connection) => {
+					if (err) console.error(err) // Not connected
+
+					connection.query(
+						"UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", 
+						[this.name, this.theme, this.maxCapacity, this.level, this.roomID], 
+						(err, res) => {
+						connection.release() // When done with the connection, release
+
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
+					})
+				})
+			}
+		})
+	}
+
+	// Delete
+	delete(roomID) {
+		return new Promise((resolve, reject) => {
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
+
+				connection.query(`DELETE FROM Rooms WHERE roomID = ${roomID}`, (err, res) => {
+					connection.release() // When done with the connection, release
+
+					// If there is an SQL error
+					if (err) {
+						reject(err)
+						return
+					}
+
+					resolve(this)
 				})
 			})
 		})

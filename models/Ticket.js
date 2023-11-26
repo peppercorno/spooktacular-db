@@ -87,6 +87,73 @@ class Ticket {
 			})
 		})
 	}
+
+	// Create or Update 
+	save() {
+		return new Promise( (resolve, reject) => {
+			// Determine whether we are creating or updating
+			if (this.ticketID === undefined || this.ticketID === null) {
+				// Create
+				if (!this.customerID || this.customerID.length === 0) throw new Error("ticket.add.customerIDmissing");
+				if (!this.priceID || this.priceID.length === 0) throw new Error("ticket.add.priceIDmissing");
+				//if (!this.quantity || this.quantity.length === 0) throw new Error("ticket.add.quantitymissing");at 
+				console.log("Debug - Quantity:", this.quantity);
+				if (this.quantity === undefined || this.quantity === null) throw new Error("ticket.add.quantitymissing");
+				if (isNaN(this.quantity)) throw new Error("ticket.add.quantitynan");
+	  
+				let quantity = parseInt(this.quantity);
+				let purchaseDate = moment(this.purchaseDate).format("YYYY-MM-DD hh:mm:ss"); // Format the date
+	  
+				db.pool.getConnection((err, connection) => {
+			  	if (err) {
+					console.error(err);
+					reject(err);
+					return;
+			  	}
+	  
+			  	connection.query(`INSERT INTO Tickets (customerID, priceID, quantity, purchaseDate) VALUES (?, ?, ?, ?)`, [this.customerID, this.priceID, quantity, purchaseDate], (err, res) => {
+					connection.release();
+	  
+				  	if (err) {
+						reject(err);
+						return;
+				  	}
+	  
+				  	resolve(this);
+				})
+			})
+		} else {
+			// Update
+			if (!this.customerID || this.customerID.length === 0) throw new Error("ticket.edit.customerIDmissing");
+			if (!this.priceID || this.priceID.length === 0) throw new Error("ticket.edit.priceIDmissing");
+			//if (!this.quantity || this.quantity.length === 0) throw new Error("ticket.edit.quantitymissing");
+			if (this.quantity === undefined || this.quantity === null) throw new Error("ticket.add.quantitymissing");
+			if (isNaN(this.quantity)) throw new Error("ticket.edit.quantitynan");
+	  
+			let quantity = parseInt(this.quantity);
+			let purchaseDate = moment(this.purchaseDate).format("YYYY-MM-DD hh:mm:ss");
+	  
+			db.pool.getConnection((err, connection) => {
+			  	if (err) {
+					console.error(err);
+					reject(err);
+					return;
+			  	}
+	  
+			  	connection.query("UPDATE Tickets SET customerID = ?, priceID = ?, quantity = ?, purchaseDate = ? WHERE ticketID = ?", [this.customerID, this.priceID, quantity, purchaseDate, this.ticketID], (err, res) => {
+					connection.release();
+	  
+				  	if (err) {
+						reject(err);
+						return;
+				  	}
+	  
+				  	resolve(this);
+				})
+			})
+		}
+	})
+}
 }
 
 module.exports = Ticket
