@@ -1,0 +1,69 @@
+{{> navigation currentView="inventoryItems" }}
+
+<main>
+	<section>
+		<header class="header-row">
+			<h1>Inventory Items</h1>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+		</header>
+
+		<div class="filter-wrapper">
+			<label class="disabled">Filter by room</label>
+			<select id="" disabled>
+				<option></option>
+			</select>
+		</div>
+
+		{{#ifCond success "===" "added"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "edited"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
+			{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
+		{{/ifCond}}
+
+		{{#if errorMessage}}
+			{{> notification centered="true" message=errorMessage}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Item Name</th>
+					<th>Item Condition</th>
+					<th>Room</th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each inventoryItems}}
+				<tr>
+					<td>{{this.itemID}}</td>
+					<td>{{this.name}}</td>
+					<td>{{this.itemCondition}}</td>
+					<td>{{this.roomName}}</td>
+					<td>
+						<button onClick="goToEditForm({{this.itemID}})" class="table-button edit" type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
+					</td>
+					<td>
+						<form method="DELETE" action="/inventory-items/delete/{{this.itemID}}" class="form-delete">
+							<input type="submit" class="table-button delete" value=""/>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/inventoryItems.js"></script>

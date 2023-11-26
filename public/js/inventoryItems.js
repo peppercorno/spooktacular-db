@@ -1,41 +1,25 @@
-// When 'add new' button is clicked, show 'add' section
-document.getElementById("buttonInventoryItemAdd").addEventListener("click", function (event) {
-	// Hide section with edit form
-	document.getElementById("sectionInventoryItemEdit").classList.add("display-none")
+function goToAddForm() {
+	location.assign("/inventory-items/add")
+}
 
-	// Show section with add form, scroll down to it
-	document.getElementById("sectionInventoryItemAdd").classList.toggle("display-none")
-	document.getElementById("sectionInventoryItemAdd").scrollIntoView()
+function goToEditForm(itemID) {
+	location.assign("/inventory-items/edit/" + itemID)
+}
+
+function goBack() {
+	location.assign("/inventory-items")
+}
+
+document.addEventListener("DOMContentLoaded", function (event) {
+	// Dropdown menu:  If editing, or when re-rendering the 'add' form after an error, select the correct option
+	let selectedID = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").getAttribute("value")
+
+	if (selectedID) {
+		let selectOptions = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").children
+		for (var i = 0; i < selectOptions.length; i++) {
+			if (selectOptions[i].getAttribute("value") === selectedID) selectOptions[i].setAttribute("selected", "selected")
+		}
+	}
 })
 
-// When 'edit' button in table is clicked, show 'edit' section
-document.querySelectorAll(".table-button.edit").forEach(function (el) {
-	el.addEventListener("click", function () {
-		// Hide section with add form
-		document.getElementById("sectionInventoryItemAdd").classList.add("display-none")
-
-		// Show section with edit form, scroll down to it
-		document.getElementById("sectionInventoryItemEdit").classList.remove("display-none")
-		document.getElementById("sectionInventoryItemEdit").scrollIntoView()
-
-		// Populate edit form
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemID]").value =
-			this.getAttribute("data-itemid") // Pass itemID to hidden input
-
-		// Select room
-		document.getElementById("formInventoryItemEdit").querySelector("select[name=room]").value =
-			this.getAttribute("data-roomid")
-
-		// TODO: Selecting multiple employees may not be straightforward
-		// document.getElementById("formInventoryItemEdit").querySelector("select[name=employee]").value =
-		// 	this.getAttribute("data-employeeid")
-
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemName]").value =
-			this.getAttribute("data-itemname")
-		document.getElementById("formInventoryItemEdit").querySelector("input[name=itemCondition]").value =
-			this.getAttribute("data-itemcondition")
-	})
-})
-
-// TODO: Filter by room
-// TODO: Filter by employee
+// TODO: Filter

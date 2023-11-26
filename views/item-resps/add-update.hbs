@@ -1,0 +1,50 @@
+{{> navigation currentView="itemResponsibilities" }}
+
+<main>
+	<section>
+		<div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Item Responsibility
+			</h1>
+            <button onClick="goBack()" type="button">Back</button>
+        </div>
+
+		<form method="POST"
+            {{#if formAdd}}action="/item-resps/add"{{/if}} 
+			{{#if formEdit}}action="/item-resps/edit"{{/if}} 
+			id="formItemResponsibility">
+
+            {{#if formEdit}}
+                <input type="text" name="relationshipID" value="{{relationshipFields.relationshipID}}" hidden/>
+            {{/if}}
+
+			<div class="form-field">
+				<label class="form-label">Item</label>
+                <select name="itemID" value="{{relationshipFields.itemID}}">
+                    {{#each items}}
+                    <option value="{{this.itemID}}">#{{this.itemID}} - {{this.name}}</option>
+                    {{/each}}
+                </select>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Employee</label>
+                <select name="employeeID" value="{{relationshipFields.employeeID}}">
+                    {{#each employees}}
+                    <option value="{{this.employeeID}}">{{this.firstName}} {{this.lastName}}</option>
+                    {{/each}}
+                </select>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Relationship" />
+			</div>
+		</form>
+	</section>
+
+</main>
+
+<script type="text/javascript" src="/js/itemResponsibility.js"></script>

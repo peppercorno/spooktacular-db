@@ -8,21 +8,23 @@ Admission Prices
 ------------------------------*/
 -- For table: Get all Admission Price rows
 -- Indicate whether each row has any child rows
-SELECT priceID, year, basePrice,
+SELECT priceID, year, description, basePrice,
 EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows
 FROM AdmissionPrices ORDER BY year DESC;
 
+-- For dropdown menus: Get all Admission Price rows according to a given year. Order by description alphabetically.
+SELECT priceID, description, basePrice FROM AdmissionPrices WHERE year = :givenYear ORDER BY description ASC;
+
 -- Add a new Admission Price
-INSERT INTO AdmissionPrices (year, basePrice) 
-VALUES (:yearInput, :basePriceInput);
+INSERT INTO AdmissionPrices (year, description, basePrice) 
+VALUES (:newYear, :newDescription, :newBasePrice);
 
 -- To populate update form fields:
 -- Get one Admission Price row by priceID
 SELECT * FROM AdmissionPrices WHERE priceID = :priceIDToUpdate;
 
--- Update existing Admission Price (only allow basePrice to be updated, not year)
-UPDATE AdmissionPrices SET basePrice = :newBasePriceInput 
-WHERE priceID = :priceIDToUpdate;
+-- Update an Admission Price
+UPDATE AdmissionPrices SET year = :newYear, description = :newDescription, basePrice = :newBasePrice WHERE priceID = :priceIDToUpdate;
 
 -- Delete an Admission Price
 DELETE FROM AdmissionPrices WHERE priceID = :priceIDToDelete;
@@ -48,7 +50,7 @@ INSERT INTO Customers (firstName, lastName, email) VALUES (:newFirstName, :newLa
 -- Get one Customer row by customerID
 SELECT * FROM Customers WHERE customerID = :customerIDToUpdate;
 
--- Update a new Customer
+-- Update a Customer
 UPDATE Customers SET firstName = :newFirstName, lastName = :newLastName, email = :newEmail WHERE customerID = :customerIDToUpdate;
 
 -- Delete a Customer
@@ -86,7 +88,8 @@ Inventory Items
 -- For table: Get all Inventory Item rows with associated Room data
 SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, Rooms.name AS roomName
 FROM InventoryItems
-LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID;
+LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID 
+ORDER BY itemID desc;
 
 -- To populate update form fields:
 -- Get one Inventory Item row by itemID, along with associated Room data
@@ -94,13 +97,10 @@ SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, Invent
 	Rooms.name AS roomName
 FROM InventoryItems 
 LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID
-WHERE InventoryItems.itemID = :itemID;
+WHERE InventoryItems.itemID = :itemIDToUpdate;
 
--- For the dropdown menu: get associated Employees from intersection table to know which select options to mark as selected
-SELECT InventoryItems_Employees.employeeID, CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName 
-FROM InventoryItems_Employees 
-INNER JOIN Employees ON InventoryItems_Employees.employeeID = Employees.employeeID
-WHERE itemID = :itemIDToUpdate;
+-- For dropdown menus: Get all Inventory Item rows-- itemID and name only
+SELECT itemID, name FROM InventoryItems;
 
 -- Add a new Inventory Item
 INSERT INTO InventoryItems (name, roomID, itemCondition)
@@ -120,7 +120,7 @@ DELETE FROM InventoryItems WHERE itemID = :itemIDToDelete;
 InventoryItems_Employees
 ------------------------------*/
 -- For table: get all InventoryItems_Employees rows and associated names from InventoryItems and Employees
-SELECT InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, 
+SELECT InventoryItems_Employees.relationshipID, InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, 
     InventoryItems.name AS itemName, 
     CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName 
 FROM InventoryItems_Employees
@@ -128,13 +128,18 @@ INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.it
 INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;
 
 -- Add a relationship between Inventory Items and Employees
-INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:itemID, :employeeID);
+INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:newItemID, :newEmployeeID);
 
--- Update a relationship by itemID
-UPDATE InventoryItems_Employees SET employeeID = :newEmployeeID WHERE itemID = :itemIDToUpdate;
+-- To populate update form fields: Get one relationship by relationshipID.
+-- Don't need associated InventoryItem or Employee names as dropdown values will provide them.
+SELECT * FROM InventoryItems_Employees WHERE relationshipID = :relationshipIDToUpdate;
+
+-- Update a relationship
+UPDATE InventoryItems_Employees SET itemID = :newItemID, employeeID = :newEmployeeID 
+WHERE relationshipID = :relationshipIDToUpdate;
 
 -- Delete a relationship between Inventory Items and Employees
-DELETE FROM InventoryItems_Employees WHERE (itemID = :itemIDToDelete AND employeeID = :employeeIDToDelete);
+DELETE FROM InventoryItems_Employees WHERE relationshipID = :relationshipIDToDelete;
 
 /*------------------------------
 Reviews

@@ -1,0 +1,60 @@
+{{> navigation currentView="inventoryItems" }}
+
+<main>
+	<section>
+        <div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Inventory Item
+			</h1>
+            <button onClick="goBack()" type="button">Back</button>
+        </div>
+		
+		<form method="POST" 
+			{{#if formAdd}}action="/inventory-items/add"{{/if}} 
+			{{#if formEdit}}action="/inventory-items/edit"{{/if}} 
+			id="formInventoryItem">
+
+			{{#if formEdit}}
+				<input type="text" name="itemID" value="{{itemFields.itemID}}" hidden/>
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label">Name</label>
+				<input type="text" name="name" value="{{itemFields.name}}"/>
+			</div>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Room</label>
+					<p class="form-field-explanation">Optional</p>
+				</div>
+				<div class="column-input">
+					<select name="roomID" value="{{itemFields.roomID}}">
+						<option value="0">--</option>
+						{{#each rooms}}
+							<option value="{{this.roomID}}">{{this.name}}</option>
+						{{/each}}
+					</select>
+				</div>
+			</div>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Item Condition</label>
+					<p class="form-field-explanation">Optional</p>
+				</div>
+				<div class="column-input">
+					<input type="text" name="itemCondition" value="{{itemFields.itemCondition}}"/>
+				</div>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Inventory Item" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/inventoryItems.js"></script>
