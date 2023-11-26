@@ -23,7 +23,7 @@
 
 			<div class="form-field">
 				<label class="form-label">Item</label>
-                <select name="itemID">
+                <select name="newItemID">
                     {{#each items}}
                     <option value="{{this.itemID}}">#{{this.itemID}} - {{this.itemName}}</option>
                     {{/each}}
@@ -31,7 +31,7 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Employee</label>
-                <select name="employeeID">
+                <select name="newEmployeeID">
                     {{#each employees}}
                     <option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
                     {{/each}}

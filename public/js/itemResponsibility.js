@@ -11,7 +11,7 @@ function goBack() {
 }
 
 document.addEventListener("DOMContentLoaded", function (event) {
-	// If editing, or when re-rendering the 'add' form after an error, select the correct options
+	// Dropdown menus: If editing, or when re-rendering the 'add' form after an error, select the correct options
 	let selectedItemID = document.getElementById("formItemResponsibility").querySelector("select[name=itemID]").getAttribute("value")
 	let selectedEmployeeID = document.getElementById("formItemResponsibility").querySelector("select[name=employeeID]").getAttribute("value")
 

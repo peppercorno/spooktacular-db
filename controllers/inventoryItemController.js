@@ -28,7 +28,7 @@ exports.showAdd = async (req, res) => {
 		res.render("inventory-items/add-update", { rooms, formAdd: true })
 	} catch (err) {
 		console.log(err)
-		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage: "Oops, unable to retrieve room data." })
+		res.render("inventory-items/add-update", { errorMessage: "Oops, unable to retrieve room data.", formAdd: true })
 	}
 }
 
@@ -44,7 +44,7 @@ exports.showEdit = async (req, res) => {
 		res.render("inventory-items/add-update", { rooms, itemFields, formEdit: true })
 	} catch (err) {
 		console.log(err)
-		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage: "Oops, unable to retrieve data." })
+		res.render("inventory-items/add-update", { errorMessage: "Oops, unable to retrieve data for this item.", formEdit: true })
 	}
 }
 

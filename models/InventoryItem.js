@@ -46,6 +46,28 @@ class InventoryItem {
 		})
 	}
 
+	// Read: get all rows for dropdown menus. Limit to itemID and name details.
+	static findNames() {
+		return new Promise((resolve, reject) => {
+			db.pool.getConnection((err, connection) => {
+				if (err) console.error(err) // Not connected
+
+				connection.query("SELECT itemID, name FROM InventoryItems;", (err, rows) => {
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
+
+					let inventoryItems = []
+					for (let row of rows) inventoryItems.push(new this(row.itemID, null, null, row.name, null))
+
+					resolve(inventoryItems)
+				})
+			})
+		})
+	}
+
 	// Read: get one row by itemID
 	static findById(itemID) {
 		return new Promise((resolve, reject) => {

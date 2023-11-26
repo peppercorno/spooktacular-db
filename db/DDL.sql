@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS Customers (
 -- 1:M optional relationship with Tickets
 CREATE TABLE IF NOT EXISTS AdmissionPrices (
     priceID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    year int NOT NULL UNIQUE,
+    year int NOT NULL,
+    description varchar(64) NOT NULL,
     basePrice decimal(9,2) NOT NULL
 ) ENGINE = InnoDB;
 
@@ -95,9 +96,9 @@ CREATE TABLE IF NOT EXISTS Reviews (
     Create intersection tables 
 ------------------------------*/
 CREATE TABLE IF NOT EXISTS InventoryItems_Employees (
+    relationshipID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     itemID int,
     employeeID int,
-    PRIMARY KEY (itemID, employeeID),
     FOREIGN KEY (itemID) REFERENCES InventoryItems(itemID) ON DELETE CASCADE,
     FOREIGN KEY (employeeID) REFERENCES Employees(employeeID) ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -132,11 +133,12 @@ INSERT INTO Customers (firstName, lastName, email) VALUES
         "lilyl@email.com"
     );
 
-INSERT INTO AdmissionPrices (year, basePrice) VALUES
-    (2021, 15.00),
-    (2022, 20.00),
-    (2023, 25.00),
-    (2024, 28.00);
+INSERT INTO AdmissionPrices (year, description, basePrice) VALUES
+    (2021, "Standard", 15.00),
+    (2022, "Standard", 20.00),
+    (2023, "Student", 10.00),
+    (2023, "Standard", 25.00),
+    (2023, "Senior", 18.00);
 
 INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES 
     (

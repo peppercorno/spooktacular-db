@@ -1,82 +1,130 @@
-// Get model
+// Get models
 const ItemResponsibility = require("../models/ItemResponsibility")
+const InventoryItem = require("../models/InventoryItem")
+const Employee = require("../models/Employee")
 
-// Render Item Responsibilities view
-exports.render = async (req, res) => {
-	// Get all relationships between Inventory Items and Employees
-	let relationships = await ItemResponsibility.findAll()
-	let relBeingEdited = ""
+// Show all rows representing relationships between Inventory Items and Employees
+exports.showAll = async (req, res) => {
+	try {
+		// Get all rows from intersection table InventoryItems_Employees
+		let relationships = await ItemResponsibility.findAll()
 
-	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add relationship." } // Default error message
-	if (error) {
-		// Custom error messages
-		// if (req.query.type === "firstnamemissing") error.message = "First name is required."
+		// Whether to show success notification
+		let success = req.query.success
+
+		// Render view
+		res.render("item-resps/index", { relationships, success })
+	} catch (err) {
+		console.log(err)
+		res.render("item-resps/index", { errorMessage: "Error! Unable to retrieve data." })
 	}
-	// Errors from 'add' form
-	if (error && req.query.error === "add") error.section = "add"
-	// Errors from 'edit' form
-	if (error && req.query.error === "edit") {
-		// Fetch relationship data to repopulate fields in 'edit' form
-		relBeingEdited = await ItemResponsibility.findById(req.query.id)
-		error.section = "edit"
+}
+
+// Show add form
+exports.showAdd = async (req, res) => {
+	try {
+		// For dropdown menus
+		let items = await InventoryItem.findNames()
+		let employees = await Employee.findNames()
+
+		res.render("item-resps/add-update", { items, employees, formAdd: true })
+	} catch (err) {
+		console.log(err)
+		res.render("item-resps/add-update", { errorMessage: "Oops, unable to retrieve data for dropdown menus.", formAdd: true })
 	}
-	if (error && req.query.error === "notdeleted") error.section = "notdeleted"
+}
 
-	// Whether to show notification above table
-	let success = req.query.success
+// Show edit form
+exports.showEdit = async (req, res) => {
+	try {
+		// Get data for relationship being edited
+		let relationshipFields = await ItemResponsibility.findByCompPK(req.params.itemID, req.params.employeeID)
 
-	// Render view
-	res.render("item-responsibilities", { relationships, error, success, relBeingEdited })
+		// For dropdown menus
+		let items = await InventoryItem.findNames()
+		let employees = await Employee.findNames()
+
+		res.render("item-resps/add-update", { items, employees, relationshipFields, formEdit: true })
+	} catch (err) {
+		console.log(err)
+		res.render("item-resps/add-update", { errorMessage: "Oops, unable to retrieve data for this relationship.", formEdit: true })
+	}
 }
 
 // Add a new relationship
-// exports.add = async (req, res) => {
-// 	try {
-// 		// First param: null because we don't want to fill in customerID (it is a PK and auto-increment)
-// 		let relationship = new ItemResponsibility(null, req.body.firstName, req.body.lastName, req.body.email)
+exports.add = async (req, res) => {
+	try {
+		// First param: null because we don't want to fill in itemID (it is a PK and auto-increment)
+		// Follow params that ItemResponsibility class requires: itemID, employeeID, itemName, employeeFullName
+		let relationship = new ItemResponsibility(null, null, req.body.newItemID, req.body.newEmployeeID, req.body.name, req.body.itemCondition)
 
-// 		await relationship.save()
+		await relationship.save()
 
-// 		// If successful
-// 		res.redirect("/item-resps/?success=added")
-// 	} catch (err) {
-// 		// To detect one of our defined validation errors, check the prefix
-// 		if (err.message.substring(0, 12) === "relationship.add") {
-// 			res.redirect("/item-resps/?error=add&type=" + err.message.substring(13))
-// 		} else res.redirect("/item-resps/?error=add&type=unknown")
-// 	}
-// }
+		// If successful
+		res.redirect("/item-resps/?success=added")
+	} catch (err) {
+		console.log(err)
+
+		// For dropdown menu
+		let rooms = await Room.findNames()
+
+		// To repopulate form fields after an error
+		let relationshipFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add relationship."
+		if (!rooms || rooms === null) errorMessage = "Unable to retrieve room data."
+		if (err.message === "nameMissing") errorMessage = "Item name is missing."
+
+		res.render("item-resps/add-update", { items, employees, relationshipFields, errorMessage, formAdd: true })
+	}
+}
 
 // Edit existing relationship
-// exports.edit = async (req, res) => {
-// 	try {
-// 		let relationship = new ItemResponsibility(req.body.customerID, req.body.firstName, req.body.lastName, req.body.email)
+exports.edit = async (req, res) => {
+	try {
+		let relationship = new ItemResponsibility(req.body.itemID, req.body.roomID, "", req.body.name, req.body.itemCondition)
 
-// 		await relationship.save()
+		await relationship.save()
 
-// 		// If successful
-// 		res.redirect("/item-resps/?success=edited")
-// 	} catch (err) {
-// 		console.log(err)
+		// If successful
+		res.redirect("/item-resps/?success=edited")
+	} catch (err) {
+		console.log(err)
 
-// 		// To detect one of our defined validation errors, check the prefix
-// 		if (err.message.substring(0, 13) === "relationship.edit") {
-// 			res.redirect("/item-resps/?error=edit&type=" + err.message.substring(14) + "&id=" + req.body.customerID)
-// 		} else res.redirect("/item-resps/?error=edit&type=unknown" + "&id=" + req.body.customerID)
-// 	}
-// }
+		// For dropdown menu
+		let rooms = await Room.findNames()
+
+		// To repopulate form fields after an error
+		let relationshipFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add relationship."
+		if (!rooms || rooms === null) errorMessage = "Unable to retrieve room data."
+		if (err.message === "nameMissing") errorMessage = "Item name is missing."
+
+		res.render("item-resps/add-update", { errorMessage, items, employees, relationshipFields, formEdit: true })
+	}
+}
 
 // Delete existing relationship
-// exports.delete = async (req, res) => {
-// 	try {
-// 		let relationship = new ItemResponsibility(req.params.id, "", "", "")
+exports.delete = async (req, res) => {
+	try {
+		let relationship = new ItemResponsibility(req.params.id, "", "", "", "")
 
-// 		await relationship.delete(req.params.id)
+		await item.delete(req.params.id)
 
-// 		// If successful
-// 		res.redirect("/item-resps/?success=deleted")
-// 	} catch (err) {
-// 		console.log(err)
-// 		res.redirect("/item-resps/?error=notdeleted")
-// 	}
-// }
+		// If successful
+		res.redirect("/item-resps/?success=deleted")
+	} catch (err) {
+		console.log(err)
+
+		let errorMessage = "Error! Item not deleted."
+
+		// Get all relationships
+		let relationships = await ItemResponsibility.findAll()
+		if (!relationships || relationships === null) errorMessage = "Error! Unable to retrieve data."
+
+		res.render("item-resps/index", { relationships, errorMessage })
+	}
+}
