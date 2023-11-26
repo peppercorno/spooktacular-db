@@ -54,7 +54,12 @@
 								<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
 							</form>
 						{{else}}
-							<p class="text-cannot-delete">Cannot delete.<br/>Has a Review.</p>
+							<button class="table-button delete" disabled>
+								<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+								<div class="nodelete-tooltip">
+									<p>Unable to delete.<br/>Has a Review.</p>
+								</div>
+							</button>
 						{{/ifCond}}
 					</td>
 				</tr>
