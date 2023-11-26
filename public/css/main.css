@@ -94,7 +94,7 @@ a.nav-item {
 button:hover,
 a.nav-item:hover,
 input[type="submit"]:hover {
-	background-color: #186a3e;
+	background-color: #1ce479;
 }
 
 a.nav-item.selected {
@@ -102,10 +102,21 @@ a.nav-item.selected {
 	background-color: #046b34;
 }
 
+button.button-secondary {
+	background-color: transparent;
+	color: #eeeeee;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+button.button-secondary:hover {
+	background-color: rgba(255, 255, 255, 0.08);
+}
+
 button:disabled,
 input[type="submit"]:disabled {
-	color: #616161;
-	background-color: #272727;
+	color: #616161 !important;
+	background-color: #272727 !important;
+	border: none;
 	cursor: default;
 }
 
@@ -339,6 +350,7 @@ textarea {
 	border-radius: 3px;
 	outline: none;
 	background-color: #212121;
+	caret-color: white;
 }
 
 select:disabled,
@@ -349,6 +361,16 @@ textarea:disabled {
 	color: #616161;
 	border: none;
 	background-color: #131313;
+}
+
+/*Fix Chrome autofill default white background*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: white;
+	transition: background-color 5000s ease-in-out 0s;
 }
 
 .radio-wrapper {
