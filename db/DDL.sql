@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS Reviews (
 ) ENGINE = InnoDB;
 
 /*------------------------------
-    Create intersection tables 
+    Create intersection table
 ------------------------------*/
 CREATE TABLE IF NOT EXISTS InventoryItems_Employees (
     relationshipID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
