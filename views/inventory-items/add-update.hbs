@@ -8,7 +8,7 @@
 				{{#if formEdit}}Edit {{/if}}
 				Inventory Item
 			</h1>
-            <button onClick="goBack()" type="button">Back</button>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
         </div>
 		
 		<form method="POST" 
@@ -30,7 +30,7 @@
 					<p class="form-field-explanation">Optional</p>
 				</div>
 				<div class="column-input">
-					<select name="roomID" value="{{itemFields.roomID}}">
+					<select name="roomID" {{#if itemFields }}value="{{itemFields.roomID}}"{{/if}}>
 						<option value="0">--</option>
 						{{#each rooms}}
 							<option value="{{this.roomID}}">{{this.name}}</option>

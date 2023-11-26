@@ -47,7 +47,7 @@ exports.showEdit = async (req, res) => {
 		res.render("item-resps/add-update", { items, employees, relationshipFields, formEdit: true })
 	} catch (err) {
 		console.log(err)
-		res.render("item-resps/add-update", { errorMessage: "Oops, unable to retrieve data for this relationship.", formEdit: true })
+		res.render("item-resps/add-update", { relationshipFields, errorMessage: "Oops, unable to retrieve data for this relationship.", formEdit: true })
 	}
 }
 
@@ -88,6 +88,10 @@ exports.edit = async (req, res) => {
 	try {
 		let relationship = new ItemResponsibility(req.body.relationshipID, req.body.itemID, req.body.employeeID, null, null)
 
+		// Prevent SQL error that causes server to crash: Check whether relationship already exists
+		let alreadyExists = await relationship.checkIfExists()
+		if (alreadyExists) throw new Error("alreadyExists")
+
 		await relationship.save()
 
 		// If successful
@@ -106,8 +110,10 @@ exports.edit = async (req, res) => {
 		let errorMessage = "Unknown error! Unable to edit relationship."
 		if (!items || items === null) errorMessage = "Unable to retrieve data on inventory items."
 		if (!employees || employees === null) errorMessage = "Unable to retrieve data on employees."
+		if (err.message === "alreadyExists") errorMessage = "This relationship already exists in the database."
+
 		// If user tries to add a relationship that already exists
-		if (err.code && err.code === "ER_DUP_ENTRY") errorMessage = "This relationship already exists in the database."
+		// if (err.code && err.code === "ER_DUP_ENTRY") errorMessage = "This relationship already exists in the database."
 
 		res.render("item-resps/add-update", { errorMessage, items, employees, relationshipFields, formEdit: true })
 	}

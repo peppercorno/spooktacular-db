@@ -8,7 +8,7 @@
 				{{#if formEdit}}Edit {{/if}}
 				Item Responsibility
 			</h1>
-            <button onClick="goBack()" type="button">Back</button>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
         </div>
 
 		<form method="POST"
@@ -22,7 +22,7 @@
 
 			<div class="form-field">
 				<label class="form-label">Item</label>
-                <select name="itemID" value="{{relationshipFields.itemID}}">
+                <select name="itemID" {{#if relationshipFields}}value="{{relationshipFields.itemID}}"{{/if}}>
                     {{#each items}}
                     <option value="{{this.itemID}}">#{{this.itemID}} - {{this.name}}</option>
                     {{/each}}
@@ -30,7 +30,7 @@
 			</div>
 			<div class="form-field">
 				<label class="form-label">Employee</label>
-                <select name="employeeID" value="{{relationshipFields.employeeID}}">
+                <select name="employeeID" {{#if relationshipFields}}value="{{relationshipFields.employeeID}}"{{/if}}>
                     {{#each employees}}
                     <option value="{{this.employeeID}}">{{this.firstName}} {{this.lastName}}</option>
                     {{/each}}
@@ -40,7 +40,7 @@
 				{{#if errorMessage}}
 					{{> notification message=errorMessage}}
 				{{/if}}
-				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Relationship" />
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Relationship"/>
 			</div>
 		</form>
 	</section>

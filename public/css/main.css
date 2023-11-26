@@ -94,7 +94,7 @@ a.nav-item {
 button:hover,
 a.nav-item:hover,
 input[type="submit"]:hover {
-	background-color: #186a3e;
+	background-color: #1ce479;
 }
 
 a.nav-item.selected {
@@ -102,10 +102,21 @@ a.nav-item.selected {
 	background-color: #046b34;
 }
 
+button.button-secondary {
+	background-color: transparent;
+	color: #eeeeee;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+button.button-secondary:hover {
+	background-color: rgba(255, 255, 255, 0.08);
+}
+
 button:disabled,
 input[type="submit"]:disabled {
 	color: #616161;
 	background-color: #272727;
+	border: none;
 	cursor: default;
 }
 
@@ -231,12 +242,53 @@ button.table-button i {
 
 button.table-button.delete,
 input[type="submit"].table-button.delete {
-	background-color: tomato;
+	background-color: #c04f42;
+	position: relative;
 }
 
 button.table-button.delete:hover,
 input[type="submit"].table-button.delete:hover {
-	background-color: #b9402b;
+	background-color: salmon;
+}
+
+button.table-button:disabled {
+	cursor: default;
+}
+
+button.table-button.delete:disabled {
+	background-color: #473837;
+}
+
+button.table-button.delete:disabled i {
+	opacity: 0.75;
+}
+
+/*Tooltip for rows that cannot be deleted*/
+.nodelete-tooltip {
+	width: 140px;
+	height: 38px;
+	padding: 4px;
+	border: 1px solid #424242;
+	border-radius: 6px;
+	background: #1f1f1f;
+	position: absolute;
+	top: 0;
+	left: 100px;
+	z-index: 2;
+	display: none;
+}
+
+.nodelete-tooltip p {
+	margin: auto;
+	padding: 0;
+	color: white;
+	font-size: 11px;
+	font-weight: normal;
+	text-transform: initial;
+}
+
+button.table-button.delete:disabled:hover .nodelete-tooltip {
+	display: flex;
 }
 
 .form-delete {
@@ -257,16 +309,6 @@ input[type="submit"].table-button.delete:hover {
 .icon-delete i {
 	color: #181a1b;
 	font-size: 1.25em;
-}
-
-.text-cannot-delete {
-	font-size: 10px;
-	line-height: 14px;
-	text-align: center;
-	background: #212121;
-	padding: 3px;
-	border-radius: 6px;
-	color: #6b6b6b;
 }
 
 /*-------------------
@@ -339,6 +381,7 @@ textarea {
 	border-radius: 3px;
 	outline: none;
 	background-color: #212121;
+	caret-color: white;
 }
 
 select:disabled,
@@ -349,6 +392,16 @@ textarea:disabled {
 	color: #616161;
 	border: none;
 	background-color: #131313;
+}
+
+/*Fix Chrome autofill default white background*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: white;
+	transition: background-color 5000s ease-in-out 0s;
 }
 
 .radio-wrapper {
@@ -402,8 +455,8 @@ Notification
 }
 
 .notification.error {
-	border: 1px solid tomato;
-	color: tomato;
+	border: 1px solid #c04f42;
+	color: salmon;
 }
 
 .notification.success {
