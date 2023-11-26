@@ -2,9 +2,10 @@
 let db = require("../db-config")
 
 class AdmissionPrice {
-	constructor(id, year, basePrice, hasChildRows) {
+	constructor(id, year, description, basePrice, hasChildRows) {
 		this.priceID = id
 		this.year = year
+		this.description = description
 		this.basePrice = basePrice
 		this.hasChildRows = hasChildRows
 	}
@@ -15,7 +16,7 @@ class AdmissionPrice {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
-				let sqlQuery = "SELECT priceID, year, basePrice, "
+				let sqlQuery = "SELECT priceID, year, description, basePrice, "
 				sqlQuery += "EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows "
 				sqlQuery += "FROM AdmissionPrices ORDER BY year DESC;"
 
@@ -29,7 +30,7 @@ class AdmissionPrice {
 					}
 
 					let admissionPrices = []
-					for (let row of rows) admissionPrices.push(new this(row.priceID, row.year, row.basePrice, row.hasChildRows))
+					for (let row of rows) admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, row.hasChildRows))
 
 					resolve(admissionPrices)
 				})
@@ -53,7 +54,7 @@ class AdmissionPrice {
 					}
 
 					// res is an array. Create new class instance using data from first item in array
-					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].basePrice, null)
+					let admissionPrice = new this(res[0].priceID, res[0].year, res[0].description, res[0].basePrice, null)
 
 					resolve(admissionPrice)
 				})
@@ -70,6 +71,8 @@ class AdmissionPrice {
 				if (!this.year || this.year.length === 0) throw new Error("admission.add.yearmissing")
 				if (isNaN(this.year)) throw new Error("admission.add.yearnan")
 
+				if (!this.description || this.description.length === 0) throw new Error("admission.add.descriptionmissing")
+
 				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.add.basepricemissing")
 				if (isNaN(this.basePrice)) throw new Error("admission.add.basepricenan")
 
@@ -79,7 +82,7 @@ class AdmissionPrice {
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query(`INSERT INTO AdmissionPrices (year, basePrice) VALUES (${year}, ${basePrice})`, (err, res) => {
+					connection.query(`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${this.description}', ${basePrice})`, (err, res) => {
 						connection.release() // When done with the connection, release
 
 						// If there is an SQL error
@@ -96,6 +99,8 @@ class AdmissionPrice {
 				if (!this.year || this.year.length === 0) throw new Error("admission.edit.yearmissing")
 				if (isNaN(this.year)) throw new Error("admission.edit.yearnan")
 
+				if (!this.description || this.description.length === 0) throw new Error("admission.add.descriptionmissing")
+
 				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.edit.basepricemissing")
 				if (isNaN(this.basePrice)) throw new Error("admission.edit.basepricenan")
 
@@ -105,7 +110,7 @@ class AdmissionPrice {
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query("UPDATE AdmissionPrices SET year = ?, basePrice = ? WHERE priceID = ?", [year, basePrice, this.priceID], (err, res) => {
+					connection.query("UPDATE AdmissionPrices SET year = ?, description = ?, basePrice = ? WHERE priceID = ?", [year, this.description, basePrice, this.priceID], (err, res) => {
 						connection.release() // When done with the connection, release
 
 						// If there is an SQL error

@@ -17,23 +17,22 @@
 			id="formItemResponsibility">
 
             {{#if formEdit}}
-                <input type="text" name="itemID" value="{{itemFields.itemID}}" hidden/>
-                <input type="text" name="employeeID" value="{{itemFields.employeeID}}" hidden/>
+                <input type="text" name="relationshipID" value="{{relationshipFields.relationshipID}}" hidden/>
             {{/if}}
 
 			<div class="form-field">
 				<label class="form-label">Item</label>
-                <select name="newItemID">
+                <select name="itemID" value="{{relationshipFields.itemID}}">
                     {{#each items}}
-                    <option value="{{this.itemID}}">#{{this.itemID}} - {{this.itemName}}</option>
+                    <option value="{{this.itemID}}">#{{this.itemID}} - {{this.name}}</option>
                     {{/each}}
                 </select>
 			</div>
 			<div class="form-field">
 				<label class="form-label">Employee</label>
-                <select name="newEmployeeID">
+                <select name="employeeID" value="{{relationshipFields.employeeID}}">
                     {{#each employees}}
-                    <option value="{{this.employeeID}}">{{this.employeeFullName}}</option>
+                    <option value="{{this.employeeID}}">{{this.firstName}} {{this.lastName}}</option>
                     {{/each}}
                 </select>
 			</div>
@@ -48,4 +47,4 @@
 
 </main>
 
-<script type="text/javascript" src="/js/ItemResponsibility.js"></script>
+<script type="text/javascript" src="/js/itemResponsibility.js"></script>

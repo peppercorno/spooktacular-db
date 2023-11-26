@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS InventoryItems_Employees (
     relationshipID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     itemID int,
     employeeID int,
+    UNIQUE (itemID, employeeID),
     FOREIGN KEY (itemID) REFERENCES InventoryItems(itemID) ON DELETE CASCADE,
     FOREIGN KEY (employeeID) REFERENCES Employees(employeeID) ON DELETE CASCADE
 ) ENGINE=InnoDB;

@@ -28,7 +28,7 @@ exports.showAdd = async (req, res) => {
 		res.render("inventory-items/add-update", { rooms, formAdd: true })
 	} catch (err) {
 		console.log(err)
-		res.render("inventory-items/add-update", { errorMessage: "Oops, unable to retrieve room data.", formAdd: true })
+		res.render("inventory-items/add-update", { errorMessage: "Oops, Unable to retrieve data on rooms.", formAdd: true })
 	}
 }
 
@@ -36,7 +36,7 @@ exports.showAdd = async (req, res) => {
 exports.showEdit = async (req, res) => {
 	try {
 		// Get data for item being edited
-		let itemFields = await InventoryItem.findById(req.params.id)
+		let itemFields = await InventoryItem.findByID(req.params.id)
 
 		// For dropdown menu
 		let rooms = await Room.findNames()
@@ -52,8 +52,8 @@ exports.showEdit = async (req, res) => {
 exports.add = async (req, res) => {
 	try {
 		// First param: null because we don't want to fill in itemID (it is a PK and auto-increment)
-		// Follow params that InventoryItem class requires (eg. pass roomName as "", as we don't need it to save an item)
-		let item = new InventoryItem(null, req.body.roomID, "", req.body.name, req.body.itemCondition)
+		// Follow params that InventoryItem class requires
+		let item = new InventoryItem(null, req.body.roomID, null, req.body.name, req.body.itemCondition)
 
 		await item.save()
 
@@ -70,7 +70,7 @@ exports.add = async (req, res) => {
 
 		// Error messages
 		let errorMessage = "Unknown error! Unable to add inventory item."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve room data."
+		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
 		if (err.message === "nameMissing") errorMessage = "Item name is missing."
 
 		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage, formAdd: true })
@@ -80,7 +80,7 @@ exports.add = async (req, res) => {
 // Edit existing inventory item
 exports.edit = async (req, res) => {
 	try {
-		let item = new InventoryItem(req.body.itemID, req.body.roomID, "", req.body.name, req.body.itemCondition)
+		let item = new InventoryItem(req.body.itemID, req.body.roomID, null, req.body.name, req.body.itemCondition)
 
 		await item.save()
 
@@ -96,8 +96,8 @@ exports.edit = async (req, res) => {
 		let itemFields = req.body
 
 		// Error messages
-		let errorMessage = "Unknown error! Unable to add inventory item."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve room data."
+		let errorMessage = "Unknown error! Unable to edit inventory item."
+		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
 		if (err.message === "nameMissing") errorMessage = "Item name is missing."
 
 		res.render("inventory-items/add-update", { errorMessage, rooms, itemFields, formEdit: true })
@@ -107,7 +107,7 @@ exports.edit = async (req, res) => {
 // Delete existing inventory item
 exports.delete = async (req, res) => {
 	try {
-		let item = new InventoryItem(req.params.id, "", "", "", "")
+		let item = new InventoryItem(req.params.id, null, null, null, null)
 
 		await item.delete(req.params.id)
 

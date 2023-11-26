@@ -22,6 +22,7 @@
 				<tr>
 					<th>ID</th>
 					<th>Year</th>
+					<th>Description</th>
 					<th>Base Price</th>
 					<th class="col-table-button"></th>
 					<th class="col-table-button"></th>
@@ -32,11 +33,13 @@
 				<tr>
 					<td>{{this.priceID}}</td>
 					<td>{{this.year}}</td>
+					<td>{{this.description}}</td>
 					<td>${{this.basePrice}}</td>
 					<td>
 						<button class="table-button edit"
 						data-priceid="{{this.priceID}}"
 						data-year="{{this.year}}"
+						data-description="{{this.description}}"
 						data-baseprice="{{this.basePrice}}" type="button">
 							<i class="fa fa-pen-to-square"></i>
 						</button>
@@ -64,6 +67,10 @@
 				<label class="form-label" class="form-label">Year</label>
 				<input type="text" name="year" />
 			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Description</label>
+				<input type="text" name="description" />
+			</div>
 			<div class="form-field columns">
 				<div class="column-label">
 					<label class="form-label">Base Price</label>
@@ -88,6 +95,10 @@
 			<div class="form-field">
 				<label class="form-label" class="form-label">Year</label>
 				<input type="text" name="year" value="{{priceBeingEdited.year}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Description</label>
+				<input type="text" name="description" />
 			</div>
 			<div class="form-field columns">
 				<div class="column-label">

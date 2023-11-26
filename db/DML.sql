@@ -130,10 +130,6 @@ INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employee
 -- Add a relationship between Inventory Items and Employees
 INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:newItemID, :newEmployeeID);
 
--- To populate update form fields:
--- Get one relationship by composite PK
-SELECT * FROM InventoryItems_Employees WHERE itemID = :itemIDToUpdate AND employeeID = :employeeIDToUpdate;
-
 -- To populate update form fields: Get one relationship by relationshipID.
 -- Don't need associated InventoryItem or Employee names as dropdown values will provide them.
 SELECT * FROM InventoryItems_Employees WHERE relationshipID = :relationshipIDToUpdate;

@@ -38,12 +38,12 @@
 					<td>#{{this.itemID}} - {{this.itemName}}</td>
 					<td>{{this.employeeFullName}}</td>
 					<td>
-						<button onClick="goToEditForm({{this.itemID}}, {{this.employeeID}})" class="table-button edit" type="button">
+						<button onClick="goToEditForm({{this.relationshipID}})" class="table-button edit" type="button">
 							<i class="fa fa-pen-to-square"></i>
 						</button>
 					</td>
 					<td>
-						<form method="DELETE" action="/item-resps/delete/{{this.itemID}}_{{this.employeeID}}" class="form-delete">
+						<form method="DELETE" action="/item-resps/delete/{{this.relationshipID}}" class="form-delete">
 							<input type="submit" class="table-button delete" value=""/>
 							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
 						</form>
@@ -55,4 +55,4 @@
 	</section>
 </main>
 
-<script type="text/javascript" src="/js/ItemResponsibility.js"></script>
+<script type="text/javascript" src="/js/itemResponsibility.js"></script>

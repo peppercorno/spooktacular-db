@@ -69,7 +69,7 @@ class InventoryItem {
 	}
 
 	// Read: get one row by itemID
-	static findById(itemID) {
+	static findByID(itemID) {
 		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "

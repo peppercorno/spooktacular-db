@@ -4,7 +4,8 @@ let db = require("../db-config")
 // Represents a row in intersection table, InventoryItem_Employees
 // ie. a relationship between one Inventory Item and one Employee
 class ItemResponsibility {
-	constructor(itemID, employeeID, itemName, employeeFullName) {
+	constructor(relationshipID, itemID, employeeID, itemName, employeeFullName) {
+		this.relationshipID = relationshipID
 		this.itemID = itemID
 		this.employeeID = employeeID
 		this.itemName = itemName
@@ -14,7 +15,7 @@ class ItemResponsibility {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, "
+			let sqlQuery = "SELECT InventoryItems_Employees.relationshipID, InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, "
 			sqlQuery += "InventoryItems.name AS itemName, "
 			sqlQuery += "CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName  "
 			sqlQuery += "FROM InventoryItems_Employees "
@@ -34,7 +35,7 @@ class ItemResponsibility {
 					}
 
 					let relationships = []
-					for (let row of rows) relationships.push(new this(row.itemID, row.employeeID, row.itemName, row.employeeFullName))
+					for (let row of rows) relationships.push(new this(row.relationshipID, row.itemID, row.employeeID, row.itemName, row.employeeFullName))
 
 					resolve(relationships)
 				})
@@ -42,13 +43,13 @@ class ItemResponsibility {
 		})
 	}
 
-	// Read: get one row by composite PK made up of itemID and employeeID
-	static findByCompPK(itemID, employeeID) {
+	// Read: get one row by relationshipID
+	static findByID(relationshipID) {
 		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
-				connection.query(`SELECT * FROM InventoryItems_Employees WHERE itemID = ${itemID} AND employeeID = ${employeeID}`, (err, res) => {
+				connection.query(`SELECT * FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
 					if (err) {
@@ -58,7 +59,7 @@ class ItemResponsibility {
 					}
 
 					// res is an array. Create new class instance using data from first item in array
-					let row = new this(res[0].itemID, res[0].roomID, res[0].itemName, res[0].employeeFullName)
+					let row = new this(res[0].relationshipID, res[0].itemID, res[0].employeeID, null, null)
 
 					resolve(row)
 				})
@@ -70,16 +71,17 @@ class ItemResponsibility {
 	save() {
 		return new Promise((resolve, reject) => {
 			// Determine whether we are creating or updating
-			if (this.itemID === undefined || this.itemID === null || this.employeeID === undefined || this.employeeID === null) {
+			if (this.relationshipID === undefined || this.relationshipID === null) {
 				// Create
+
 				// Parse form values as integers
-				let newItemID = parseInt(this.newItemID)
-				let newEmployeeID = parseInt(this.newEmployeeID)
+				let itemID = parseInt(this.itemID)
+				let employeeID = parseInt(this.employeeID)
 
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query(`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${newItemID}, ${newEmployeeID})`, (err, res) => {
+					connection.query(`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${itemID}, ${employeeID})`, (err, res) => {
 						connection.release() // When done with the connection, release
 
 						// If there is an SQL error
@@ -93,40 +95,38 @@ class ItemResponsibility {
 				})
 			} else {
 				// Update
+
 				// Parse form values as integers
-				let newItemID = parseInt(this.newItemID)
-				let newEmployeeID = parseInt(this.newEmployeeID)
+				let relationshipID = parseInt(this.relationshipID)
+				let itemID = parseInt(this.itemID)
+				let employeeID = parseInt(this.employeeID)
 
 				db.pool.getConnection((err, connection) => {
 					if (err) console.error(err) // Not connected
 
-					connection.query(
-						"UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE itemID = ? AND employeeID = ?",
-						[newItemID, newEmployeeID, itemID, employeeID],
-						(err, res) => {
-							connection.release() // When done with the connection, release
+					connection.query("UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE relationshipID = ?;", [itemID, employeeID, relationshipID], (err, res) => {
+						connection.release() // When done with the connection, release
 
-							// If there is an SQL error
-							if (err) {
-								reject(err)
-								return
-							}
-
-							resolve(this)
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
 						}
-					)
+
+						resolve(this)
+					})
 				})
 			}
 		})
 	}
 
-	// Delete by composite PK
-	delete(itemID, employeeID) {
+	// Delete
+	delete(relationshipID) {
 		return new Promise((resolve, reject) => {
 			db.pool.getConnection((err, connection) => {
 				if (err) console.error(err) // Not connected
 
-				connection.query(`DELETE FROM InventoryItems_Employees WHERE (itemID = ${itemID} AND employeeID = ${employeeID})`, (err, res) => {
+				connection.query(`DELETE FROM InventoryItems_Employees WHERE relationshipID = ${relationshipID}`, (err, res) => {
 					connection.release() // When done with the connection, release
 
 					// If there is an SQL error

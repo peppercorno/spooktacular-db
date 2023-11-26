@@ -14,9 +14,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
 	// Dropdown menu:  If editing, or when re-rendering the 'add' form after an error, select the correct option
 	let selectedID = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").getAttribute("value")
 
-	let selectOptions = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").children
-	for (var i = 0; i < selectOptions.length; i++) {
-		if (selectOptions[i].getAttribute("value") === selectedID) selectOptions[i].setAttribute("selected", "selected")
+	if (selectedID) {
+		let selectOptions = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").children
+		for (var i = 0; i < selectOptions.length; i++) {
+			if (selectOptions[i].getAttribute("value") === selectedID) selectOptions[i].setAttribute("selected", "selected")
+		}
 	}
 })
 
