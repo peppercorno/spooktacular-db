@@ -20,7 +20,7 @@ exports.showAll = async (req, res) => {
 	if (error && req.query.error === "add") error.section = "add"
 	// Errors from 'edit' form
 	if (error && req.query.error === "edit") {
-		roomBeingEdited = await Room.findById(req.query.id)
+		roomBeingEdited = await Room.findByID(req.query.id)
 		error.section = "edit"
 	}
 

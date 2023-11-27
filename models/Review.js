@@ -49,7 +49,7 @@ class Review {
 	}
 
 	// Read: get one row by reviewID, along with associated Customer and Room info
-	static findById(reviewID) {
+	static findByID(reviewID) {
 		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "

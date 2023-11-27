@@ -1,93 +1,114 @@
 // Get model
 const AdmissionPrice = require("../models/AdmissionPrice")
 
-// Render AdmissionPrices view
+// Show all Admission Prices
 exports.showAll = async (req, res) => {
-	// Get all admission prices
-	let admissionPrices = await AdmissionPrice.findAll()
-	let priceBeingEdited = ""
+	try {
+		let admissionPrices = await AdmissionPrice.findAll()
 
-	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add admission price." }
-	if (error) {
-		// Custom error messages
-		if (req.query.type === "yearmissing") error.message = "Year is required."
-		if (req.query.type === "basepricemissing") error.message = "Base Price is required."
-		if (req.query.type === "yearnan") error.message = "Year must be a number."
-		if (req.query.type === "basepricenan") error.message = "Base Price must be a number."
+		// Whether to show success notification
+		let success = req.query.success
+
+		// Render view
+		res.render("admission-prices/index", { admissionPrices, success })
+	} catch (err) {
+		console.log(err)
+		res.render("admission-prices/index", { errorMessage: "Error! Unable to retrieve admission prices." })
 	}
-	// Errors from 'add' form
-	if (error && req.query.error === "add") {
-		error.section = "add"
+}
 
-		if (req.query.type == "dup_entry") error.message = "This year already exists in the database."
+// Show add form
+exports.showAdd = async (req, res) => {
+	res.render("admission-prices/add-update", { formAdd: true })
+}
+
+// Show edit form
+exports.showEdit = async (req, res) => {
+	try {
+		// Get data for Admission Price being edited
+		let priceFields = await AdmissionPrice.findByID(req.params.id)
+
+		res.render("admission-prices/add-update", { priceFields, formEdit: true })
+	} catch (err) {
+		console.log(err)
+		res.render("admission-prices/add-update", { errorMessage: "Oops, unable to retrieve data for this admission price.", formEdit: true })
 	}
-	// Errors from 'edit' form
-	if (error && req.query.error === "edit") {
-		priceBeingEdited = await AdmissionPrice.findById(req.query.id)
-		error.section = "edit"
-		if (req.query.type == "dup_entry") error.message = "The value for 'Year' is already in use."
-	}
-
-	// Whether to show notification above table
-	let success = req.query.success
-
-	// Render view
-	res.render("admission-prices", { admissionPrices, error, success, priceBeingEdited })
 }
 
 // Add a new admission price
 exports.add = async (req, res) => {
 	try {
-		// Create a new AdmissionPrice instance
-		let admissionPrice = new AdmissionPrice(null, req.body.year, req.body.basePrice)
+		// First param: null because we don't want to fill in priceID (it is a PK and auto-increment)
+		// Follow params that AdmissionPrice class requires
+		let admissionPrice = new AdmissionPrice(null, req.body.year, req.body.description, req.body.basePrice, null)
 
-		// Save the new admission price
 		await admissionPrice.save()
 
-		// If successful, redirect with a success message
+		// If successful
 		res.redirect("/admission-prices/?success=added")
 	} catch (err) {
-		if (err.message.substring(0, 13) === "admission.add") {
-			res.redirect("/admission-prices/?error=add&type=" + err.message.substring(14))
-		} else if (err.message.substring(0, 12) === "ER_DUP_ENTRY") {
-			res.redirect("/admission-prices/?error=edit&type=" + "dup_entry")
-		} else res.redirect("/admission-prices/?error=add&type=unknown")
+		console.log(err)
+
+		// To repopulate form fields after an error
+		let priceFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add admission price."
+		if (err.message === "yearMissing") errorMessage = "Year is missing."
+		if (err.message === "yearNaN") errorMessage = "Year must be a number."
+		if (err.message === "descriptionMissing") errorMessage = "Description is missing."
+		if (err.message === "basePriceMissing") errorMessage = "Base price is missing."
+		if (err.message === "basePriceNaN") errorMessage = "Base price must be a number."
+
+		res.render("admission-prices/add-update", { priceFields, errorMessage, formAdd: true })
 	}
 }
 
 // Edit existing admission price
 exports.edit = async (req, res) => {
 	try {
-		// Create a new AdmissionPrice instance with the provided data
-		let admissionPrice = new AdmissionPrice(req.body.priceID, req.body.year, req.body.basePrice)
+		let admissionPrice = new AdmissionPrice(req.body.priceID, req.body.year, req.body.description, req.body.basePrice, null)
 
-		// Save the updated admission price
 		await admissionPrice.save()
 
-		// If successful, redirect with a success message
+		// If successful
 		res.redirect("/admission-prices/?success=edited")
 	} catch (err) {
-		if (err.message.substring(0, 14) === "admission.edit") {
-			res.redirect("/admission-prices/?error=edit&type=" + err.message.substring(15) + "&id=" + req.body.priceID)
-		} else if (err.message.substring(0, 12) === "ER_DUP_ENTRY") {
-			res.redirect("/admission-prices/?error=edit&type=" + "dup_entry" + "&id=" + req.body.priceID)
-		} else res.redirect("/admission-prices/?error=edit&type=unknown" + "&id=" + req.body.priceID)
+		console.log(err)
+
+		// To repopulate form fields after an error
+		let priceFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add admission price."
+		if (err.message === "yearMissing") errorMessage = "Year is missing."
+		if (err.message === "yearNaN") errorMessage = "Year must be a number."
+		if (err.message === "descriptionMissing") errorMessage = "Description is missing."
+		if (err.message === "basePriceMissing") errorMessage = "Base price is missing."
+		if (err.message === "basePriceNaN") errorMessage = "Base price must be a number."
+
+		res.render("admission-prices/add-update", { priceFields, errorMessage, formEdit: true })
 	}
 }
 
 // Delete existing admission price
 exports.delete = async (req, res) => {
 	try {
-		// Create a new AdmissionPrice instance with the provided priceID
-		let admissionPrice = new AdmissionPrice(req.params.id, "", "")
+		let admissionPrice = new AdmissionPrice(req.params.id, null, null, null, null)
 
-		// Delete the admission price
 		await admissionPrice.delete(req.params.id)
 
-		// If successful, redirect with a success message
+		// If successful
 		res.redirect("/admission-prices/?success=deleted")
 	} catch (err) {
 		console.log(err)
-		res.redirect("/admission-prices/?error=notdeleted")
+
+		let errorMessage = "Error! Item not deleted."
+
+		// Get all Admission Prices
+		let admissionPrices = await AdmissionPrice.findAll()
+		if (!admissionPrices || admissionPrices === null) errorMessage = "Error! Unable to retrieve admission prices."
+
+		res.render("admission-prices/index", { admissionPrices, errorMessage })
 	}
 }

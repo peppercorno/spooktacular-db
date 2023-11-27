@@ -2,8 +2,8 @@
 let db = require("../db-config")
 
 class AdmissionPrice {
-	constructor(id, year, description, basePrice, hasChildRows) {
-		this.priceID = id
+	constructor(priceID, year, description, basePrice, hasChildRows) {
+		this.priceID = priceID
 		this.year = year
 		this.description = description
 		this.basePrice = basePrice
@@ -25,7 +25,9 @@ class AdmissionPrice {
 				}
 
 				let admissionPrices = []
-				for (let row of rows) admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, row.hasChildRows))
+				for (let row of rows) {
+					admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, row.hasChildRows))
+				}
 
 				resolve(admissionPrices)
 			})
@@ -33,7 +35,7 @@ class AdmissionPrice {
 	}
 
 	// Read: get one row by priceID
-	static findById(priceID) {
+	static findByID(priceID) {
 		return new Promise((resolve, reject) => {
 			db.pool.query(`SELECT * FROM AdmissionPrices WHERE priceID = ${priceID}`, (err, res) => {
 				if (err) {
@@ -53,21 +55,25 @@ class AdmissionPrice {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Validate and escape quotes
+			if (!this.year || this.year.length === 0) throw new Error("yearMissing")
+			if (isNaN(this.year)) throw new Error("yearNaN")
+
+			if (!this.description || this.description.length === 0) throw new Error("descriptionMissing")
+
+			if (!this.basePrice || this.basePrice.length === 0) throw new Error("basePriceMissing")
+			if (isNaN(this.basePrice)) throw new Error("basePriceNaN")
+
+			let year = parseInt(this.year)
+			let basePrice = parseInt(this.basePrice)
+
+			let description = this.description.replaceAll("'", "\\'")
+
 			// Determine whether we are creating or updating
 			if (this.priceID === undefined || this.priceID === null) {
 				// Create
-				if (!this.year || this.year.length === 0) throw new Error("admission.add.yearmissing")
-				if (isNaN(this.year)) throw new Error("admission.add.yearnan")
 
-				if (!this.description || this.description.length === 0) throw new Error("admission.add.descriptionmissing")
-
-				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.add.basepricemissing")
-				if (isNaN(this.basePrice)) throw new Error("admission.add.basepricenan")
-
-				let year = parseInt(this.year)
-				let basePrice = parseInt(this.basePrice)
-
-				db.pool.query(`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${this.description}', ${basePrice})`, (err, res) => {
+				db.pool.query(`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${description}', ${basePrice})`, (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -78,18 +84,9 @@ class AdmissionPrice {
 				})
 			} else {
 				// Update
-				if (!this.year || this.year.length === 0) throw new Error("admission.edit.yearmissing")
-				if (isNaN(this.year)) throw new Error("admission.edit.yearnan")
+				let priceID = parseInt(this.priceID)
 
-				if (!this.description || this.description.length === 0) throw new Error("admission.add.descriptionmissing")
-
-				if (!this.basePrice || this.basePrice.length === 0) throw new Error("admission.edit.basepricemissing")
-				if (isNaN(this.basePrice)) throw new Error("admission.edit.basepricenan")
-
-				let year = parseInt(this.year)
-				let basePrice = parseInt(this.basePrice)
-
-				db.pool.query("UPDATE AdmissionPrices SET year = ?, description = ?, basePrice = ? WHERE priceID = ?", [year, this.description, basePrice, this.priceID], (err, res) => {
+				db.pool.query("UPDATE AdmissionPrices SET year = ?, description = ?, basePrice = ? WHERE priceID = ?", [year, description, basePrice, priceID], (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)

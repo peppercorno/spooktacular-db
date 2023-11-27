@@ -93,7 +93,7 @@ class ItemResponsibility {
 			} else {
 				// Update
 
-				// Parse form values as integers
+				// Parse as integers
 				let relationshipID = parseInt(this.relationshipID)
 				let itemID = parseInt(this.itemID)
 				let employeeID = parseInt(this.employeeID)

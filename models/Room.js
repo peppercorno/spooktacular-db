@@ -54,7 +54,7 @@ class Room {
 	}
 
 	// Read: get one row by roomID
-	static findById(roomID) {
+	static findByID(roomID) {
 		return new Promise((resolve, reject) => {
 			db.pool.query(`SELECT * FROM Rooms WHERE roomID = ${roomID}`, (err, res) => {
 				if (err) {

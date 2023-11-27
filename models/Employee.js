@@ -4,8 +4,8 @@ const moment = require("moment")
 let db = require("../db-config")
 
 class Employee {
-	constructor(id, firstName, lastName, email, jobTitle, startDate, endDate, salary) {
-		this.employeeID = id
+	constructor(employeeID, firstName, lastName, email, jobTitle, startDate, endDate, salary) {
+		this.employeeID = employeeID
 		this.firstName = firstName
 		this.lastName = lastName
 		this.email = email
@@ -30,6 +30,7 @@ class Employee {
 					// Format dates
 					let startDate = moment(row.startDate).format("YYYY-MM-DD")
 					let endDate = moment(row.endDate).format("YYYY-MM-DD")
+
 					employees.push(new this(row.employeeID, row.firstName, row.lastName, row.email, row.jobTitle, startDate, endDate, row.salary))
 				}
 				resolve(employees)
@@ -57,7 +58,7 @@ class Employee {
 	}
 
 	// Read: get one row by priceID
-	static findById(employeeID) {
+	static findByID(employeeID) {
 		return new Promise((resolve, reject) => {
 			db.pool.query(`SELECT * FROM Employees WHERE employeeID = ${employeeID}`, (err, res) => {
 				if (err) {
@@ -66,8 +67,12 @@ class Employee {
 					return
 				}
 
+				// Format dates
+				let startDate = moment(res[0].startDate).format("YYYY-MM-DD")
+				let endDate = moment(res[0].endDate).format("YYYY-MM-DD")
+
 				// res is an array. Create new class instance using data from first item in array
-				let employee = new this(res[0].employeeID, res[0].firstName, res[0].lastName, res[0].email, res[0].jobTitle, res[0].startDate, res[0].endDate, res[0].salary)
+				let employee = new this(res[0].employeeID, res[0].firstName, res[0].lastName, res[0].email, res[0].jobTitle, startDate, endDate, res[0].salary)
 
 				resolve(employee)
 			})
@@ -77,65 +82,54 @@ class Employee {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Validate and escape quotes
+			if (this.firstName.length === 0) throw new Error("firstNameMissing")
+			if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("firstNameLength")
+
+			if (this.lastName.length === 0) throw new Error("lastNameMissing")
+			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("lastNameLength")
+
+			if (this.email.length === 0) throw new Error("emailMissing")
+			// TODO: Add email validation using regex
+
+			if (this.jobTitle.length === 0) throw new Error("jobTitleMissing")
+			if (this.salary.length === 0) throw new Error("salaryMissing")
+			if (isNaN(this.salary)) throw new Error("salaryNaN")
+
+			if (this.startDate === "" || this.startDate === null) throw new Error("startDateMissing")
+			if (this.endDate === "" || this.endDate === null) throw new Error("endDateMissing")
+
+			let firstName = this.firstName.replaceAll("'", "\\'")
+			let lastName = this.lastName.replaceAll("'", "\\'")
+			let jobTitle = this.jobTitle.replaceAll("'", "\\'")
+			let salary = parseInt(this.salary)
+
+			// Use expected date format
+			let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
+			let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
+
 			// Determine whether we are creating or updating
 			if (this.employeeID === undefined || this.employeeID === null) {
 				// Create
-				if (this.firstName.length === 0) throw new Error("employee.add.firstnamemissing")
-				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("employee.add.firstnamelength")
+				db.pool.query(
+					`INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate, salary) VALUES ('${firstName}', '${lastName}', '${this.email}', '${jobTitle}', '${startDate}', '${endDate}', ${salary})`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-				if (this.lastName.length === 0) throw new Error("employee.add.lastnamemissing")
-				if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("employee.add.lastNamelength")
-
-				if (this.email.length === 0) throw new Error("employee.add.emailmissing")
-				// TODO: Add email validation using regex
-
-				if (this.jobTitle.length === 0) throw new Error("employee.add.jobtitlemissing")
-				if (this.salary.length === 0) throw new Error("employee.add.salarymissing")
-				if (isNaN(this.salary)) throw new Error("admission.add.salarynan")
-
-				let salary = parseInt(this.salary)
-
-				// Format startDate and endDate for DB
-				let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
-				let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
-
-				let sqlQuery = "INSERT INTO Employees (firstName, lastName, email, jobTitle, startDate, endDate, salary) "
-				sqlQuery += " VALUES ('" + this.firstName + "', '" + this.lastName + "', '" + this.email
-				sqlQuery += "', '" + this.jobTitle + "', '" + startDate + "', '" + endDate + "', " + salary + ");"
-
-				db.pool.query(sqlQuery, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
+						resolve(this)
 					}
-
-					resolve(this)
-				})
+				)
 			} else {
 				// Update
-				if (this.firstName.length === 0) throw new Error("employee.edit.firstnamemissing")
-				if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("employee.edit.firstnamelength")
-
-				if (this.lastName.length === 0) throw new Error("employee.edit.lastnamemissing")
-				if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("employee.edit.lastNamelength")
-
-				if (this.email.length === 0) throw new Error("employee.edit.emailmissing")
-				// TODO: Add email validation using regex
-
-				if (this.jobTitle.length === 0) throw new Error("employee.edit.jobtitlemissing")
-				if (this.salary.length === 0) throw new Error("employee.edit.salarymissing")
-				if (isNaN(this.salary)) throw new Error("admission.edit.salarynan")
-
-				let salary = parseInt(this.salary)
-
-				// Format startDate and endDate for DB
-				let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
-				let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
+				let employeeID = parseInt(this.employeeID)
 
 				db.pool.query(
 					"UPDATE Employees SET firstName = ?, lastName = ?, email = ?, jobTitle = ?, startDate = ?, endDate = ?, salary = ? WHERE employeeID = ?",
-					[this.firstName, this.lastName, this.email, this.jobTitle, startDate, endDate, salary, this.employeeID],
+					[firstName, lastName, this.email, jobTitle, startDate, endDate, salary, employeeID],
 					(err, res) => {
 						// If there is an SQL error
 						if (err) {

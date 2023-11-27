@@ -1,44 +1,44 @@
 // Get model
 const Employee = require("../models/Employee")
 
-// Render Employees view
+// Show all Employees
 exports.showAll = async (req, res) => {
-	// Get all employees
-	let employees = await Employee.findAll()
-	let employeeBeingEdited = ""
+	try {
+		let employees = await Employee.findAll()
 
-	let error = req.query.error === undefined ? false : { message: "Unknown error. Unable to add employee." } // Default error message
-	if (error) {
-		// Custom error messages
-		if (req.query.type === "firstnamemissing") error.message = "First name is required."
-		if (req.query.type === "lastnamemissing") error.message = "Last name is required."
-		if (req.query.type === "emailmissing") error.message = "Email is required."
-		if (req.query.type === "jobtitlemissing") error.message = "Job title is required."
-		if (req.query.type === "salarymissing") error.message = "Salary is required."
-		if (req.query.type === "salarynan") error.message = "Salary must be a number."
+		// Whether to show success notification
+		let success = req.query.success
+
+		res.render("employees/index", { employees, success })
+	} catch (err) {
+		console.log(err)
+		res.render("employees/index", { errorMessage: "Error! Unable to retrieve employees." })
 	}
-	// Errors from 'add' form
-	if (error && req.query.error === "add") error.section = "add"
-	// Errors from 'edit' form
-	if (error && req.query.error === "edit") {
-		employeeBeingEdited = await Employee.findById(req.query.id)
-		error.section = "edit"
+}
+
+// Show add form
+exports.showAdd = async (req, res) => {
+	res.render("employees/add-update", { formAdd: true })
+}
+
+// Show edit form
+exports.showEdit = async (req, res) => {
+	try {
+		// Get data for employee being edited
+		let employeeFields = await Employee.findByID(req.params.id)
+
+		res.render("employees/add-update", { employeeFields, formEdit: true })
+	} catch (err) {
+		console.log(err)
+		res.render("employees/add-update", { errorMessage: "Oops, unable to retrieve data for this employee.", formEdit: true })
 	}
-
-	// Whether to show 'not deleted' notification
-	if (error && req.query.error === "notdeleted") error.section = "notdeleted"
-
-	// Whether to show notification above table
-	let success = req.query.success
-
-	// Render view
-	res.render("employees", { employees, error, success, employeeBeingEdited })
 }
 
 // Add a new employee
 exports.add = async (req, res) => {
 	try {
 		// First param: null because we don't want to fill in employeeID (it is a PK and auto-increment)
+		// Follow params that Employee class requires
 		let employee = new Employee(null, req.body.firstName, req.body.lastName, req.body.email, req.body.jobTitle, req.body.startDate, req.body.endDate, req.body.salary)
 
 		await employee.save()
@@ -48,10 +48,22 @@ exports.add = async (req, res) => {
 	} catch (err) {
 		console.log(err)
 
-		// To detect one of our defined validation errors, check the prefix
-		if (err.message.substring(0, 12) === "employee.add") {
-			res.redirect("/employees/?error=add&type=" + err.message.substring(13))
-		} else res.redirect("/employees/?error=add&type=unknown")
+		// To repopulate form fields after an error
+		let employeeFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add employee."
+		if (err.message === "firstNameMissing") errorMessage = "First name is required."
+		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
+		if (err.message === "jobTitleMissing") errorMessage = "Job title is required."
+		if (err.message === "startDateMissing") errorMessage = "Start date is required."
+		if (err.message === "endDateMissing") errorMessage = "End date is required."
+		if (err.message === "salaryMissing") errorMessage = "Salary is required."
+		if (err.message === "salaryNaN") errorMessage = "Please use a number for the salary."
+		if (err.message === "firstNameLength" || err.message === "lastNameLength") errorMessage = "For first and last names, enter 2 to 60 characters."
+		if (err.message === "emailMissing") errorMessage = "Email is required."
+
+		res.render("employees/add-update", { employeeFields, errorMessage, formAdd: true })
 	}
 }
 
@@ -67,17 +79,29 @@ exports.edit = async (req, res) => {
 	} catch (err) {
 		console.log(err)
 
-		// To detect one of our defined validation errors, check the prefix
-		if (err.message.substring(0, 13) === "employee.edit") {
-			res.redirect("/employees/?error=edit&type=" + err.message.substring(14) + "&id=" + req.body.employeeID)
-		} else res.redirect("/employees/?error=edit&type=unknown" + "&id=" + req.body.employeeID)
+		// To repopulate form fields after an error
+		let employeeFields = req.body
+
+		// Error messages
+		let errorMessage = "Unknown error! Unable to add employee."
+		if (err.message === "firstNameMissing") errorMessage = "First name is required."
+		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
+		if (err.message === "jobTitleMissing") errorMessage = "Job title is required."
+		if (err.message === "startDateMissing") errorMessage = "Start date is required."
+		if (err.message === "endDateMissing") errorMessage = "End date is required."
+		if (err.message === "salaryMissing") errorMessage = "Salary is required."
+		if (err.message === "salaryNaN") errorMessage = "Please use a number for the salary."
+		if (err.message === "firstNameLength" || err.message === "lastNameLength") errorMessage = "For first and last names, enter 2 to 60 characters."
+		if (err.message === "emailMissing") errorMessage = "Email is required."
+
+		res.render("employees/add-update", { employeeFields, errorMessage, formEdit: true })
 	}
 }
 
 // Delete existing employee
 exports.delete = async (req, res) => {
 	try {
-		let employee = new Employee(req.params.id, "", "", "")
+		let employee = new Employee(req.params.id, null, null, null, null, null, null, null)
 
 		await employee.delete(req.params.id)
 
@@ -85,6 +109,13 @@ exports.delete = async (req, res) => {
 		res.redirect("/employees/?success=deleted")
 	} catch (err) {
 		console.log(err)
-		res.redirect("/employees/?error=notdeleted")
+
+		let errorMessage = "Error! Employee not deleted."
+
+		// Get all Employees
+		let employees = await Employee.findAll()
+		if (!employees || employees === null) errorMessage = "Error! Unable to retrieve employees."
+
+		res.render("employees/index", { employees, errorMessage })
 	}
 }

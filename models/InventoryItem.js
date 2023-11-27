@@ -1,3 +1,11 @@
+/*Citation
+------------------------------------------------------------------------
+	Title: To prevent SQL errors, escape quotes in string values before inserting or updating.
+	Date: 27 Nov 2023
+	Adapted from URL: https://bobbyhadz.com/blog/javascript-escape-quotes-in-string
+	Author: Borislav Hadzhiev
+------------------------------------------------------------------------*/
+
 // Get connection
 let db = require("../db-config")
 
@@ -84,18 +92,22 @@ class InventoryItem {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Validate and escape quotes
+			if (this.name.length === 0) throw new Error("nameMissing")
+
+			let name = this.name.replaceAll("'", "\\'")
+
+			// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
+			let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
+
+			// If no item condition was entered, make sure we pass an empty string
+			if (!this.itemCondition || this.itemCondition.length === 0 || this.itemCondition === "--") this.itemCondition = ""
+			let itemCondition = this.itemCondition.replaceAll("'", "\\'")
+
 			// Determine whether we are creating or updating
 			if (this.itemID === undefined || this.itemID === null) {
 				// Create
-				if (this.name.length === 0) throw new Error("nameMissing")
-
-				// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
-				let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
-
-				// If no item condition was entered, make sure we pass an empty string
-				if (!this.itemCondition || this.itemCondition.length === 0) this.itemCondition = ""
-
-				db.pool.query(`INSERT INTO InventoryItems (name, roomID, itemCondition) VALUES ('${this.name}', ${roomID}, '${this.itemCondition}')`, (err, res) => {
+				db.pool.query(`INSERT INTO InventoryItems (name, roomID, itemCondition) VALUES ('${name}', ${roomID}, '${itemCondition}')`, (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -106,18 +118,9 @@ class InventoryItem {
 				})
 			} else {
 				// Update
-				if (this.name.length === 0) throw new Error("nameMissing")
-
-				// Parse itemID
 				let itemID = parseInt(this.itemID)
 
-				// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
-				let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
-
-				// If no item condition was entered, make sure we pass an empty string
-				if (!this.itemCondition || this.itemCondition.length === 0 || this.itemCondition === "--") this.itemCondition = ""
-
-				db.pool.query("UPDATE InventoryItems SET name = ?, roomID = ?, itemCondition = ? WHERE itemID = ?", [this.name, roomID, this.itemCondition, itemID], (err, res) => {
+				db.pool.query("UPDATE InventoryItems SET name = ?, roomID = ?, itemCondition = ? WHERE itemID = ?", [name, roomID, itemCondition, itemID], (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)

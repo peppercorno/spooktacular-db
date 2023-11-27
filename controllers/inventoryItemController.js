@@ -5,13 +5,11 @@ const Room = require("../models/Room")
 // Show all InventoryItems
 exports.showAll = async (req, res) => {
 	try {
-		// Get all inventoryItems
 		let inventoryItems = await InventoryItem.findAll()
 
 		// Whether to show success notification
 		let success = req.query.success
 
-		// Render view
 		res.render("inventory-items/index", { inventoryItems, success })
 	} catch (err) {
 		console.log(err)
@@ -100,7 +98,7 @@ exports.edit = async (req, res) => {
 		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
 		if (err.message === "nameMissing") errorMessage = "Item name is missing."
 
-		res.render("inventory-items/add-update", { errorMessage, rooms, itemFields, formEdit: true })
+		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage, formEdit: true })
 	}
 }
 

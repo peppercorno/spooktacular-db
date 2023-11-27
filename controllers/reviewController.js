@@ -22,7 +22,7 @@ exports.showAll = async (req, res) => {
 	if (error && req.query.error === "add") error.section = "add"
 	// Errors from 'edit' form
 	if (error && req.query.error === "edit") {
-		reviewBeingEdited = await Review.findById(req.query.id)
+		reviewBeingEdited = await Review.findByID(req.query.id)
 		error.section = "edit"
 	}
 
@@ -39,7 +39,7 @@ exports.add = async (req, res) => {
 		console.log("Request Body:", req.body) // Log the request body
 
 		// Fetch customer full name based on customerID
-		// const customer = await Customer.findById(req.body.customerID);
+		// const customer = await Customer.findByID(req.body.customerID);
 		// const customerFullName = `${customer.firstName} ${customer.lastName}`;
 
 		let review = new Review(null, req.body.customerID, req.body.roomID, null, req.body.rating, req.body.text, null)
