@@ -28,7 +28,25 @@ class AdmissionPrice {
 				for (let row of rows) {
 					admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, row.hasChildRows))
 				}
+				resolve(admissionPrices)
+			})
+		})
+	}
 
+	// Read: for dropdown menu when creating a ticket. Limit to current year only.
+	static findByCurrentYear() {
+		return new Promise((resolve, reject) => {
+			db.pool.query("SELECT * FROM AdmissionPrices WHERE year = YEAR(CURDATE()) ORDER BY description ASC;", (err, rows) => {
+				if (err) {
+					console.error(err)
+					resolve([]) // No rows
+					return
+				}
+
+				let admissionPrices = []
+				for (let row of rows) {
+					admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, null))
+				}
 				resolve(admissionPrices)
 			})
 		})

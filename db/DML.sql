@@ -12,8 +12,8 @@ SELECT priceID, year, description, basePrice,
 EXISTS(SELECT 1 FROM Tickets t1 WHERE t1.priceID = AdmissionPrices.priceID) AS hasChildRows
 FROM AdmissionPrices ORDER BY year DESC;
 
--- For dropdown menus: Get all Admission Price rows according to a given year. Order by description alphabetically.
-SELECT priceID, description, basePrice FROM AdmissionPrices WHERE year = :givenYear ORDER BY description ASC;
+-- For dropdown menus: Get all Admission Price rows that apply to the current year. Order by description alphabetically.
+SELECT * FROM AdmissionPrices WHERE year = YEAR(CURDATE()) ORDER BY description ASC;
 
 -- Add a new Admission Price
 INSERT INTO AdmissionPrices (year, description, basePrice) 
@@ -210,6 +210,7 @@ Tickets
 -- For table: Get all Ticket rows along with associated Customer and AdmissionPrice data
 SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate,
     CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
+    AdmissionPrices.description AS ticketType, 
     AdmissionPrices.basePrice AS unitPrice,
     (AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice
 FROM Tickets
@@ -218,15 +219,16 @@ INNER JOIN AdmissionPrices ON AdmissionPrices.priceID = Tickets.priceID
 ORDER BY purchaseDate DESC;
 
 -- To populate update form fields
--- Get one Ticket row by ticketID, along with associated Customer and Room data
+-- Get one Ticket row by ticketID, along with associated Customer and AdmissionPrice data
 SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate,
     CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName,
+    AdmissionPrices.description AS ticketType, 
     AdmissionPrices.basePrice AS unitPrice,
     (AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice
 FROM Tickets
 INNER JOIN Customers ON Customers.CustomerID = Tickets.customerID 
 INNER JOIN AdmissionPrices ON AdmissionPrices.priceID = Tickets.priceID
-WHERE Tickets.ticketID = :ticketID;
+WHERE Tickets.ticketID = :givenTicketID;
 
 -- Add a new Ticket
 INSERT INTO Tickets (customerID, priceID, quantity)
@@ -238,8 +240,13 @@ VALUES (:customerID, :priceID, :quantity);
 DELETE FROM Tickets WHERE ticketID = :ticketIDToDelete;
 
 
--- Citation
--- 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows
+-- Citations
+-- 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
 -- Date: 12 Nov 2023
 -- Adapted from URL: https://stackoverflow.com/a/58886829
 -- Author: GMB
+
+-- YEAR(CURDATE()) syntax to get rows in AdmissionPrices where year matches the current year.
+-- Date: 28 Nov 2023
+-- Adapted from URL: https://stackoverflow.com/a/27745487
+-- Author: John Conde

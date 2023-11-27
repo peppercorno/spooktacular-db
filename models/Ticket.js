@@ -4,11 +4,12 @@ const moment = require("moment")
 let db = require("../db-config")
 
 class Ticket {
-	constructor(ticketID, customerID, customerFullName, priceID, unitPrice, totalPrice, quantity, purchaseDate) {
+	constructor(ticketID, customerID, customerFullName, priceID, ticketType, unitPrice, totalPrice, quantity, purchaseDate) {
 		this.ticketID = ticketID
 		this.customerID = customerID
 		this.customerFullName = customerFullName
 		this.priceID = priceID
+		this.ticketType = ticketType
 		this.unitPrice = unitPrice
 		this.totalPrice = totalPrice
 		this.quantity = quantity
@@ -20,6 +21,7 @@ class Ticket {
 		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
+			sqlQuery += "AdmissionPrices.description AS ticketType, "
 			sqlQuery += "AdmissionPrices.basePrice AS unitPrice, "
 			sqlQuery += "(AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice "
 			sqlQuery += "FROM Tickets "
@@ -39,7 +41,7 @@ class Ticket {
 					// Format date
 					let purchaseDate = moment(row.purchaseDate).format("MMM D YYYY, h:mm A")
 
-					tickets.push(new this(row.ticketID, row.customerID, row.customerFullName, row.priceID, row.unitPrice, row.totalPrice, row.quantity, purchaseDate))
+					tickets.push(new this(row.ticketID, row.customerID, row.customerFullName, row.priceID, row.ticketType, row.unitPrice, row.totalPrice, row.quantity, purchaseDate))
 				}
 				resolve(tickets)
 			})
@@ -51,6 +53,7 @@ class Ticket {
 		return new Promise((resolve, reject) => {
 			let sqlQuery = "SELECT Tickets.ticketID, Tickets.customerID, Tickets.priceID, Tickets.quantity, Tickets.purchaseDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
+			sqlQuery += "AdmissionPrices.description AS ticketType, "
 			sqlQuery += "AdmissionPrices.basePrice AS unitPrice, "
 			sqlQuery += "(AdmissionPrices.basePrice * Tickets.quantity) AS totalPrice "
 			sqlQuery += "FROM Tickets "
@@ -69,58 +72,60 @@ class Ticket {
 				let purchaseDate = moment(res[0].purchaseDate).format("MMM D YYYY, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
-				let ticket = new this(res[0].ticketID, res[0].customerID, res[0].customerFullName, res[0].priceID, res[0].unitPrice, res[0].totalPrice, res[0].quantity, purchaseDate)
+				let ticket = new this(
+					res[0].ticketID,
+					res[0].customerID,
+					res[0].customerFullName,
+					res[0].priceID,
+					res[0].ticketType,
+					res[0].unitPrice,
+					res[0].totalPrice,
+					res[0].quantity,
+					purchaseDate
+				)
 
 				resolve(ticket)
 			})
 		})
 	}
 
-	// Create or Update
+	// Create
 	save() {
 		return new Promise((resolve, reject) => {
-			// Determine whether we are creating or updating
-			if (this.ticketID === undefined || this.ticketID === null) {
-				// Create
-				if (!this.customerID || this.customerID.length === 0) throw new Error("ticket.add.customerIDmissing")
-				if (!this.priceID || this.priceID.length === 0) throw new Error("ticket.add.priceIDmissing")
-				if (this.quantity === undefined || this.quantity === null) throw new Error("ticket.add.quantitymissing")
-				if (isNaN(this.quantity)) throw new Error("ticket.add.quantitynan")
+			// Validate and parse
+			if (!this.customerID || this.customerID.length === 0) throw new Error("customerIDMissing")
+			if (!this.priceID || this.priceID.length === 0) throw new Error("priceIDMissing")
+			if (this.quantity === undefined || this.quantity === null || this.quantity == 0) throw new Error("quantityMissing")
+			if (isNaN(this.quantity)) throw new Error("quantityNaN")
 
-				let quantity = parseInt(this.quantity)
-				let purchaseDate = moment(this.purchaseDate).format("YYYY-MM-DD hh:mm:ss") // Format the date
+			let customerID = parseInt(this.customerID)
+			let priceID = parseInt(this.priceID)
+			let quantity = parseInt(this.quantity)
 
-				db.pool.query(`INSERT INTO Tickets (customerID, priceID, quantity, purchaseDate) VALUES (?, ?, ?, ?)`, [this.customerID, this.priceID, quantity, purchaseDate], (err, res) => {
-					if (err) {
-						reject(err)
-						return
-					}
+			// Create
+			db.pool.query(`INSERT INTO Tickets (customerID, priceID, quantity) VALUES (${customerID}, ${priceID}, ${quantity})`, (err, res) => {
+				if (err) {
+					reject(err)
+					return
+				}
 
-					resolve(this)
-				})
-			} else {
-				// Update
-				if (!this.customerID || this.customerID.length === 0) throw new Error("ticket.edit.customerIDmissing")
-				if (!this.priceID || this.priceID.length === 0) throw new Error("ticket.edit.priceIDmissing")
-				if (this.quantity === undefined || this.quantity === null) throw new Error("ticket.add.quantitymissing")
-				if (isNaN(this.quantity)) throw new Error("ticket.edit.quantitynan")
+				resolve(this)
+			})
+		})
+	}
 
-				let quantity = parseInt(this.quantity)
-				let purchaseDate = moment(this.purchaseDate).format("YYYY-MM-DD hh:mm:ss")
+	// Delete
+	delete(ticketID) {
+		return new Promise((resolve, reject) => {
+			db.pool.query(`DELETE FROM Tickets WHERE ticketID = ${ticketID}`, (err, res) => {
+				// If there is an SQL error
+				if (err) {
+					reject(err)
+					return
+				}
 
-				db.pool.query(
-					"UPDATE Tickets SET customerID = ?, priceID = ?, quantity = ?, purchaseDate = ? WHERE ticketID = ?",
-					[this.customerID, this.priceID, quantity, purchaseDate, this.ticketID],
-					(err, res) => {
-						if (err) {
-							reject(err)
-							return
-						}
-
-						resolve(this)
-					}
-				)
-			}
+				resolve(this)
+			})
 		})
 	}
 }

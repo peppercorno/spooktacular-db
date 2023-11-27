@@ -16,13 +16,18 @@
 					{{/each}}
 				</select>
 			</div>
-			<div class="form-field">
-				<label class="form-label" class="form-label">Unit Price</label>
-				<select name="price">
-					{{#each admissionPrices}}
-					<option value="{{ this.priceID }}">{{ this.year }}: ${{ this.basePrice }}</option>
-					{{/each}}
-				</select>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label" class="form-label">Unit Price</label>
+					<p class="form-field-explanation">Current year only</p>
+				</div>
+				<div class="column-input">
+					<select name="priceID">
+						{{#each admissionPrices}}
+						<option value="{{ this.priceID }}">{{ this.year }}, {{ this.description }}: ${{ this.basePrice }}</option>
+						{{/each}}
+					</select>
+				</div>
 			</div>
 			<div class="form-field">
 				<label class="form-label" class="form-label">Quantity</label>

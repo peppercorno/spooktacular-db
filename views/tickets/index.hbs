@@ -2,7 +2,10 @@
 
 <main>
 	<section>
-		<h1>Tickets</h1>
+		<header class="header-row">
+			<h1>Tickets</h1>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+		</header>
 
 		{{#ifCond success "===" "added"}}
 		{{> notification centered="true" type="success" message="Ticket successfully added!"}}
@@ -16,12 +19,17 @@
 		{{> notification centered="true" type="success" message="Ticket successfully deleted."}}
 		{{/ifCond}}
 
+		{{#if errorMessage}}
+		{{> notification centered="true" message=errorMessage}}
+		{{/if}}
+
 		<table>
 			<thead>
 				<tr>
 					<th>ID</th>
 					<th>Customer</th>
 					<th>Quantity</th>
+					<th>Ticket Type</th>
 					<th>Unit Price</th>
 					<th>Total Price</th>
 					<th>Purchase Date</th>
@@ -34,11 +42,15 @@
 					<td>{{ this.ticketID }}</td>
 					<td>{{ this.customerFullName }}</td>
 					<td>{{ this.quantity }}</td>
+					<td>{{ this.ticketType }}</td>
 					<td>${{ this.unitPrice }}</td>
 					<td>${{ this.totalPrice }}</td>
 					<td>{{ this.purchaseDate }}</td>
 					<td>
-						<button class="table-button delete" type="button"><i class="fa fa-trash-can"></i></button>
+						<form method="DELETE" action="/tickets/delete/{{ this.ticketID }}" class="form-delete">
+							<input type="submit" class="table-button delete" value="" />
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
 					</td>
 				</tr>
 				{{/each}}
