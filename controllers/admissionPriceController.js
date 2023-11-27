@@ -2,7 +2,7 @@
 const AdmissionPrice = require("../models/AdmissionPrice")
 
 // Render AdmissionPrices view
-exports.render = async (req, res) => {
+exports.showAll = async (req, res) => {
 	// Get all admission prices
 	let admissionPrices = await AdmissionPrice.findAll()
 	let priceBeingEdited = ""

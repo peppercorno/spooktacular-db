@@ -1,0 +1,75 @@
+{{> navigation currentView="reviews" }}
+
+<main>
+	<section>
+		<div class="header-row">
+			<h1>
+				{{#if formAdd}}Add {{/if}} {{#if formEdit}}Edit {{/if}}
+				Reviews
+			</h1>
+			<button onClick="goBack()" class="button-secondary" type="button">Back</button>
+		</div>
+
+		{{#if formEdit}}
+		<h2 class="form-subtitle">
+			Review created on <span id="reviewCreationDate">{{ reviewFields.creationDate }}</span>
+		</h2>
+		{{/if}}
+
+		<form method="POST"
+            {{#if formAdd}}action="/reviews/add"{{/if}} 
+			{{#if formEdit}}action="/reviews/edit"{{/if}} 
+			id="formReview">
+
+			{{#if formEdit}}
+			<input type="text" name="reviewID" value="{{ reviewFields.reviewID }}" hidden />
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label" class="form-label">By Customer</label>
+				<select name="customerID" {{#if reviewFields }}value="{{ reviewFields.customerID }}"{{/if}}>
+					{{#each customers}}
+					<option value="{{ this.customerID }}">#{{ this.customerID }}: {{ this.firstName }} {{ this.lastName }}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Reviewing a room?</label>
+					<p class="form-field-explanation">Optional</p>
+				</div>
+				<div class="column-input">
+					<select name="roomID" {{#if reviewFields }}value="{{ reviewFields.roomID }}"{{/if}}>
+						<option value="0">--</option>
+						{{#each rooms}}
+						<option value="{{ this.roomID }}">{{ this.name }}</option>
+						{{/each}}
+					</select>
+				</div>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Rating</label>
+				<select name="rating" {{#if reviewFields }}value="{{ reviewFields.rating }}"{{/if}}>
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+			<div class="form-field stacked">
+				<label class="form-label">Review Text</label>
+				<textarea name="text" rows="5" value="{{ reviewFields.text }}"></textarea>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+				{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Review" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/reviews.js"></script>

@@ -1,0 +1,71 @@
+{{> navigation currentView="admissionPrices" }}
+
+<main>
+	<section>
+		<header class="header-row">
+			<h1>Admission Prices</h1>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+		</header>
+
+		{{#ifCond success "===" "added"}}
+		{{> notification centered="true" type="success" message="Admission price successfully added!"}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "edited"}}
+		{{> notification centered="true" type="success" message="Admission price successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
+		{{> notification centered="true" type="success" message="Admission price successfully deleted."}}
+		{{/ifCond}}
+
+		{{#if errorMessage}}
+		{{> notification centered="true" message=errorMessage}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Year</th>
+					<th>Description</th>
+					<th>Base Price</th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each admissionPrices}}
+				<tr>
+					<td>{{ this.priceID }}</td>
+					<td>{{ this.year }}</td>
+					<td>{{ this.description }}</td>
+					<td>${{ this.basePrice }}</td>
+					<td>
+						<button onClick="goToEditForm({{ this.priceID }})" class="table-button edit" type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
+					</td>
+					<td>
+						{{#ifCond this.hasChildRows "==" "0"}}
+						<form method="DELETE" action="/admission-prices/delete/{{ this.priceID }}" class="form-delete">
+							<input type="submit" class="table-button delete" value="" />
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
+						{{else}}
+						<button class="table-button delete" disabled>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+							<div class="nodelete-tooltip">
+								<p>Unable to delete.<br />Used in Ticket.</p>
+							</div>
+						</button>
+						{{/ifCond}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/admissionPrices.js"></script>

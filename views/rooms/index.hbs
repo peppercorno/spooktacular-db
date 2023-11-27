@@ -1,0 +1,73 @@
+{{> navigation currentView="rooms" }}
+
+<main>
+	<section>
+		<header class="header-row">
+			<h1>Rooms</h1>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+		</header>
+
+		{{#ifCond success "===" "added"}}
+		{{> notification centered="true" type="success" message="Room successfully added!"}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "edited"}}
+		{{> notification centered="true" type="success" message="Room successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
+		{{> notification centered="true" type="success" message="Room successfully deleted."}}
+		{{/ifCond}}
+
+		{{#if errorMessage}}
+		{{> notification centered="true" message=errorMessage}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Theme</th>
+					<th>Max Capacity</th>
+					<th>Level</th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each rooms}}
+				<tr>
+					<td>{{ this.roomID }}</td>
+					<td>{{ this.name }}</td>
+					<td>{{ this.theme }}</td>
+					<td>{{ this.maxCapacity }}</td>
+					<td>{{ this.level }}</td>
+					<td>
+						<button onClick="goToEditForm({{ this.roomID }})" class="table-button edit" type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
+					</td>
+					<td>
+						{{#ifCond this.hasChildRows "==" "0"}}
+						<form method="DELETE" action="/rooms/delete/{{ this.roomID }}" class="form-delete">
+							<input type="submit" class="table-button delete" value="" />
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
+						{{else}}
+						<button class="table-button delete" disabled>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+							<div class="nodelete-tooltip">
+								<p>Unable to delete.<br />Has a Review.</p>
+							</div>
+						</button>
+						{{/ifCond}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/rooms.js"></script>

@@ -1,0 +1,72 @@
+{{> navigation currentView="customers" }}
+
+<main>
+	<section>
+		<header class="header-row">
+			<h1>Customers</h1>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+		</header>
+
+		{{#ifCond success "===" "added"}}
+		{{> notification centered="true" type="success" message="Customer successfully added!"}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "edited"}}
+		{{> notification centered="true" type="success" message="Customer successfully edited."}}
+		{{/ifCond}}
+
+		{{#ifCond success "===" "deleted"}}
+		{{> notification centered="true" type="success" message="Customer successfully deleted."}}
+		{{/ifCond}}
+
+		{{#if errorMessage}}
+		{{> notification centered="true" message=errorMessage}}
+		{{/if}}
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th class="col-table-button"></th>
+					<th class="col-table-button"></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tbody>
+				{{#each customers}}
+				<tr>
+					<td>{{ this.customerID }}</td>
+					<td>{{ this.firstName }}</td>
+					<td>{{ this.lastName }}</td>
+					<td>{{ this.email }}</td>
+					<td>
+						<button onClick="goToEditForm({{ this.customerID }})" class="table-button edit" type="button">
+							<i class="fa fa-pen-to-square"></i>
+						</button>
+					</td>
+					<td>
+						{{#ifCond this.hasChildRows "==" "0"}}
+						<form method="DELETE" action="/customers/delete/{{ this.customerID }}" class="form-delete">
+							<input type="submit" class="table-button delete" value="" />
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+						</form>
+						{{else}}
+						<button class="table-button delete" disabled>
+							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
+							<div class="nodelete-tooltip">
+								<p>Unable to delete. Owns Ticket or Review.</p>
+							</div>
+						</button>
+						{{/ifCond}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/customers.js"></script>

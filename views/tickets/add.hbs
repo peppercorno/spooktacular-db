@@ -1,0 +1,52 @@
+{{> navigation currentView="tickets" }}
+
+<main>
+	<section>
+		<div class="header-row">
+			<h1>Add Ticket</h1>
+			<button onClick="goBack()" class="button-secondary" type="button">Back</button>
+		</div>
+
+		<form method="POST" action="/tickets/add" id="formTicket">
+			<div class="form-field">
+				<label class="form-label">Customer</label>
+				<select name="customerID">
+					{{#each customers}}
+					<option value="{{ this.customerID }}">#{{ this.customerID }}: {{ this.firstName }} {{ this.lastName }}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Unit Price</label>
+				<select name="price">
+					{{#each admissionPrices}}
+					<option value="{{ this.priceID }}">{{ this.year }}: ${{ this.basePrice }}</option>
+					{{/each}}
+				</select>
+			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Quantity</label>
+				<select name="quantity">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+				{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="Add Ticket" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/tickets.js"></script>

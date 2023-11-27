@@ -12,7 +12,7 @@ const mysql = require("mysql")
 const dotenv = require("dotenv").config({ path: path.resolve(__dirname, ".env") })
 
 // When button to reset database is clicked
-exports.render = (req, res) => {
+exports.showAll = (req, res) => {
 	let error = req.query.error
 	let success = req.query.success
 

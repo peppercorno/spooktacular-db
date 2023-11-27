@@ -11,5 +11,13 @@
 	"endOfLine": "auto",
 	"arrowParens": "avoid",
 	"breakBeforeElse": true,
-	"spaceBeforeFunctionParen": false
+	"spaceBeforeFunctionParen": false,
+	"overrides": [
+		{
+			"files": "**/*.hbs",
+			"options": {
+				"parser": "angular"
+			}
+		}
+	]
 }

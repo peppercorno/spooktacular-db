@@ -1,3 +1,11 @@
+/*Citations
+------------------------------------------------------------------------
+	Title: Checking syntax for querySelectorAll() to apply click event listeners to buttons in all table rows.
+	Date: 4 Nov 2023
+	Adapted from URL: https://stackoverflow.com/a/50229330
+	Author: Mamun
+------------------------------------------------------------------------*/
+
 function goToAddForm() {
 	location.assign("/inventory-items/add")
 }
@@ -16,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 	if (selectedID) {
 		let selectOptions = document.getElementById("formInventoryItem").querySelector("select[name=roomID]").children
-		for (var i = 0; i < selectOptions.length; i++) {
+		for (let i = 0; i < selectOptions.length; i++) {
 			if (selectOptions[i].getAttribute("value") === selectedID) selectOptions[i].setAttribute("selected", "selected")
 		}
 	}

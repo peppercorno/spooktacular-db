@@ -1,36 +1,39 @@
-// When 'add new' button is clicked, show 'add' section
-document.getElementById("buttonReviewAdd").addEventListener("click", function (event) {
-	// Hide section with edit form
-	document.getElementById("sectionReviewEdit").classList.add("display-none")
+function goToAddForm() {
+	location.assign("/reviews/add")
+}
 
-	// Show section with add form, scroll down to it
-	document.getElementById("sectionReviewAdd").classList.toggle("display-none")
-	document.getElementById("sectionReviewAdd").scrollIntoView()
-})
+function goToEditForm(reviewID) {
+	location.assign("/reviews/edit/" + reviewID)
+}
 
-// When 'edit' button in table is clicked, show 'edit' section
-document.querySelectorAll(".table-button.edit").forEach(function (el) {
-	el.addEventListener("click", function () {
-		// Hide section with add form
-		document.getElementById("sectionReviewAdd").classList.add("display-none")
+function goBack() {
+	location.assign("/reviews")
+}
 
-		// Show section with edit form, scroll down to it
-		document.getElementById("sectionReviewEdit").classList.remove("display-none")
-		document.getElementById("sectionReviewEdit").scrollIntoView()
+document.addEventListener("DOMContentLoaded", function (event) {
+	// Dropdown menus:  If editing, or when re-rendering the 'add' form after an error, select the correct option
+	let selectedCustomerID = document.getElementById("formReview").querySelector("select[name=customerID]").getAttribute("value")
+	let selectedRoomID = document.getElementById("formReview").querySelector("select[name=roomID]").getAttribute("value")
+	let selectedRating = document.getElementById("formReview").querySelector("select[name=rating]").getAttribute("value")
 
-		// Display creation date
-		document.getElementById("reviewCreationDate").innerHTML = this.getAttribute("data-creationdate")
+	if (selectedCustomerID) {
+		let customerOptions = document.getElementById("formReview").querySelector("select[name=customerID]").children
+		for (let i = 0; i < customerOptions.length; i++) {
+			if (customerOptions[i].getAttribute("value") === selectedCustomerID) customerOptions[i].setAttribute("selected", "selected")
+		}
+	}
 
-		// Populate edit form
-		document.getElementById("formReviewEdit").querySelector("input[name=reviewID]").value = this.getAttribute("data-reviewid") // Pass reviewID to hidden input
+	if (selectedRoomID) {
+		let roomOptions = document.getElementById("formReview").querySelector("select[name=roomID]").children
+		for (let i = 0; i < roomOptions.length; i++) {
+			if (roomOptions[i].getAttribute("value") === selectedRoomID) roomOptions[i].setAttribute("selected", "selected")
+		}
+	}
 
-		// Select correct option for customer, room and rating
-		document.getElementById("formReviewEdit").querySelector("select[name=customer]").value = this.getAttribute("data-customerid")
-		// If null, select 'unselected' option
-		if (!this.getAttribute("data-roomid")) document.getElementById("formReviewEdit").querySelector("select[name=room]").value = "0"
-		else document.getElementById("formReviewEdit").querySelector("select[name=room]").value = this.getAttribute("data-roomid")
-		document.getElementById("formReviewEdit").querySelector("select[name=rating]").value = this.getAttribute("data-rating")
-
-		document.getElementById("formReviewEdit").querySelector("textarea[name=text]").value = this.getAttribute("data-text")
-	})
+	if (selectedRating) {
+		let ratingOptions = document.getElementById("formReview").querySelector("select[name=rating]").children
+		for (let i = 0; i < ratingOptions.length; i++) {
+			if (ratingOptions[i].getAttribute("value") === selectedRating) ratingOptions[i].setAttribute("selected", "selected")
+		}
+	}
 })

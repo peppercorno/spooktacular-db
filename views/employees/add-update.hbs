@@ -1,0 +1,61 @@
+{{> navigation currentView="employees" }}
+
+<main>
+	<section>
+        <div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Employees
+			</h1>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
+        </div>
+
+		<form method="POST"
+            {{#if formAdd}}action="/employees/add"{{/if}} 
+			{{#if formEdit}}action="/employees/edit"{{/if}} 
+			id="formEmployee">
+
+            {{#if formEdit}}
+				<input type="text" name="employeeID" value="{{ employeeFields.employeeID }}" hidden />
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label">First Name</label>
+				<input type="text" name="firstName" value="{{ employeeFields.firstName }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Last Name</label>
+				<input type="text" name="lastName" value="{{ employeeFields.lastName }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Email</label>
+				<input type="text" name="email" value="{{ employeeFields.email }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Job Title</label>
+				<input type="text" name="jobTitle" value="{{ employeeFields.jobTitle }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Start Date</label>
+				<input type="date" name="startDate" value="{{ employeeFields.startDate }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">End Date</label>
+				<input type="date" name="endDate" value="{{ employeeFields.endDate }}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Salary</label>
+				<input type="text" name="salary" value="{{ employeeFields.salary }}"/>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Employee" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/employees.js"></script>

@@ -10,7 +10,7 @@
 const Customer = require("../models/Customer")
 
 // Render Customers view
-exports.render = async (req, res) => {
+exports.showAll = async (req, res) => {
 	// Get all customers
 	let customers = await Customer.findAll()
 	let customerBeingEdited = ""

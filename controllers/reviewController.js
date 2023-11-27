@@ -4,7 +4,7 @@ const Customer = require("../models/Customer")
 const Room = require("../models/Room")
 
 // Render Reviews view
-exports.render = async (req, res) => {
+exports.showAll = async (req, res) => {
 	// Get all reviews
 	let reviews = await Review.findAll()
 	let reviewBeingEdited = ""
@@ -36,10 +36,10 @@ exports.render = async (req, res) => {
 // Add a new review
 exports.add = async (req, res) => {
 	try {
-		console.log("Request Body:", req.body); // Log the request body
+		console.log("Request Body:", req.body) // Log the request body
 
-		// Fetch customer full name based on customerID 
-        // const customer = await Customer.findById(req.body.customerID);
+		// Fetch customer full name based on customerID
+		// const customer = await Customer.findById(req.body.customerID);
 		// const customerFullName = `${customer.firstName} ${customer.lastName}`;
 
 		let review = new Review(null, req.body.customerID, req.body.roomID, null, req.body.rating, req.body.text, null)

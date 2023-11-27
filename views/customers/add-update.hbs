@@ -1,0 +1,45 @@
+{{> navigation currentView="customers" }}
+
+<main>
+	<section>
+		<div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Customer
+			</h1>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
+        </div>
+
+		<form method="POST"
+            {{#if formAdd}}action="/customers/add"{{/if}} 
+			{{#if formEdit}}action="/customers/edit"{{/if}} 
+			id="formCustomer">
+
+			{{#if formEdit}}
+				<input type="text" name="customerID" value="{{customerFields.customerID}}" hidden/>
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label">First Name</label>
+				<input type="text" name="firstName" value="{{customerFields.firstName}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Last Name</label>
+				<input type="text" name="lastName" value="{{customerFields.lastName}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Email</label>
+				<input type="email" name="email" value="{{customerFields.email}}"/>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Customer" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/customers.js"></script>

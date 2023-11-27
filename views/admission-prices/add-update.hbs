@@ -1,0 +1,51 @@
+{{> navigation currentView="admissionPrices" }}
+
+<main>
+	<section>
+        <div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Admission Prices
+			</h1>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
+        </div>
+
+		<form method="POST" 
+            {{#if formAdd}}action="/admission-prices/add"{{/if}} 
+			{{#if formEdit}}action="/admission-prices/edit"{{/if}} 
+			id="formAdmissionPrice">
+
+            {{#if formEdit}}
+				<input type="text" name="priceID" value="{{priceFields.priceID}}" hidden/>
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label" class="form-label">Year</label>
+				<input type="text" name="year" value="{{priceFields.year}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label" class="form-label">Description</label>
+				<input type="text" name="description" value="{{priceFields.description}}"/>
+			</div>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Base Price</label>
+					<p class="form-field-explanation">in USD</p>
+				</div>
+				<div class="column-input">
+					<input type="text" name="basePrice" value="{{priceFields.basePrice}}"/>
+				</div>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Price" />
+			</div>
+		</form>
+	</section>
+
+</main>
+
+<script type="text/javascript" src="/js/admissionPrices.js"></script>

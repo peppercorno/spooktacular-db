@@ -4,23 +4,23 @@
 	<section>
 		<header class="header-row">
 			<h1>Employees Responsible for Inventory Items</h1>
-            <button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
+			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
 		</header>
 
 		{{#ifCond success "===" "added"}}
-			{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
+		{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
 		{{/ifCond}}
 
 		{{#ifCond success "===" "edited"}}
-			{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
+		{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
 		{{/ifCond}}
 
 		{{#ifCond success "===" "deleted"}}
-			{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
+		{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
 		{{/ifCond}}
 
-        {{#if errorMessage}}
-			{{> notification centered="true" message=errorMessage}}
+		{{#if errorMessage}}
+		{{> notification centered="true" message=errorMessage}}
 		{{/if}}
 
 		<table>
@@ -35,16 +35,16 @@
 			<tbody>
 				{{#each relationships}}
 				<tr>
-					<td>#{{this.itemID}} - {{this.itemName}}</td>
-					<td>{{this.employeeFullName}}</td>
+					<td>#{{ this.itemID }} - {{ this.itemName }}</td>
+					<td>{{ this.employeeFullName }}</td>
 					<td>
-						<button onClick="goToEditForm({{this.relationshipID}})" class="table-button edit" type="button">
+						<button onClick="goToEditForm({{ this.relationshipID }})" class="table-button edit" type="button">
 							<i class="fa fa-pen-to-square"></i>
 						</button>
 					</td>
 					<td>
-						<form method="DELETE" action="/item-resps/delete/{{this.relationshipID}}" class="form-delete">
-							<input type="submit" class="table-button delete" value=""/>
+						<form method="DELETE" action="/item-resps/delete/{{ this.relationshipID }}" class="form-delete">
+							<input type="submit" class="table-button delete" value="" />
 							<span class="icon-delete"><i class="fa fa-trash-can"></i></span>
 						</form>
 					</td>

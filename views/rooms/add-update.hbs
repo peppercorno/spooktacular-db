@@ -1,0 +1,54 @@
+{{> navigation currentView="rooms" }}
+
+<main>
+    <section>
+	    <div class="header-row">
+            <h1>
+				{{#if formAdd}}Add {{/if}}
+				{{#if formEdit}}Edit {{/if}}
+				Room
+			</h1>
+            <button onClick="goBack()" class="button-secondary" type="button">Back</button>
+        </div>
+
+		<form method="POST" 
+            {{#if formAdd}}action="/rooms/add"{{/if}} 
+			{{#if formEdit}}action="/rooms/edit"{{/if}} 
+			id="formRoom">
+
+			{{#if formEdit}}
+				<input type="text" name="roomID" value="{{roomFields.roomID}}" hidden/>
+			{{/if}}
+
+			<div class="form-field">
+				<label class="form-label">Name</label>
+				<input type="text" name="roomName" value="{{roomFields.name}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Theme</label>
+				<input type="text" name="theme" value="{{roomFields.theme}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Max Capacity</label>
+				<input type="text" name="maxCapacity" value="{{roomFields.maxCapacity}}"/>
+			</div>
+			<div class="form-field">
+				<label class="form-label">Level</label>
+				<select name="level" {{#if roomFields }}value="{{ roomFields.level }}"{{/if}}>
+					<option value="1">1 (Ground Floor)</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</select>
+			</div>
+			<div class="button-row">
+				{{#if errorMessage}}
+					{{> notification message=errorMessage}}
+				{{/if}}
+				<input type="submit" value="{{#if formAdd}}Add{{/if}}{{#if formEdit}}Edit{{/if}} Room" />
+			</div>
+		</form>
+	</section>
+</main>
+
+<script type="text/javascript" src="/js/rooms.js"></script>

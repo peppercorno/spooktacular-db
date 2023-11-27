@@ -2,7 +2,7 @@
 const Employee = require("../models/Employee")
 
 // Render Employees view
-exports.render = async (req, res) => {
+exports.showAll = async (req, res) => {
 	// Get all employees
 	let employees = await Employee.findAll()
 	let employeeBeingEdited = ""

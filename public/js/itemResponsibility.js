@@ -17,14 +17,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 	if (selectedItemID) {
 		let itemOptions = document.getElementById("formItemResponsibility").querySelector("select[name=itemID]").children
-		for (var i = 0; i < itemOptions.length; i++) {
+		for (let i = 0; i < itemOptions.length; i++) {
 			if (itemOptions[i].getAttribute("value") === selectedItemID) itemOptions[i].setAttribute("selected", "selected")
 		}
 	}
 
 	if (selectedEmployeeID) {
 		let employeeOptions = document.getElementById("formItemResponsibility").querySelector("select[name=employeeID]").children
-		for (var i = 0; i < employeeOptions.length; i++) {
+		for (let i = 0; i < employeeOptions.length; i++) {
 			if (employeeOptions[i].getAttribute("value") === selectedEmployeeID) employeeOptions[i].setAttribute("selected", "selected")
 		}
 	}
