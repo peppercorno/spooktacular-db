@@ -126,7 +126,8 @@ class Ticket {
 						return
 					}
 
-					resolve(this)
+					// Resolve with newly-inserted ID
+					resolve(res.insertId)
 				}
 			)
 		})

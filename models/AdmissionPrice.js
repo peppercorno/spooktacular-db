@@ -95,7 +95,6 @@ class AdmissionPrice {
 			// Determine whether we are creating or updating
 			if (this.priceID === undefined || this.priceID === null) {
 				// Create
-
 				db.pool.query(
 					`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${description}', ${basePrice})`,
 					(err, res) => {
@@ -105,7 +104,8 @@ class AdmissionPrice {
 							return
 						}
 
-						resolve(this)
+						// Resolve with newly-inserted ID
+						resolve(res.insertId)
 					}
 				)
 			} else {

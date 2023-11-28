@@ -113,7 +113,8 @@ class Customer {
 							return
 						}
 
-						resolve(this)
+						// Resolve with newly-inserted ID
+						resolve(res.insertId)
 					}
 				)
 			} else {
