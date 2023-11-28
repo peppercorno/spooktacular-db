@@ -20,7 +20,7 @@ function goBack() {
 
 document.addEventListener("DOMContentLoaded", function (event) {
 	// Dropdown menu:  If editing, or when re-rendering the 'add' form after an error, select the correct option
-	let form = document.getElementById("formRoom")
+	let form = document.getElementById("formInventoryItem")
 
 	if (form) {
 		let selectedID = form.querySelector("select[name=roomID]").getAttribute("value")

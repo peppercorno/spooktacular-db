@@ -1,6 +1,14 @@
 // Get connection
 let db = require("../db-config")
 
+/*Citations
+------------------------------------------------------------------------
+	Title: Figuring out how to get the ID of a newly-inserted row, so we know which to highlight in the view.
+	Date: 28 Nov 2023
+	Adapted from URL: https://www.npmjs.com/package/mysql#getting-the-id-of-an-inserted-row
+	Author: mysql npm team
+------------------------------------------------------------------------*/
+
 class InventoryItem {
 	constructor(itemID, roomID, roomName, name, itemCondition) {
 		this.itemID = itemID
@@ -114,7 +122,8 @@ class InventoryItem {
 							return
 						}
 
-						resolve(this)
+						// Resolve with newly-inserted ID
+						resolve(res.insertId)
 					}
 				)
 			} else {

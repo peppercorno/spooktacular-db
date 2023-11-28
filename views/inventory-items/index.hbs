@@ -14,17 +14,9 @@
 			</select>
 		</div>
 
-		{{#ifCond success "===" "added"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "edited"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "deleted"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
-		{{/ifCond}}
+		{{#if successMessage}}
+		{{> notification centered="true" type="success" message=successMessage}}
+		{{/if}}
 
 		{{#if errorMessage}}
 		{{> notification centered="true" message=errorMessage}}
@@ -43,7 +35,7 @@
 			</thead>
 			<tbody>
 				{{#each inventoryItems}}
-				<tr>
+				<tr {{#ifCond ../highlight "==" this.itemID}}class="highlight"{{/ifCond}}>
 					<td>{{ this.itemID }}</td>
 					<td>{{ this.name }}</td>
 					<td>{{ this.itemCondition }}</td>

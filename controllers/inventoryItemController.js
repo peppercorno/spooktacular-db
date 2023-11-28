@@ -8,9 +8,15 @@ exports.showAll = async (req, res) => {
 		let inventoryItems = await InventoryItem.findAll()
 
 		// Whether to show success notification
-		let success = req.query.success
+		let successMessage = ""
+		if (req.query.success === "added") successMessage = "Inventory item #" + req.query.id + " successfully added!"
+		if (req.query.success === "edited") successMessage = "Inventory item #" + req.query.id + " successfully edited!"
+		if (req.query.success === "deleted") successMessage = "Inventory item #" + req.query.id + " deleted."
 
-		res.render("inventory-items/index", { inventoryItems, success })
+		// If successful, highlight newly added or edited table row
+		let highlight = req.query.success && req.query.success !== "deleted" ? req.query.id : null
+
+		res.render("inventory-items/index", { inventoryItems, successMessage, highlight })
 	} catch (err) {
 		console.log(err)
 		res.render("inventory-items/index", { errorMessage: "Error! Unable to retrieve inventory items." })
@@ -42,7 +48,10 @@ exports.showEdit = async (req, res) => {
 		res.render("inventory-items/add-update", { rooms, itemFields, formEdit: true })
 	} catch (err) {
 		console.log(err)
-		res.render("inventory-items/add-update", { errorMessage: "Oops, unable to retrieve data for this item.", formEdit: true })
+		res.render("inventory-items/add-update", {
+			errorMessage: "Oops, unable to retrieve data for this item.",
+			formEdit: true
+		})
 	}
 }
 
@@ -53,10 +62,10 @@ exports.add = async (req, res) => {
 		// Follow params that InventoryItem class requires
 		let item = new InventoryItem(null, req.body.roomID, null, req.body.name, req.body.itemCondition)
 
-		await item.save()
+		let added = await item.save()
 
 		// If successful
-		res.redirect("/inventory-items/?success=added")
+		res.redirect("/inventory-items/?success=added&id=" + added)
 	} catch (err) {
 		console.log(err)
 
@@ -83,7 +92,7 @@ exports.edit = async (req, res) => {
 		await item.save()
 
 		// If successful
-		res.redirect("/inventory-items/?success=edited")
+		res.redirect("/inventory-items/?success=edited&id=" + req.body.itemID)
 	} catch (err) {
 		console.log(err)
 
@@ -110,7 +119,7 @@ exports.delete = async (req, res) => {
 		await item.delete(req.params.id)
 
 		// If successful
-		res.redirect("/inventory-items/?success=deleted")
+		res.redirect("/inventory-items/?success=deleted&id=" + req.params.id)
 	} catch (err) {
 		console.log(err)
 
