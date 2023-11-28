@@ -78,12 +78,10 @@ class AdmissionPrice {
 		return new Promise((resolve, reject) => {
 			// Validate
 			if (!this.year || this.year.length === 0) throw new Error("yearMissing")
-			if (isNaN(this.year)) throw new Error("yearNaN")
-
+			if (isNaN(this.year) || this.year.length !== 4) throw new Error("invalidYear")
 			if (!this.description || this.description.length === 0) throw new Error("descriptionMissing")
-
 			if (!this.basePrice || this.basePrice.length === 0) throw new Error("basePriceMissing")
-			if (isNaN(this.basePrice)) throw new Error("basePriceNaN")
+			if (isNaN(this.basePrice)) throw new Error("invalidBasePrice")
 
 			// Parse as int
 			let year = parseInt(this.year)

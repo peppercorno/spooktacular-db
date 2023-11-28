@@ -7,9 +7,15 @@ exports.showAll = async (req, res) => {
 		let rooms = await Room.findAll()
 
 		// Whether to show success notification
-		let success = req.query.success
+		let successMessage = ""
+		if (req.query.success === "added") successMessage = "Room #" + req.query.id + " successfully added!"
+		if (req.query.success === "edited") successMessage = "Room #" + req.query.id + " successfully edited!"
+		if (req.query.success === "deleted") successMessage = "Room #" + req.query.id + " deleted."
 
-		res.render("rooms/index", { rooms, success })
+		// If successful, highlight newly added or edited table row
+		let highlight = req.query.success && req.query.success !== "deleted" ? req.query.id : null
+
+		res.render("rooms/index", { rooms, successMessage, highlight })
 	} catch (err) {
 		console.log(err)
 		res.render("rooms/index", { errorMessage: "Error! Unable to retrieve rooms." })
@@ -41,23 +47,18 @@ exports.add = async (req, res) => {
 		// Follow params that Room class requires
 		let room = new Room(null, req.body.name, req.body.theme, req.body.maxCapacity, req.body.level, null)
 
-		await room.save()
+		let addedID = await room.save()
 
 		// If successful
-		res.redirect("/rooms/?success=added")
+		res.redirect("/rooms/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let roomFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add room."
-		if (err.message === "nameMissing") errorMessage = "Room name is missing."
-		if (err.message === "invalidMaxCapacity") errorMessage = "Max capacity must be a number greater than zero."
-		if (err.message === "maxCapacityTooLarge") errorMessage = "None of our rooms can hold that many people..."
-		if (err.message === "levelMissing") errorMessage = "Level is missing."
-		if (err.message === "invalidLevel") errorMessage = "Level must be a number ranging from 1 to 4."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to add room."
 
 		res.render("rooms/add-update", { roomFields, errorMessage, formAdd: true })
 	}
@@ -71,20 +72,15 @@ exports.edit = async (req, res) => {
 		await room.save()
 
 		// If successful
-		res.redirect("/rooms/?success=edited")
+		res.redirect("/rooms/?success=edited&id=" + req.body.roomID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let roomFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add room."
-		if (err.message === "nameMissing") errorMessage = "Room name is missing."
-		if (err.message === "invalidMaxCapacity") errorMessage = "Max capacity must be a number greater than zero."
-		if (err.message === "maxCapacityTooLarge") errorMessage = "None of our rooms can hold that many people..."
-		if (err.message === "levelMissing") errorMessage = "Level is missing."
-		if (err.message === "invalidLevel") errorMessage = "Level must be a number ranging from 1 to 4."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to edit room."
 
 		res.render("rooms/add-update", { roomFields, errorMessage, formEdit: true })
 	}
@@ -98,7 +94,7 @@ exports.delete = async (req, res) => {
 		await room.delete(req.params.id)
 
 		// If successful
-		res.redirect("/rooms/?success=deleted")
+		res.redirect("/rooms/?success=deleted&id=" + req.params.id)
 	} catch (err) {
 		console.log(err)
 
@@ -110,4 +106,13 @@ exports.delete = async (req, res) => {
 
 		res.render("rooms/index", { rooms, errorMessage })
 	}
+}
+
+let defineErrorMessage = errType => {
+	if (errType === "nameMissing") return "Room name is missing."
+	if (errType === "invalidMaxCapacity") return "Max capacity must be a number greater than zero."
+	if (errType === "maxCapacityTooLarge") return "None of our rooms can hold so many people..."
+	if (errType === "levelMissing") return "Level is missing."
+	if (errType === "invalidLevel") return "Level must be a number from 1 to 4."
+	return
 }

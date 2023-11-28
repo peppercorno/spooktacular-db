@@ -9,9 +9,15 @@ exports.showAll = async (req, res) => {
 		let reviews = await Review.findAll()
 
 		// Whether to show success notification
-		let success = req.query.success
+		let successMessage = ""
+		if (req.query.success === "added") successMessage = "Review #" + req.query.id + " successfully added!"
+		if (req.query.success === "edited") successMessage = "Review #" + req.query.id + " successfully edited!"
+		if (req.query.success === "deleted") successMessage = "Review #" + req.query.id + " deleted."
 
-		res.render("reviews/index", { reviews, success })
+		// If successful, highlight newly added or edited table row
+		let highlight = req.query.success && req.query.success !== "deleted" ? req.query.id : null
+
+		res.render("reviews/index", { reviews, successMessage, highlight })
 	} catch (err) {
 		console.log(err)
 		res.render("reviews/index", { errorMessage: "Error! Unable to retrieve reviews." })
@@ -56,10 +62,10 @@ exports.add = async (req, res) => {
 		// Follow params that Review class requires
 		let review = new Review(null, req.body.customerID, null, req.body.roomID, null, req.body.rating, req.body.text, null)
 
-		await review.save()
+		let addedID = await review.save()
 
 		// If successful
-		res.redirect("/reviews/?success=added")
+		res.redirect("/reviews/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
@@ -67,15 +73,11 @@ exports.add = async (req, res) => {
 		let customers = await Customer.findFullNames()
 		let rooms = await Room.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let reviewFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add review."
-		if (!customers || customers === null) errorMessage = "Unable to retrieve data on customers."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
-		if (err.message === "customerIDMissing") errorMessage = "A review must be written by a customer."
-		if (err.message === "invalidRating") errorMessage = "Rating must be a number ranging from 0 to 5."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, customers, rooms) ?? "Unknown error! Unable to add review."
 
 		res.render("reviews/add-update", { customers, rooms, reviewFields, errorMessage, formAdd: true })
 	}
@@ -84,12 +86,21 @@ exports.add = async (req, res) => {
 // Edit existing review
 exports.edit = async (req, res) => {
 	try {
-		let review = new Review(req.body.reviewID, req.body.customerID, null, req.body.roomID, null, req.body.rating, req.body.text, null)
+		let review = new Review(
+			req.body.reviewID,
+			req.body.customerID,
+			null,
+			req.body.roomID,
+			null,
+			req.body.rating,
+			req.body.text,
+			null
+		)
 
 		await review.save()
 
 		// If successful
-		res.redirect("/reviews/?success=edited")
+		res.redirect("/reviews/?success=edited&id=" + req.body.reviewID)
 	} catch (err) {
 		console.log(err)
 
@@ -97,15 +108,11 @@ exports.edit = async (req, res) => {
 		let customers = await Customer.findFullNames()
 		let rooms = await Room.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let reviewFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add review."
-		if (!customers || customers === null) errorMessage = "Unable to retrieve data on customers."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
-		if (err.message === "customerIDMissing") errorMessage = "A review must be written by a customer."
-		if (err.message === "invalidRating") errorMessage = "Rating must be a number ranging from 0 to 5."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, customers, rooms) ?? "Unknown error! Unable to edit review."
 
 		res.render("reviews/add-update", { customers, rooms, reviewFields, errorMessage, formEdit: true })
 	}
@@ -119,7 +126,7 @@ exports.delete = async (req, res) => {
 		await review.delete(req.params.id)
 
 		// If successful
-		res.redirect("/reviews/?success=deleted")
+		res.redirect("/reviews/?success=deleted&id=" + req.params.id)
 	} catch (err) {
 		console.log(err)
 
@@ -131,4 +138,12 @@ exports.delete = async (req, res) => {
 
 		res.render("reviews/index", { reviews, errorMessage })
 	}
+}
+
+let defineErrorMessage = (errType, customers, rooms) => {
+	if (!customers || customers === null) return "Unable to retrieve data for customers."
+	if (!rooms || rooms === null) return "Unable to retrieve data for rooms."
+	if (errType === "customerIDMissing") return "A review must be written by a customer."
+	if (errType === "invalidRating") return "Rating must be a number ranging from 0 to 5."
+	return
 }

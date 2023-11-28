@@ -110,7 +110,7 @@ class Ticket {
 			if (!this.customerID || this.customerID.length === 0) throw new Error("customerIDMissing")
 			if (!this.priceID || this.priceID.length === 0) throw new Error("priceIDMissing")
 			if (this.quantity === undefined || this.quantity === null || this.quantity == 0) throw new Error("quantityMissing")
-			if (isNaN(this.quantity)) throw new Error("quantityNaN")
+			if (isNaN(this.quantity)) throw new Error("invalidQuantity")
 
 			// Parse as int
 			let customerID = parseInt(this.customerID)

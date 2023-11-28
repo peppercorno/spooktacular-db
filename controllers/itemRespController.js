@@ -10,10 +10,16 @@ exports.showAll = async (req, res) => {
 		let relationships = await ItemResponsibility.findAll()
 
 		// Whether to show success notification
-		let success = req.query.success
+		let successMessage = ""
+		if (req.query.success === "added") successMessage = "Relationship #" + req.query.id + " successfully added!"
+		if (req.query.success === "edited") successMessage = "Relationship #" + req.query.id + " successfully edited!"
+		if (req.query.success === "deleted") successMessage = "Relationship #" + req.query.id + " deleted."
+
+		// If successful, highlight newly added or edited table row
+		let highlight = req.query.success && req.query.success !== "deleted" ? req.query.id : null
 
 		// Render view
-		res.render("item-resps/index", { relationships, success })
+		res.render("item-resps/index", { relationships, successMessage, highlight })
 	} catch (err) {
 		console.log(err)
 		res.render("item-resps/index", { errorMessage: "Error! Unable to retrieve data on item responsibilities." })
@@ -30,7 +36,10 @@ exports.showAdd = async (req, res) => {
 		res.render("item-resps/add-update", { items, employees, formAdd: true })
 	} catch (err) {
 		console.log(err)
-		res.render("item-resps/add-update", { errorMessage: "Oops, unable to retrieve data for dropdown menus.", formAdd: true })
+		res.render("item-resps/add-update", {
+			errorMessage: "Oops, unable to retrieve data for dropdown menus.",
+			formAdd: true
+		})
 	}
 }
 
@@ -47,7 +56,11 @@ exports.showEdit = async (req, res) => {
 		res.render("item-resps/add-update", { items, employees, relationshipFields, formEdit: true })
 	} catch (err) {
 		console.log(err)
-		res.render("item-resps/add-update", { relationshipFields, errorMessage: "Oops, unable to retrieve data for this relationship.", formEdit: true })
+		res.render("item-resps/add-update", {
+			relationshipFields,
+			errorMessage: "Oops, unable to retrieve data for this relationship.",
+			formEdit: true
+		})
 	}
 }
 
@@ -58,10 +71,14 @@ exports.add = async (req, res) => {
 		// Follow params that ItemResponsibility class requires
 		let relationship = new ItemResponsibility(null, req.body.itemID, req.body.employeeID, null, null)
 
-		await relationship.save()
+		// Prevent SQL error: Check whether relationship already exists
+		let alreadyExists = await relationship.checkIfExists()
+		if (alreadyExists) throw new Error("alreadyExists")
+
+		let addedID = await relationship.save()
 
 		// If successful
-		res.redirect("/item-resps/?success=added")
+		res.redirect("/item-resps/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
@@ -69,15 +86,11 @@ exports.add = async (req, res) => {
 		let items = await InventoryItem.findNames()
 		let employees = await Employee.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let relationshipFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add new relationship."
-		if (!items || items === null) errorMessage = "Unable to retrieve data on inventory items."
-		if (!employees || employees === null) errorMessage = "Unable to retrieve data on employees."
-		// If user tries to add a relationship that already exists
-		if (err.code && err.code === "ER_DUP_ENTRY") errorMessage = "This relationship already exists in the database."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, items, employees) ?? "Unknown error! Unable to add relationship."
 
 		res.render("item-resps/add-update", { items, employees, relationshipFields, errorMessage, formAdd: true })
 	}
@@ -88,14 +101,14 @@ exports.edit = async (req, res) => {
 	try {
 		let relationship = new ItemResponsibility(req.body.relationshipID, req.body.itemID, req.body.employeeID, null, null)
 
-		// Prevent SQL error that causes server to crash: Check whether relationship already exists
+		// Prevent SQL error: Check whether relationship already exists
 		let alreadyExists = await relationship.checkIfExists()
 		if (alreadyExists) throw new Error("alreadyExists")
 
 		await relationship.save()
 
 		// If successful
-		res.redirect("/item-resps/?success=edited")
+		res.redirect("/item-resps/?success=edited&id=" + req.body.relationshipID)
 	} catch (err) {
 		console.log(err)
 
@@ -103,19 +116,13 @@ exports.edit = async (req, res) => {
 		let items = await InventoryItem.findNames()
 		let employees = await Employee.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let relationshipFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to edit relationship."
-		if (!items || items === null) errorMessage = "Unable to retrieve data on inventory items."
-		if (!employees || employees === null) errorMessage = "Unable to retrieve data on employees."
-		if (err.message === "alreadyExists") errorMessage = "This relationship already exists in the database."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, items, employees) ?? "Unknown error! Unable to edit relationship."
 
-		// If user tries to add a relationship that already exists
-		// if (err.code && err.code === "ER_DUP_ENTRY") errorMessage = "This relationship already exists in the database."
-
-		res.render("item-resps/add-update", { errorMessage, items, employees, relationshipFields, formEdit: true })
+		res.render("item-resps/add-update", { items, employees, relationshipFields, errorMessage, formEdit: true })
 	}
 }
 
@@ -127,7 +134,7 @@ exports.delete = async (req, res) => {
 		await relationship.delete(req.params.id)
 
 		// If successful
-		res.redirect("/item-resps/?success=deleted")
+		res.redirect("/item-resps/?success=deleted&id=" + req.params.id)
 	} catch (err) {
 		console.log(err)
 
@@ -139,4 +146,11 @@ exports.delete = async (req, res) => {
 
 		res.render("item-resps/index", { relationships, errorMessage })
 	}
+}
+
+let defineErrorMessage = (errType, items, employees) => {
+	if (errType === "alreadyExists") return "This relationship already exists in the database."
+	if (!items || items === null) return "Unable to retrieve data for inventory items."
+	if (!employees || employees === null) return "Unable to retrieve data for employees."
+	return
 }

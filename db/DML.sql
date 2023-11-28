@@ -183,7 +183,7 @@ Rooms
 -- Indicate whether each row has any child rows
 SELECT roomID, name, theme, maxCapacity, level, 
 EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows
-FROM Rooms;
+FROM Rooms ORDER BY name ASC;
 
 -- For dropdown menus: Get all Room rows-- roomID and name only. Order by name.
 SELECT roomID, name FROM Rooms ORDER BY name ASC;

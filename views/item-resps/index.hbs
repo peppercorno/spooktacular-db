@@ -7,17 +7,9 @@
 			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
 		</header>
 
-		{{#ifCond success "===" "added"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully added!"}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "edited"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully edited."}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "deleted"}}
-		{{> notification centered="true" type="success" message="Inventory item successfully deleted."}}
-		{{/ifCond}}
+		{{#if successMessage}}
+		{{> notification centered="true" type="success" message=successMessage}}
+		{{/if}}
 
 		{{#if errorMessage}}
 		{{> notification centered="true" message=errorMessage}}
@@ -26,6 +18,7 @@
 		<table>
 			<thead>
 				<tr>
+					<th>ID</th>
 					<th>Item Name</th>
 					<th>Employee</th>
 					<th class="col-table-button"></th>
@@ -34,7 +27,8 @@
 			</thead>
 			<tbody>
 				{{#each relationships}}
-				<tr>
+				<tr {{#ifCond ../highlight "==" this.relationshipID}}class="highlight"{{/ifCond}}>
+					<td>{{ this.relationshipID }}</td>
 					<td>#{{ this.itemID }} - {{ this.itemName }}</td>
 					<td>{{ this.employeeFullName }}</td>
 					<td>

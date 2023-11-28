@@ -7,17 +7,9 @@
 			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
 		</header>
 
-		{{#ifCond success "===" "added"}}
-		{{> notification centered="true" type="success" message="Ticket successfully added!"}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "edited"}}
-		{{> notification centered="true" type="success" message="Ticket successfully edited."}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "deleted"}}
-		{{> notification centered="true" type="success" message="Ticket successfully deleted."}}
-		{{/ifCond}}
+		{{#if successMessage}}
+		{{> notification centered="true" type="success" message=successMessage}}
+		{{/if}}
 
 		{{#if errorMessage}}
 		{{> notification centered="true" message=errorMessage}}
@@ -38,7 +30,7 @@
 			</thead>
 			<tbody>
 				{{#each tickets}}
-				<tr>
+				<tr {{#ifCond ../highlight "==" this.ticketID}}class="highlight"{{/ifCond}}>
 					<td>{{ this.ticketID }}</td>
 					<td>{{ this.customerFullName }}</td>
 					<td>{{ this.quantity }}</td>

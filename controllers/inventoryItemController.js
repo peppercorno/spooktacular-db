@@ -62,23 +62,21 @@ exports.add = async (req, res) => {
 		// Follow params that InventoryItem class requires
 		let item = new InventoryItem(null, req.body.roomID, null, req.body.name, req.body.itemCondition)
 
-		let added = await item.save()
+		let addedID = await item.save()
 
 		// If successful
-		res.redirect("/inventory-items/?success=added&id=" + added)
+		res.redirect("/inventory-items/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
 		// For dropdown menu
 		let rooms = await Room.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let itemFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add inventory item."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
-		if (err.message === "nameMissing") errorMessage = "Item name is missing."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, rooms) ?? "Unknown error! Unable to add customer."
 
 		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage, formAdd: true })
 	}
@@ -99,13 +97,11 @@ exports.edit = async (req, res) => {
 		// For dropdown menu
 		let rooms = await Room.findNames()
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let itemFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to edit inventory item."
-		if (!rooms || rooms === null) errorMessage = "Unable to retrieve data on rooms."
-		if (err.message === "nameMissing") errorMessage = "Item name is missing."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message, rooms) ?? "Unknown error! Unable to edit customer."
 
 		res.render("inventory-items/add-update", { rooms, itemFields, errorMessage, formEdit: true })
 	}
@@ -131,4 +127,10 @@ exports.delete = async (req, res) => {
 
 		res.render("inventory-items/index", { inventoryItems, errorMessage })
 	}
+}
+
+let defineErrorMessage = (errType, rooms) => {
+	if (!rooms || rooms === null) return "Unable to retrieve data for rooms."
+	if (errType === "nameMissing") return "Item name is missing."
+	return
 }

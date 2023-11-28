@@ -7,17 +7,9 @@
 			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
 		</header>
 
-		{{#ifCond success "===" "added"}}
-		{{> notification centered="true" type="success" message="Room successfully added!"}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "edited"}}
-		{{> notification centered="true" type="success" message="Room successfully edited."}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "deleted"}}
-		{{> notification centered="true" type="success" message="Room successfully deleted."}}
-		{{/ifCond}}
+		{{#if successMessage}}
+		{{> notification centered="true" type="success" message=successMessage}}
+		{{/if}}
 
 		{{#if errorMessage}}
 		{{> notification centered="true" message=errorMessage}}
@@ -37,7 +29,7 @@
 			</thead>
 			<tbody>
 				{{#each rooms}}
-				<tr>
+				<tr {{#ifCond ../highlight "==" this.roomID}}class="highlight"{{/ifCond}}>
 					<td>{{ this.roomID }}</td>
 					<td>{{ this.name }}</td>
 					<td>{{ this.theme }}</td>

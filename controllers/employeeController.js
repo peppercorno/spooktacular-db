@@ -56,28 +56,18 @@ exports.add = async (req, res) => {
 			req.body.salary
 		)
 
-		let added = await employee.save()
+		let addedID = await employee.save()
 
 		// If successful
-		res.redirect("/employees/?success=added&id=" + added)
+		res.redirect("/employees/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let employeeFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add employee."
-		if (err.message === "firstNameMissing") errorMessage = "First name is required."
-		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
-		if (err.message === "jobTitleMissing") errorMessage = "Job title is required."
-		if (err.message === "startDateMissing") errorMessage = "Start date is required."
-		if (err.message === "endDateMissing") errorMessage = "End date is required."
-		if (err.message === "salaryMissing") errorMessage = "Salary is required."
-		if (err.message === "salaryNaN") errorMessage = "Please use a number for the salary."
-		if (err.message === "firstNameLength" || err.message === "lastNameLength")
-			errorMessage = "For first and last names, enter 2 to 60 characters."
-		if (err.message === "emailMissing") errorMessage = "Email is required."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to add employee."
 
 		res.render("employees/add-update", { employeeFields, errorMessage, formAdd: true })
 	}
@@ -104,21 +94,11 @@ exports.edit = async (req, res) => {
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let employeeFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add employee."
-		if (err.message === "firstNameMissing") errorMessage = "First name is required."
-		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
-		if (err.message === "jobTitleMissing") errorMessage = "Job title is required."
-		if (err.message === "startDateMissing") errorMessage = "Start date is required."
-		if (err.message === "endDateMissing") errorMessage = "End date is required."
-		if (err.message === "salaryMissing") errorMessage = "Salary is required."
-		if (err.message === "salaryNaN") errorMessage = "Please use a number for the salary."
-		if (err.message === "firstNameLength" || err.message === "lastNameLength")
-			errorMessage = "For first and last names, enter 2 to 60 characters."
-		if (err.message === "emailMissing") errorMessage = "Email is required."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to edit employee."
 
 		res.render("employees/add-update", { employeeFields, errorMessage, formEdit: true })
 	}
@@ -144,4 +124,18 @@ exports.delete = async (req, res) => {
 
 		res.render("employees/index", { employees, errorMessage })
 	}
+}
+
+let defineErrorMessage = errType => {
+	if (errType === "firstNameMissing") return "First name is required."
+	if (errType === "lastNameMissing") return "Last name is required."
+	if (errType === "jobTitleMissing") return "Job title is required."
+	if (errType === "startDateMissing") return "Start date is required."
+	if (errType === "endDateMissing") return "End date is required."
+	if (errType === "salaryMissing") return "Salary is required."
+	if (errType === "salaryNaN") return "Please use a number for the salary."
+	if (errType === "firstNameLength" || errType === "lastNameLength")
+		return "For first and last names, enter 2 to 60 characters."
+	if (errType === "emailMissing") return "Email is required."
+	return
 }

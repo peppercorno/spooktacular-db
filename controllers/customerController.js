@@ -57,23 +57,18 @@ exports.add = async (req, res) => {
 		// Follow params that Customer class requires
 		let customer = new Customer(null, req.body.firstName, req.body.lastName, req.body.email, null)
 
-		let added = await customer.save()
+		let addedID = await customer.save()
 
 		// If successful
-		res.redirect("/customers/?success=added&id=" + added)
+		res.redirect("/customers/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let customerFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add customer."
-		if (err.message === "firstNameMissing") errorMessage = "First name is required."
-		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
-		if (err.message === "firstNameLength" || err.message === "lastNameLength")
-			errorMessage = "For first and last names, enter 2 to 60 characters."
-		if (err.message === "emailMissing") errorMessage = "Email is required."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to add customer."
 
 		res.render("customers/add-update", { customerFields, errorMessage, formAdd: true })
 	}
@@ -91,16 +86,11 @@ exports.edit = async (req, res) => {
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let customerFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add customer."
-		if (err.message === "firstNameMissing") errorMessage = "First name is required."
-		if (err.message === "lastNameMissing") errorMessage = "Last name is required."
-		if (err.message === "firstNameLength" || err.message === "lastNameLength")
-			errorMessage = "Please enter a value that is between 2 to 60 characters long."
-		if (err.message === "emailMissing") errorMessage = "Email is required."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to edit customer."
 
 		res.render("customers/add-update", { customerFields, errorMessage, formEdit: true })
 	}
@@ -126,4 +116,13 @@ exports.delete = async (req, res) => {
 
 		res.render("customers/index", { customers, errorMessage })
 	}
+}
+
+let defineErrorMessage = errType => {
+	if (errType === "firstNameMissing") return "First name is missing."
+	if (errType === "lastNameMissing") return "Last name is missing."
+	if (errType === "firstNameLength" || errType === "lastNameLength")
+		return "For first and last names, use values between 2 to 60 characters."
+	if (errType === "emailMissing") return "Email is missing."
+	return
 }

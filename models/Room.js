@@ -29,9 +29,9 @@ class Room {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT roomID,name, theme, maxCapacity, level, "
+			let sqlQuery = "SELECT roomID, name, theme, maxCapacity, level, "
 			sqlQuery += "EXISTS(SELECT 1 FROM Reviews r1 WHERE r1.roomID = Rooms.roomID) AS hasChildRows "
-			sqlQuery += "FROM Rooms;"
+			sqlQuery += "FROM Rooms ORDER BY name ASC;"
 
 			db.pool.query(sqlQuery, (err, rows) => {
 				if (err) {

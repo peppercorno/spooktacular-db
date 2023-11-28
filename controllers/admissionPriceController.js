@@ -7,10 +7,16 @@ exports.showAll = async (req, res) => {
 		let admissionPrices = await AdmissionPrice.findAll()
 
 		// Whether to show success notification
-		let success = req.query.success
+		let successMessage = ""
+		if (req.query.success === "added") successMessage = "Admission Price #" + req.query.id + " successfully added!"
+		if (req.query.success === "edited") successMessage = "Admission Price #" + req.query.id + " successfully edited!"
+		if (req.query.success === "deleted") successMessage = "Admission Price #" + req.query.id + " deleted."
+
+		// If successful, highlight newly added or edited table row
+		let highlight = req.query.success && req.query.success !== "deleted" ? req.query.id : null
 
 		// Render view
-		res.render("admission-prices/index", { admissionPrices, success })
+		res.render("admission-prices/index", { admissionPrices, successMessage, highlight })
 	} catch (err) {
 		console.log(err)
 		res.render("admission-prices/index", { errorMessage: "Error! Unable to retrieve admission prices." })
@@ -45,18 +51,18 @@ exports.add = async (req, res) => {
 		// Follow params that AdmissionPrice class requires
 		let admissionPrice = new AdmissionPrice(null, req.body.year, req.body.description, req.body.basePrice, null)
 
-		await admissionPrice.save()
+		let addedID = await admissionPrice.save()
 
 		// If successful
-		res.redirect("/admission-prices/?success=added")
+		res.redirect("/admission-prices/?success=added&id=" + addedID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let priceFields = req.body
 
 		// Determine error message
-		let errorMessage = defineErrorMessage(err.message)
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to add relationship."
 
 		res.render("admission-prices/add-update", { priceFields, errorMessage, formAdd: true })
 	}
@@ -70,15 +76,15 @@ exports.edit = async (req, res) => {
 		await admissionPrice.save()
 
 		// If successful
-		res.redirect("/admission-prices/?success=edited")
+		res.redirect("/admission-prices/?success=edited&id=" + req.body.priceID)
 	} catch (err) {
 		console.log(err)
 
-		// To repopulate form fields after an error
+		// Refill form fields after an error
 		let priceFields = req.body
 
 		// Determine error message
-		let errorMessage = defineErrorMessage(err.message)
+		let errorMessage = defineErrorMessage(err.message) ?? "Unknown error! Unable to edit relationship."
 
 		res.render("admission-prices/add-update", { priceFields, errorMessage, formEdit: true })
 	}
@@ -92,7 +98,7 @@ exports.delete = async (req, res) => {
 		await admissionPrice.delete(req.params.id)
 
 		// If successful
-		res.redirect("/admission-prices/?success=deleted")
+		res.redirect("/admission-prices/?success=deleted&id=" + req.params.id)
 	} catch (err) {
 		console.log(err)
 
@@ -107,13 +113,10 @@ exports.delete = async (req, res) => {
 }
 
 let defineErrorMessage = errType => {
-	let message = "Unknown error! Unable to add admission price."
-
-	if (errType === "yearMissing") message = "Year is missing."
-	if (errType === "yearNaN") message = "Year must be a number."
-	if (errType === "descriptionMissing") message = "Description is missing."
-	if (errType === "basePriceMissing") message = "Base price is missing."
-	if (errType === "basePriceNaN") message = "Base price must be a number."
-
-	return message
+	if (errType === "yearMissing") return "Year is missing."
+	if (errType === "invalidYear") return "Year must be a valid number, eg. 2025."
+	if (errType === "descriptionMissing") return "Description is missing."
+	if (errType === "basePriceMissing") return "Base price is missing."
+	if (errType === "invalidBasePrice") return "Base price must be a number."
+	return
 }
