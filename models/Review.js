@@ -123,7 +123,7 @@ class Review {
 			let rating = this.rating === "norating" ? null : parseInt(this.rating) // Selecting a rating is optional, set as null if unselected
 
 			// Escape quotes
-			let text = this.text.replaceAll("'", "''")
+			let text = this.text.replace(/(?<!')'(?!')/g, "''")
 
 			// Determine whether we are creating or updating
 			if (this.reviewID === undefined || this.reviewID === null) {

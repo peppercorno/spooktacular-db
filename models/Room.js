@@ -1,3 +1,17 @@
+/*Citation
+------------------------------------------------------------------------
+	Title: To prevent SQL errors, escape quotes in string values before inserting or updating.
+	Date: 27 Nov 2023
+	Adapted from URL: https://bobbyhadz.com/blog/javascript-escape-quotes-in-string
+	Author: Borislav Hadzhiev
+
+	Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores
+		the slash in the database. So, trying a regex instead which is stil imperfect.
+	Date: 28 Nov 2023
+	Adapted from URL: https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
+	Author: Cory
+------------------------------------------------------------------------*/
+
 // Get connection
 let db = require("../db-config")
 
@@ -97,8 +111,9 @@ class Room {
 			if (isNaN(this.level) || this.level < 1 || this.level > 4) throw new Error("invalidLevel")
 
 			// Escape quotes
-			let name = this.name.replaceAll("'", "''")
-			let theme = this.theme.replaceAll("'", "''")
+			// let name = this.name.replaceAll("'", "''")	// TODO: Figure out better regex
+			let name = this.name.replace(/(?<!')'(?!')/g, "''")
+			let theme = this.theme.replace(/(?<!')'(?!')/g, "''")
 
 			// Parse as int
 			let maxCapacity = this.maxCapacity ? parseInt(this.maxCapacity) : null // maxCapacity is optional, so only parse it if it exists

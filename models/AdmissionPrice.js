@@ -90,7 +90,7 @@ class AdmissionPrice {
 			let basePrice = parseInt(this.basePrice)
 
 			// Escape quotes
-			let description = this.description.replaceAll("'", "''")
+			let description = this.description.replace(/(?<!')'(?!')/g, "''")
 
 			// Determine whether we are creating or updating
 			if (this.priceID === undefined || this.priceID === null) {

@@ -98,8 +98,8 @@ class Customer {
 			// TODO: Add email validation using regex
 
 			// Escape quotes
-			let firstName = this.firstName.replaceAll("'", "''")
-			let lastName = this.lastName.replaceAll("'", "''")
+			let firstName = this.firstName.replace(/(?<!')'(?!')/g, "''")
+			let lastName = this.lastName.replace(/(?<!')'(?!')/g, "''")
 
 			// Determine whether we are creating or updating
 			if (this.customerID === undefined || this.customerID === null) {

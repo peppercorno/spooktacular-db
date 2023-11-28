@@ -1,17 +1,3 @@
-/*Citation
-------------------------------------------------------------------------
-	Title: To prevent SQL errors, escape quotes in string values before inserting or updating.
-	Date: 27 Nov 2023
-	Adapted from URL: https://bobbyhadz.com/blog/javascript-escape-quotes-in-string
-	Author: Borislav Hadzhiev
-
-	Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores
-		the slash in the database. So, I double-up the single quotes instead.
-	Date: 28 Nov 2023
-	Adapted from URL: https://stackoverflow.com/a/1586588/8035415
-	Author: Cory
-------------------------------------------------------------------------*/
-
 // Get connection
 let db = require("../db-config")
 
@@ -107,14 +93,14 @@ class InventoryItem {
 			if (this.name.length === 0) throw new Error("nameMissing")
 
 			// Escape quotes
-			let name = this.name.replaceAll("'", "''")
+			let name = this.name.replace(/(?<!')'(?!')/g, "''")
 
 			// If no room was selected, or 'blank' option was selected, set as null. Otherwise, parse it as an int
 			let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
 
 			// If no item condition was entered, pass an empty string
 			if (!this.itemCondition || this.itemCondition.length === 0 || this.itemCondition === "--") this.itemCondition = ""
-			let itemCondition = this.itemCondition.replaceAll("'", "''")
+			let itemCondition = this.itemCondition.replace(/(?<!')'(?!')/g, "''")
 
 			// Determine whether we are creating or updating
 			if (this.itemID === undefined || this.itemID === null) {

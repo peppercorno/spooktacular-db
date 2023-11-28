@@ -116,9 +116,9 @@ class Employee {
 			if (this.endDate === "" || this.endDate === null) throw new Error("endDateMissing")
 
 			// Escape quotes
-			let firstName = this.firstName.replaceAll("'", "''")
-			let lastName = this.lastName.replaceAll("'", "''")
-			let jobTitle = this.jobTitle.replaceAll("'", "''")
+			let firstName = this.firstName.replace(/(?<!')'(?!')/g, "''")
+			let lastName = this.lastName.replace(/(?<!')'(?!')/g, "''")
+			let jobTitle = this.jobTitle.replace(/(?<!')'(?!')/g, "''")
 
 			// Parse as int
 			let salary = parseInt(this.salary)
