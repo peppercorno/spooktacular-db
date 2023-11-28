@@ -1,13 +1,13 @@
-// Get connection
-let db = require("../db-config")
-
 /*Citations
 ------------------------------------------------------------------------
-	Title: Figuring out how to get the ID of a newly-inserted row, so we know which to highlight in the view.
+	Title: How to get the ID of a newly-inserted row, so we know which row to highlight in a table.
 	Date: 28 Nov 2023
 	Adapted from URL: https://www.npmjs.com/package/mysql#getting-the-id-of-an-inserted-row
-	Author: mysql npm team
+	Author: mysql npm creators
 ------------------------------------------------------------------------*/
+
+// Get connection
+let db = require("../db-config")
 
 class InventoryItem {
 	constructor(itemID, roomID, roomName, name, itemCondition) {

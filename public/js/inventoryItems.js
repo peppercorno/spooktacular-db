@@ -1,4 +1,4 @@
-/*Citations
+/* Citations
 ------------------------------------------------------------------------
 	Title: Checking syntax for querySelectorAll() to apply click event listeners to buttons in all table rows.
 	Date: 4 Nov 2023

@@ -7,17 +7,9 @@
 			<button onClick="goToAddForm()" type="button">Add New <i class="fa fa-plus"></i></button>
 		</header>
 
-		{{#ifCond success "===" "added"}}
-		{{> notification centered="true" type="success" message="Customer successfully added!"}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "edited"}}
-		{{> notification centered="true" type="success" message="Customer successfully edited."}}
-		{{/ifCond}}
-
-		{{#ifCond success "===" "deleted"}}
-		{{> notification centered="true" type="success" message="Customer successfully deleted."}}
-		{{/ifCond}}
+		{{#if successMessage}}
+		{{> notification centered="true" type="success" message=successMessage}}
+		{{/if}}
 
 		{{#if errorMessage}}
 		{{> notification centered="true" message=errorMessage}}
@@ -37,7 +29,7 @@
 			<tbody></tbody>
 			<tbody>
 				{{#each customers}}
-				<tr>
+				<tr {{#ifCond ../highlight "==" this.customerID}}class="highlight"{{/ifCond}}>
 					<td>{{ this.customerID }}</td>
 					<td>{{ this.firstName }}</td>
 					<td>{{ this.lastName }}</td>

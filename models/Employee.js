@@ -18,7 +18,7 @@ class Employee {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			db.pool.query("SELECT * FROM Employees", (err, rows) => {
+			db.pool.query("SELECT * FROM Employees ORDER BY employeeID DESC", (err, rows) => {
 				if (err) {
 					console.error(err)
 					resolve([]) // No rows
@@ -52,7 +52,7 @@ class Employee {
 	// Read: get all rows for dropdown menus. Limit to employeeID and name details.
 	static findNames() {
 		return new Promise((resolve, reject) => {
-			db.pool.query("SELECT employeeID, firstName, lastName FROM Employees ORDER BY employeeID ASC;", (err, rows) => {
+			db.pool.query("SELECT employeeID, firstName, lastName FROM Employees ORDER BY employeeID DESC;", (err, rows) => {
 				if (err) {
 					console.error(err)
 					resolve([]) // No rows

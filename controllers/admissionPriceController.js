@@ -31,7 +31,10 @@ exports.showEdit = async (req, res) => {
 		res.render("admission-prices/add-update", { priceFields, formEdit: true })
 	} catch (err) {
 		console.log(err)
-		res.render("admission-prices/add-update", { errorMessage: "Oops, unable to retrieve data for this admission price.", formEdit: true })
+		res.render("admission-prices/add-update", {
+			errorMessage: "Oops, unable to retrieve data for this admission price.",
+			formEdit: true
+		})
 	}
 }
 
@@ -52,13 +55,8 @@ exports.add = async (req, res) => {
 		// To repopulate form fields after an error
 		let priceFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add admission price."
-		if (err.message === "yearMissing") errorMessage = "Year is missing."
-		if (err.message === "yearNaN") errorMessage = "Year must be a number."
-		if (err.message === "descriptionMissing") errorMessage = "Description is missing."
-		if (err.message === "basePriceMissing") errorMessage = "Base price is missing."
-		if (err.message === "basePriceNaN") errorMessage = "Base price must be a number."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message)
 
 		res.render("admission-prices/add-update", { priceFields, errorMessage, formAdd: true })
 	}
@@ -79,13 +77,8 @@ exports.edit = async (req, res) => {
 		// To repopulate form fields after an error
 		let priceFields = req.body
 
-		// Error messages
-		let errorMessage = "Unknown error! Unable to add admission price."
-		if (err.message === "yearMissing") errorMessage = "Year is missing."
-		if (err.message === "yearNaN") errorMessage = "Year must be a number."
-		if (err.message === "descriptionMissing") errorMessage = "Description is missing."
-		if (err.message === "basePriceMissing") errorMessage = "Base price is missing."
-		if (err.message === "basePriceNaN") errorMessage = "Base price must be a number."
+		// Determine error message
+		let errorMessage = defineErrorMessage(err.message)
 
 		res.render("admission-prices/add-update", { priceFields, errorMessage, formEdit: true })
 	}
@@ -111,4 +104,16 @@ exports.delete = async (req, res) => {
 
 		res.render("admission-prices/index", { admissionPrices, errorMessage })
 	}
+}
+
+let defineErrorMessage = errType => {
+	let message = "Unknown error! Unable to add admission price."
+
+	if (errType === "yearMissing") message = "Year is missing."
+	if (errType === "yearNaN") message = "Year must be a number."
+	if (errType === "descriptionMissing") message = "Description is missing."
+	if (errType === "basePriceMissing") message = "Base price is missing."
+	if (errType === "basePriceNaN") message = "Base price must be a number."
+
+	return message
 }

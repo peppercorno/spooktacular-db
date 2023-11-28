@@ -1,4 +1,4 @@
-/*Citation
+/*Citations
 ------------------------------------------------------------------------
 	Title: To prevent SQL errors, escape quotes in string values before inserting or updating.
 	Date: 27 Nov 2023
@@ -6,7 +6,8 @@
 	Author: Borislav Hadzhiev
 
 	Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores
-		the slash in the database. So, trying a regex instead which is stil imperfect.
+		the slash in the database. So, trying a regex instead which prevents multiple single 
+		quotes when editing a string that contains a single quote.
 	Date: 28 Nov 2023
 	Adapted from URL: https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
 	Author: Cory
