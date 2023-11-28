@@ -64,6 +64,7 @@ const handlebars = exphbs.create({
 })
 app.engine(".hbs", handlebars.engine)
 app.set("view engine", ".hbs")
+app.set("views", path.join(__dirname, "views"))
 
 // Use routes
 app.use("/", homeRoutes)
