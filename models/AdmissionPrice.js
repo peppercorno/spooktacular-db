@@ -36,19 +36,22 @@ class AdmissionPrice {
 	// Read: for dropdown menu when creating a ticket. Limit to current year only.
 	static findByCurrentYear() {
 		return new Promise((resolve, reject) => {
-			db.pool.query("SELECT * FROM AdmissionPrices WHERE year = YEAR(CURDATE()) ORDER BY description ASC;", (err, rows) => {
-				if (err) {
-					console.error(err)
-					resolve([]) // No rows
-					return
-				}
+			db.pool.query(
+				"SELECT * FROM AdmissionPrices WHERE year = YEAR(CURDATE()) ORDER BY description ASC;",
+				(err, rows) => {
+					if (err) {
+						console.error(err)
+						resolve([]) // No rows
+						return
+					}
 
-				let admissionPrices = []
-				for (let row of rows) {
-					admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, null))
+					let admissionPrices = []
+					for (let row of rows) {
+						admissionPrices.push(new this(row.priceID, row.year, row.description, row.basePrice, null))
+					}
+					resolve(admissionPrices)
 				}
-				resolve(admissionPrices)
-			})
+			)
 		})
 	}
 
@@ -73,7 +76,7 @@ class AdmissionPrice {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate and escape quotes
+			// Validate
 			if (!this.year || this.year.length === 0) throw new Error("yearMissing")
 			if (isNaN(this.year)) throw new Error("yearNaN")
 
@@ -82,37 +85,46 @@ class AdmissionPrice {
 			if (!this.basePrice || this.basePrice.length === 0) throw new Error("basePriceMissing")
 			if (isNaN(this.basePrice)) throw new Error("basePriceNaN")
 
+			// Parse as int
 			let year = parseInt(this.year)
 			let basePrice = parseInt(this.basePrice)
 
-			let description = this.description.replaceAll("'", "\\'")
+			// Escape quotes
+			let description = this.description.replaceAll("'", "''")
 
 			// Determine whether we are creating or updating
 			if (this.priceID === undefined || this.priceID === null) {
 				// Create
 
-				db.pool.query(`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${description}', ${basePrice})`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					`INSERT INTO AdmissionPrices (year, description, basePrice) VALUES (${year}, '${description}', ${basePrice})`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			} else {
 				// Update
 				let priceID = parseInt(this.priceID)
 
-				db.pool.query("UPDATE AdmissionPrices SET year = ?, description = ?, basePrice = ? WHERE priceID = ?", [year, description, basePrice, priceID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					"UPDATE AdmissionPrices SET year = ?, description = ?, basePrice = ? WHERE priceID = ?",
+					[year, description, basePrice, priceID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			}
 		})
 	}

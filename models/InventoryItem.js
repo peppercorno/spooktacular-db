@@ -4,6 +4,12 @@
 	Date: 27 Nov 2023
 	Adapted from URL: https://bobbyhadz.com/blog/javascript-escape-quotes-in-string
 	Author: Borislav Hadzhiev
+
+	Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores
+		the slash in the database. So, I double-up the single quotes instead.
+	Date: 28 Nov 2023
+	Adapted from URL: https://stackoverflow.com/a/1586588/8035415
+	Author: Cory
 ------------------------------------------------------------------------*/
 
 // Get connection
@@ -21,7 +27,8 @@ class InventoryItem {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
+			let sqlQuery =
+				"SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID "
 			sqlQuery += "ORDER BY itemID desc;"
@@ -69,7 +76,8 @@ class InventoryItem {
 	// Read: get one row by itemID
 	static findByID(itemID) {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
+			let sqlQuery =
+				"SELECT InventoryItems.itemID, InventoryItems.roomID, InventoryItems.name, InventoryItems.itemCondition, "
 			sqlQuery += "Rooms.name AS roomName FROM InventoryItems "
 			sqlQuery += "LEFT JOIN Rooms ON Rooms.roomID = InventoryItems.roomID "
 			sqlQuery += "WHERE InventoryItems.itemID = :itemID;"
@@ -95,43 +103,51 @@ class InventoryItem {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate and escape quotes
+			// Validate
 			if (this.name.length === 0) throw new Error("nameMissing")
 
-			let name = this.name.replaceAll("'", "\\'")
+			// Escape quotes
+			let name = this.name.replaceAll("'", "''")
 
-			// If no room was selected, or the 'blank' option was selected, make sure value is null. Otherwise, parse it as an int
+			// If no room was selected, or 'blank' option was selected, set as null. Otherwise, parse it as an int
 			let roomID = this.roomID == 0 || !this.roomID ? null : parseInt(this.roomID)
 
-			// If no item condition was entered, make sure we pass an empty string
+			// If no item condition was entered, pass an empty string
 			if (!this.itemCondition || this.itemCondition.length === 0 || this.itemCondition === "--") this.itemCondition = ""
-			let itemCondition = this.itemCondition.replaceAll("'", "\\'")
+			let itemCondition = this.itemCondition.replaceAll("'", "''")
 
 			// Determine whether we are creating or updating
 			if (this.itemID === undefined || this.itemID === null) {
 				// Create
-				db.pool.query(`INSERT INTO InventoryItems (name, roomID, itemCondition) VALUES ('${name}', ${roomID}, '${itemCondition}')`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					`INSERT INTO InventoryItems (name, roomID, itemCondition) VALUES ('${name}', ${roomID}, '${itemCondition}')`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			} else {
 				// Update
 				let itemID = parseInt(this.itemID)
 
-				db.pool.query("UPDATE InventoryItems SET name = ?, roomID = ?, itemCondition = ? WHERE itemID = ?", [name, roomID, itemCondition, itemID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					"UPDATE InventoryItems SET name = ?, roomID = ?, itemCondition = ? WHERE itemID = ?",
+					[name, roomID, itemCondition, itemID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			}
 		})
 	}

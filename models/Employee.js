@@ -31,7 +31,18 @@ class Employee {
 					let startDate = moment(row.startDate).format("YYYY-MM-DD")
 					let endDate = moment(row.endDate).format("YYYY-MM-DD")
 
-					employees.push(new this(row.employeeID, row.firstName, row.lastName, row.email, row.jobTitle, startDate, endDate, row.salary))
+					employees.push(
+						new this(
+							row.employeeID,
+							row.firstName,
+							row.lastName,
+							row.email,
+							row.jobTitle,
+							startDate,
+							endDate,
+							row.salary
+						)
+					)
 				}
 				resolve(employees)
 			})
@@ -72,7 +83,16 @@ class Employee {
 				let endDate = moment(res[0].endDate).format("YYYY-MM-DD")
 
 				// res is an array. Create new class instance using data from first item in array
-				let employee = new this(res[0].employeeID, res[0].firstName, res[0].lastName, res[0].email, res[0].jobTitle, startDate, endDate, res[0].salary)
+				let employee = new this(
+					res[0].employeeID,
+					res[0].firstName,
+					res[0].lastName,
+					res[0].email,
+					res[0].jobTitle,
+					startDate,
+					endDate,
+					res[0].salary
+				)
 
 				resolve(employee)
 			})
@@ -82,26 +102,25 @@ class Employee {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate and escape quotes
+			// Validate
 			if (this.firstName.length === 0) throw new Error("firstNameMissing")
 			if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("firstNameLength")
-
 			if (this.lastName.length === 0) throw new Error("lastNameMissing")
 			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("lastNameLength")
-
 			if (this.email.length === 0) throw new Error("emailMissing")
 			// TODO: Add email validation using regex
-
 			if (this.jobTitle.length === 0) throw new Error("jobTitleMissing")
 			if (this.salary.length === 0) throw new Error("salaryMissing")
 			if (isNaN(this.salary)) throw new Error("salaryNaN")
-
 			if (this.startDate === "" || this.startDate === null) throw new Error("startDateMissing")
 			if (this.endDate === "" || this.endDate === null) throw new Error("endDateMissing")
 
-			let firstName = this.firstName.replaceAll("'", "\\'")
-			let lastName = this.lastName.replaceAll("'", "\\'")
-			let jobTitle = this.jobTitle.replaceAll("'", "\\'")
+			// Escape quotes
+			let firstName = this.firstName.replaceAll("'", "''")
+			let lastName = this.lastName.replaceAll("'", "''")
+			let jobTitle = this.jobTitle.replaceAll("'", "''")
+
+			// Parse as int
 			let salary = parseInt(this.salary)
 
 			// Use expected date format

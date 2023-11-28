@@ -70,7 +70,14 @@ class Room {
 				}
 
 				// res is an array. Create new class instance using data from first item in array
-				let room = new this(res[0].roomID, res[0].name, res[0].theme, res[0].maxCapacity, res[0].level, res[0].hasChildRows)
+				let room = new this(
+					res[0].roomID,
+					res[0].name,
+					res[0].theme,
+					res[0].maxCapacity,
+					res[0].level,
+					res[0].hasChildRows
+				)
 
 				resolve(room)
 			})
@@ -80,7 +87,7 @@ class Room {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate and escape quotes
+			// Validate
 			if (!this.name || this.name.length === 0) throw new Error("nameMissing")
 			if (this.maxCapacity) {
 				if (isNaN(this.maxCapacity) || this.maxCapacity <= 0) throw new Error("invalidMaxCapacity")
@@ -89,36 +96,46 @@ class Room {
 			if (!this.level) throw new Error("levelMissing")
 			if (isNaN(this.level) || this.level < 1 || this.level > 4) throw new Error("invalidLevel")
 
-			let name = this.name.replaceAll("'", "\\'")
-			let theme = this.theme.replaceAll("'", "\\'")
+			// Escape quotes
+			let name = this.name.replaceAll("'", "''")
+			let theme = this.theme.replaceAll("'", "''")
+
+			// Parse as int
 			let maxCapacity = this.maxCapacity ? parseInt(this.maxCapacity) : null // maxCapacity is optional, so only parse it if it exists
 			let level = parseInt(this.level)
 
 			// Determine whether we are creating or updating
 			if (this.roomID === undefined || this.roomID === null) {
 				// Create
-				db.pool.query(`INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES ('${name}', '${theme}', ${maxCapacity}, ${level})`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					`INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES ('${name}', '${theme}', ${maxCapacity}, ${level})`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			} else {
 				// Update
 				let roomID = parseInt(this.roomID)
 
-				db.pool.query("UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", [name, theme, maxCapacity, level, roomID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					"UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?",
+					[name, theme, maxCapacity, level, roomID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			}
 		})
 	}

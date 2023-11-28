@@ -18,7 +18,8 @@ class Review {
 	// Read: get all rows and associated data for Customers and Rooms. Include rows where roomID is null.
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
+			let sqlQuery =
+				"SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "Rooms.name AS roomName "
 			sqlQuery += "FROM Reviews "
@@ -47,7 +48,18 @@ class Review {
 					// Format creation date
 					let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
 
-					reviews.push(new this(row.reviewID, row.customerID, row.customerFullName, row.roomID, row.roomName, row.rating, row.text, creationDate))
+					reviews.push(
+						new this(
+							row.reviewID,
+							row.customerID,
+							row.customerFullName,
+							row.roomID,
+							row.roomName,
+							row.rating,
+							row.text,
+							creationDate
+						)
+					)
 				}
 				resolve(reviews)
 			})
@@ -57,7 +69,8 @@ class Review {
 	// Read: get one row by reviewID, along with associated Customer and Room info
 	static findByID(reviewID) {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
+			let sqlQuery =
+				"SELECT Reviews.reviewID, Reviews.customerID, Reviews.roomID, Reviews.rating, Reviews.text, Reviews.creationDate, "
 			sqlQuery += "CONCAT(Customers.firstName, ' ', Customers.lastName) AS customerFullName, "
 			sqlQuery += "Rooms.name AS roomName "
 			sqlQuery += "FROM Reviews "
@@ -79,7 +92,16 @@ class Review {
 				let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
-				let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, roomName, res[0].rating, res[0].text, creationDate)
+				let review = new this(
+					res[0].reviewID,
+					res[0].customerID,
+					res[0].customerFullName,
+					res[0].roomID,
+					roomName,
+					res[0].rating,
+					res[0].text,
+					creationDate
+				)
 
 				resolve(review)
 			})
@@ -89,44 +111,52 @@ class Review {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate, parse, and escape quotes
+			// Validate
 			if (!this.customerID) throw new Error("customerIDMissing")
 			if (this.rating !== "norating") {
 				if (isNaN(this.rating) || this.rating < 0 || this.rating > 5) throw new Error("invalidRating")
 			}
 
+			// Parse as int
 			let customerID = parseInt(this.customerID)
-			// Selecting a room is optional, set as null if unselected
-			let roomID = this.roomID == 0 ? null : parseInt(this.roomID)
-			// Selecting a rating is optional, set as null if unselected
-			let rating = this.rating === "norating" ? null : parseInt(this.rating)
-			let text = this.text.replaceAll("'", "\\'")
+			let roomID = this.roomID == 0 ? null : parseInt(this.roomID) // Selecting a room is optional, set as null if unselected
+			let rating = this.rating === "norating" ? null : parseInt(this.rating) // Selecting a rating is optional, set as null if unselected
+
+			// Escape quotes
+			let text = this.text.replaceAll("'", "''")
 
 			// Determine whether we are creating or updating
 			if (this.reviewID === undefined || this.reviewID === null) {
 				// Create
-				db.pool.query(`INSERT INTO Reviews (customerID, roomID, rating, text) VALUES (${customerID}, ${roomID}, ${rating}, '${text}')`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					`INSERT INTO Reviews (customerID, roomID, rating, text) VALUES (${customerID}, ${roomID}, ${rating}, '${text}')`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			} else {
 				// Update
 				let reviewID = parseInt(this.reviewID)
 
-				db.pool.query("UPDATE Reviews SET customerID = ?, roomID = ?, rating = ?, text = ? WHERE reviewID = ?", [customerID, roomID, rating, text, reviewID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					"UPDATE Reviews SET customerID = ?, roomID = ?, rating = ?, text = ? WHERE reviewID = ?",
+					[customerID, roomID, rating, text, reviewID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			}
 		})
 	}

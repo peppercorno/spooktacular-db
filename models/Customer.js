@@ -89,44 +89,50 @@ class Customer {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
-			// Validate and escape quotes
+			// Validate
 			if (this.firstName.length === 0) throw new Error("firstNameMissing")
 			if (this.firstName.length < 2 || this.firstName.length > 60) throw new Error("firstNameLength")
-
 			if (this.lastName.length === 0) throw new Error("lastNameMissing")
 			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("lastNameLength")
-
 			if (this.email.length === 0) throw new Error("emailMissing")
 			// TODO: Add email validation using regex
 
-			let firstName = this.firstName.replaceAll("'", "\\'")
-			let lastName = this.lastName.replaceAll("'", "\\'")
+			// Escape quotes
+			let firstName = this.firstName.replaceAll("'", "''")
+			let lastName = this.lastName.replaceAll("'", "''")
 
 			// Determine whether we are creating or updating
 			if (this.customerID === undefined || this.customerID === null) {
 				// Create
-				db.pool.query(`INSERT INTO Customers (firstName, lastName, email) VALUES ('${firstName}', '${lastName}', '${this.email}')`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					`INSERT INTO Customers (firstName, lastName, email) VALUES ('${firstName}', '${lastName}', '${this.email}')`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			} else {
 				// Update
 				let customerID = parseInt(this.customerID)
 
-				db.pool.query("UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?", [firstName, lastName, this.email, customerID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
-					}
+				db.pool.query(
+					"UPDATE Customers SET firstName = ?, lastName = ?, email = ? WHERE customerID = ?",
+					[firstName, lastName, this.email, customerID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-					resolve(this)
-				})
+						resolve(this)
+					}
+				)
 			}
 		})
 	}

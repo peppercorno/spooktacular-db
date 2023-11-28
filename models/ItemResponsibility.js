@@ -15,7 +15,8 @@ class ItemResponsibility {
 	// Read: get all rows
 	static findAll() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT InventoryItems_Employees.relationshipID, InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, "
+			let sqlQuery =
+				"SELECT InventoryItems_Employees.relationshipID, InventoryItems_Employees.itemID, InventoryItems_Employees.employeeID, "
 			sqlQuery += "InventoryItems.name AS itemName, "
 			sqlQuery += "CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName  "
 			sqlQuery += "FROM InventoryItems_Employees "
@@ -30,7 +31,10 @@ class ItemResponsibility {
 				}
 
 				let relationships = []
-				for (let row of rows) relationships.push(new this(row.relationshipID, row.itemID, row.employeeID, row.itemName, row.employeeFullName))
+				for (let row of rows)
+					relationships.push(
+						new this(row.relationshipID, row.itemID, row.employeeID, row.itemName, row.employeeFullName)
+					)
 
 				resolve(relationships)
 			})
@@ -58,55 +62,60 @@ class ItemResponsibility {
 	// Check whether this itemID employeeID combination already exists
 	checkIfExists() {
 		return new Promise((resolve, reject) => {
-			db.pool.query(`SELECT COUNT(1) AS count FROM InventoryItems_Employees WHERE itemID = ${this.itemID} AND employeeID = ${this.employeeID}`, (err, res) => {
-				if (err) {
-					reject(err)
-					return
-				}
+			db.pool.query(
+				`SELECT COUNT(1) AS count FROM InventoryItems_Employees WHERE itemID = ${this.itemID} AND employeeID = ${this.employeeID}`,
+				(err, res) => {
+					if (err) {
+						reject(err)
+						return
+					}
 
-				// res[0].count is either zero or one. Resolve with true or false
-				resolve(res[0].count === 1)
-			})
+					// res[0].count is either zero or one. Resolve with true or false
+					resolve(res[0].count === 1)
+				}
+			)
 		})
 	}
 
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Parse as int
+			let itemID = parseInt(this.itemID)
+			let employeeID = parseInt(this.employeeID)
+
 			// Determine whether we are creating or updating
 			if (this.relationshipID === undefined || this.relationshipID === null) {
 				// Create
+				db.pool.query(
+					`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${itemID}, ${employeeID})`,
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
 
-				// Parse form values as integers
-				let itemID = parseInt(this.itemID)
-				let employeeID = parseInt(this.employeeID)
-
-				db.pool.query(`INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (${itemID}, ${employeeID})`, (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
+						resolve(this)
 					}
-
-					resolve(this)
-				})
+				)
 			} else {
 				// Update
-
-				// Parse as integers
 				let relationshipID = parseInt(this.relationshipID)
-				let itemID = parseInt(this.itemID)
-				let employeeID = parseInt(this.employeeID)
 
-				db.pool.query("UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE relationshipID = ?;", [itemID, employeeID, relationshipID], (err, res) => {
-					// If there is an SQL error
-					if (err) {
-						reject(err)
-						return
+				db.pool.query(
+					"UPDATE InventoryItems_Employees SET itemID = ?, employeeID = ? WHERE relationshipID = ?;",
+					[itemID, employeeID, relationshipID],
+					(err, res) => {
+						// If there is an SQL error
+						if (err) {
+							reject(err)
+							return
+						}
+
+						resolve(this)
 					}
-
-					resolve(this)
-				})
+				)
 			}
 		})
 	}
