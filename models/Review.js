@@ -35,10 +35,16 @@ class Review {
 
 				let reviews = []
 				for (let row of rows) {
-					// If roomID is null, set roomName to "--"
+					// If roomID is null, display roomName as "--"
 					if (row.roomID === undefined || row.roomID === null) row.roomName = "--"
 
-					// Format date
+					// If rating is null, display it as "--"
+					if (row.rating === null) row.rating = "--"
+
+					// If text is an empty string or null, display it as "--"
+					if (row.text === "" || row.text === null) row.text = "--"
+
+					// Format creation date
 					let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
 
 					reviews.push(new this(row.reviewID, row.customerID, row.customerFullName, row.roomID, row.roomName, row.rating, row.text, creationDate))
@@ -67,13 +73,13 @@ class Review {
 				}
 
 				// If roomID is null, set roomName to "--"
-				if (res[0].roomID === undefined || res[0].roomID === null) res[0].roomName = "--"
+				let roomName = res[0].roomID === undefined || res[0].roomID === null ? "--" : res[0].roomName
 
-				// Format date
+				// Format creation date
 				let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
-				let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, res[0].roomName, res[0].rating, res[0].text, creationDate)
+				let review = new this(res[0].reviewID, res[0].customerID, res[0].customerFullName, res[0].roomID, roomName, res[0].rating, res[0].text, creationDate)
 
 				resolve(review)
 			})
@@ -83,27 +89,23 @@ class Review {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Validate, parse, and escape quotes
+			if (!this.customerID) throw new Error("customerIDMissing")
+			if (this.rating !== "norating") {
+				if (isNaN(this.rating) || this.rating < 0 || this.rating > 5) throw new Error("invalidRating")
+			}
+
+			let customerID = parseInt(this.customerID)
+			// Selecting a room is optional, set as null if unselected
+			let roomID = this.roomID == 0 ? null : parseInt(this.roomID)
+			// Selecting a rating is optional, set as null if unselected
+			let rating = this.rating === "norating" ? null : parseInt(this.rating)
+			let text = this.text.replaceAll("'", "\\'")
+
 			// Determine whether we are creating or updating
 			if (this.reviewID === undefined || this.reviewID === null) {
 				// Create
-				if (!this.customerID) throw new Error("review.add.customerIDmissing")
-				//if (!this.customerFullName || this.customerFullName.length === 0) throw new Error("review.add.customermissing");
-				if (this.rating === undefined || this.rating === null) throw new Error("review.add.ratingmissing")
-				//if (isNaN(this.rating) || this.rating < 0 || this.rating > 5) throw new Error("review.add.invalidRating");
-				if (typeof this.text !== "string" || this.text.length === 0) throw new Error("review.add.invalidText")
-
-				// Convert rating to integer
-				let rating = parseInt(this.rating)
-
-				// Format creationDate for DB
-				let creationDate = moment(this.creationDate).format("YYYY-MM-DD HH:mm:ss")
-
-				let sqlQuery = "INSERT INTO Reviews (customerID, roomID, rating, text, creationDate) "
-				sqlQuery += "VALUES (?, ?, ?, ?, ?)"
-
-				let values = [this.customerID, this.roomID, rating, this.text, creationDate]
-
-				db.pool.query(sqlQuery, (err, res) => {
+				db.pool.query(`INSERT INTO Reviews (customerID, roomID, rating, text) VALUES (${customerID}, ${roomID}, ${rating}, '${text}')`, (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -114,27 +116,9 @@ class Review {
 				})
 			} else {
 				// Update
-				if (!this.customerID) throw new Error("review.edit.customerIDmissing")
-				//if (!this.customerFullName || this.customerFullName.length === 0) throw new Error("review.edit.customermissing");
-				if (this.rating === undefined || this.rating === null) throw new Error("review.edit.ratingmissing")
-				//if (isNaN(this.rating) || this.rating < 0 || this.rating > 5) throw new Error("review.edit.invalidRating");
-				if (typeof this.text !== "string" || this.text.length === 0) throw new Error("review.edit.invalidText")
+				let reviewID = parseInt(this.reviewID)
 
-				// Convert rating to integer
-				let rating = parseInt(this.rating)
-
-				// Format creationDate for DB
-				let creationDate = moment(this.creationDate).format("YYYY-MM-DD HH:mm:ss")
-
-				let sqlQuery = `
-					UPDATE Reviews
-					SET customerID = ?, roomID = ?, rating = ?, text = ?
-					WHERE reviewID = ?
-				`
-
-				let values = [this.customerID, this.roomID, rating, this.text, this.reviewID]
-
-				db.pool.query(sqlQuery, values, (err, res) => {
+				db.pool.query("UPDATE Reviews SET customerID = ?, roomID = ?, rating = ?, text = ? WHERE reviewID = ?", [customerID, roomID, rating, text, reviewID], (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -144,6 +128,21 @@ class Review {
 					resolve(this)
 				})
 			}
+		})
+	}
+
+	// Delete
+	delete(reviewID) {
+		return new Promise((resolve, reject) => {
+			db.pool.query(`DELETE FROM Reviews WHERE reviewID = ${reviewID}`, (err, res) => {
+				// If there is an SQL error
+				if (err) {
+					reject(err)
+					return
+				}
+
+				resolve(this)
+			})
 		})
 	}
 }

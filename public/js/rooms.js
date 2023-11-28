@@ -2,7 +2,7 @@ function goToAddForm() {
 	location.assign("/rooms/add")
 }
 
-function goToEditForm(itemID) {
+function goToEditForm(roomID) {
 	location.assign("/rooms/edit/" + roomID)
 }
 

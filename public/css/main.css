@@ -351,6 +351,10 @@ table form {
 	color: #616161;
 }
 
+label .form-field-explanation {
+	margin: 0 0 0 0.75em;
+}
+
 label.disabled,
 .form-label.disabled {
 	opacity: 0.2;

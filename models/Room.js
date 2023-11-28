@@ -2,8 +2,8 @@
 let db = require("../db-config")
 
 class Room {
-	constructor(id, name, theme, maxCapacity, level, hasChildRows) {
-		this.roomID = id
+	constructor(roomID, name, theme, maxCapacity, level, hasChildRows) {
+		this.roomID = roomID
 		this.name = name
 		this.theme = theme
 		this.maxCapacity = maxCapacity
@@ -27,6 +27,12 @@ class Room {
 
 				let rooms = []
 				for (let row of rows) {
+					// If theme is an empty string or null, display it as "--"
+					if (row.theme === "" || row.theme === null) row.theme = "--"
+
+					// If maxCapacity is an empty string or null, display it as "--"
+					if (row.maxCapacity === "" || row.maxCapacity === null) row.maxCapacity = "--"
+
 					rooms.push(new this(row.roomID, row.name, row.theme, row.maxCapacity, row.level, row.hasChildRows))
 				}
 				resolve(rooms)
@@ -74,19 +80,24 @@ class Room {
 	// Create or Update
 	save() {
 		return new Promise((resolve, reject) => {
+			// Validate and escape quotes
+			if (!this.name || this.name.length === 0) throw new Error("nameMissing")
+			if (this.maxCapacity) {
+				if (isNaN(this.maxCapacity) || this.maxCapacity <= 0) throw new Error("invalidMaxCapacity")
+				if (this.maxCapacity >= 100000) throw new Error("maxCapacityTooLarge")
+			}
+			if (!this.level) throw new Error("levelMissing")
+			if (isNaN(this.level) || this.level < 1 || this.level > 4) throw new Error("invalidLevel")
+
+			let name = this.name.replaceAll("'", "\\'")
+			let theme = this.theme.replaceAll("'", "\\'")
+			let maxCapacity = this.maxCapacity ? parseInt(this.maxCapacity) : null // maxCapacity is optional, so only parse it if it exists
+			let level = parseInt(this.level)
+
 			// Determine whether we are creating or updating
 			if (this.roomID === undefined || this.roomID === null) {
 				// Create
-				if (!this.name || this.name.length === 0) throw new Error("room.add.roomnamemissing")
-				if (!this.theme || this.theme.length === 0) throw new Error("room.add.thememissing")
-				if (isNaN(this.maxCapacity)) throw new Error("room.add.maxCapacitynan")
-				if (isNaN(this.level)) throw new Error("room.add.levelnan")
-
-				// Convert maxCapacity and level to integers
-				let maxCapacity = parseInt(this.maxCapacity)
-				let level = parseInt(this.level)
-
-				db.pool.query(`INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES ('${this.name}', '${this.theme}', ${this.maxCapacity}, ${this.level})`, (err, res) => {
+				db.pool.query(`INSERT INTO Rooms (name, theme, maxCapacity, level) VALUES ('${name}', '${theme}', ${maxCapacity}, ${level})`, (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)
@@ -97,16 +108,9 @@ class Room {
 				})
 			} else {
 				// Update
-				if (!this.name || this.name.length === 0) throw new Error("room.edit.roomnamemissing")
-				if (!this.theme || this.theme.length === 0) throw new Error("room.edit.thememissing")
-				if (isNaN(this.maxCapacity)) throw new Error("room.edit.maxCapacitynan")
-				if (isNaN(this.level)) throw new Error("room.edit.levelnan")
+				let roomID = parseInt(this.roomID)
 
-				// Convert maxCapacity and level to integers
-				let maxCapacity = parseInt(this.maxCapacity)
-				let level = parseInt(this.level)
-
-				db.pool.query("UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", [this.name, this.theme, this.maxCapacity, this.level, this.roomID], (err, res) => {
+				db.pool.query("UPDATE Rooms SET name = ?, theme = ?, maxCapacity = ?, level = ? WHERE roomID = ?", [name, theme, maxCapacity, level, roomID], (err, res) => {
 					// If there is an SQL error
 					if (err) {
 						reject(err)

@@ -47,20 +47,26 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-field">
-				<label class="form-label">Rating</label>
-				<select name="rating" {{#if reviewFields }}value="{{ reviewFields.rating }}"{{/if}}>
-					<option value="0">0</option>
-					<option value="1">1</option>
-					<option value="2">2</option>
-					<option value="3">3</option>
-					<option value="4">4</option>
-					<option value="5">5</option>
-				</select>
+			<div class="form-field columns">
+				<div class="column-label">
+					<label class="form-label">Rating</label>
+					<p class="form-field-explanation">Optional</p>
+				</div>
+				<div class="column-input">
+					<select name="rating" {{#if reviewFields }}value="{{ reviewFields.rating }}"{{/if}}>
+						<option value="norating">--</option>
+						<option value="0">0</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+					</select>
+				</div>
 			</div>
 			<div class="form-field stacked">
-				<label class="form-label">Review Text</label>
-				<textarea name="text" rows="5" value="{{ reviewFields.text }}"></textarea>
+				<label class="form-label">Review Text <span class="form-field-explanation">Optional</span></label>
+				<textarea name="text" rows="5">{{ reviewFields.text }}</textarea>
 			</div>
 			<div class="button-row">
 				{{#if errorMessage}}

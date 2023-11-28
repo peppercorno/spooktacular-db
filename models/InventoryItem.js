@@ -35,10 +35,10 @@ class InventoryItem {
 
 				let inventoryItems = []
 				for (let row of rows) {
-					// If roomID is null, set roomName to "--"
+					// If roomID is null, display roomName as "--"
 					if (row.roomID === undefined || row.roomID === null) row.roomName = "--"
 
-					// If item condition is an empty string or null, set roomName to "--"
+					// If item condition is an empty string or null, display it as "--"
 					if (row.itemCondition === "" || row.itemCondition === null) row.itemCondition = "--"
 
 					inventoryItems.push(new this(row.itemID, row.roomID, row.roomName, row.name, row.itemCondition))
@@ -81,8 +81,11 @@ class InventoryItem {
 					return
 				}
 
+				// If roomID is null, display roomName as "--"
+				let roomName = res[0].roomID === undefined || res[0].roomID === null ? "--" : res[0].roomName
+
 				// res is an array. Create new class instance using data from first item in array
-				let inventoryItem = new this(res[0].itemID, res[0].roomID, res[0].roomName, res[0].name, res[0].itemCondition)
+				let inventoryItem = new this(res[0].itemID, res[0].roomID, roomName, res[0].name, res[0].itemCondition)
 
 				resolve(inventoryItem)
 			})
