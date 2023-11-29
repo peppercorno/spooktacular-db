@@ -1,12 +1,74 @@
 # CS 340 Spooktacular Database
 
-Node.js, Express, MySQL CRUD project
+Basic Node.js, Express, MySQL CRUD project with Handlebars templating
 
 ---
 
-### Getting started:
+### Citations
 
--   Clone the project to a local directory.
+**SQL**
+Title: 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
+Date: 12 Nov 2023
+Adapted from URL: https://stackoverflow.com/a/58886829
+Author: GMB
+
+Title: YEAR(CURDATE()) syntax to get rows in AdmissionPrices where year matches the current year.
+Date: 28 Nov 2023
+Adapted from URL: https://stackoverflow.com/a/27745487
+Author: John Conde
+
+**Handlebars**
+Title: Registering ifCond helper for Handlebars.
+Date: 30 Oct 2023
+Adapted from URL: https://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional/16315366#16315366
+Author: Jim
+
+**Misc**
+Title: Reference for how to proceed with adding new data, though we have modified it significantly to use an MVC structure.
+Date: 30 Oct 2023
+Adapted from URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+Author: CS 340 Instruction Team
+
+Title: Reference for MVC structure, though our model is not an object. We use a class and promises instead.
+Date: 3 Nov 2023
+Adapted from URL: https://github.com/rahulguptafullstack/node-mysql-crud-app/blob/master/src/models/employee.model.js
+Author: Rahul Gupta
+
+Title: Checking how to use promises in JS.
+Date: 3 Nov 2023
+Adapted from URL: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+Author: MDN Contributors
+
+Title: Checking syntax for querySelectorAll() to apply click event listeners to buttons in all table rows.
+Date: 4 Nov 2023
+Adapted from URL: https://stackoverflow.com/a/50229330
+Author: Mamun
+
+Title: Checking up the use of multipleStatements in mysql.createConnection().
+Date: 13 Nov 2023
+Adapted from URL: https://anonystick.com/blog-developer/nodejs-mysql-multiple-statement-queries-2020040188043017
+Author: Anonystick
+
+Title: To prevent SQL errors, escape quotes in string values before inserting or updating.
+Date: 27 Nov 2023
+Adapted from URL: https://bobbyhadz.com/blog/javascript-escape-quotes-in-string
+Author: Borislav Hadzhiev
+
+Title: How to get the ID of a newly-inserted row, so we know which row to highlight in a table.
+Date: 28 Nov 2023
+Adapted from URL: https://www.npmjs.com/package/mysql#getting-the-id-of-an-inserted-row
+Author: mysql npm creators
+
+Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores the slash in the database. So, trying a regex instead which prevents multiple single quotes when editing a string that contains a single quote.
+Date: 28 Nov 2023
+Adapted from URL: https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
+Author: Cory
+
+---
+
+### Running the project:
+
+-   Clone project to a local directory.
 -   In the root directory, duplicate the .env.template file and rename it to .env. Fill in the fields with your own settings. Eg.:
     -   PORT = 5000
     -   HOST = "localhost"
@@ -17,37 +79,3 @@ Node.js, Express, MySQL CRUD project
 -   In the command line, navigate to the project directory and run `npm install`.
 -   To start the server, you can either use `npm start` to run with nodemon, or `node app.js`.
 -   In your browser, navigate to the URL you set up (eg. localhost:5000 ) to view the web app.
-
----
-
-### Checking against project guidelines:
-
--   "Your database should be pre-populated with sample data. At least three rows per table":
-
-    -   Yes, for all tables.
-
--   "At least 4 entities and at least 4 relationships, one of which must be a many-to-many relationship":
-
-    -   We have 7 entities (8 tables), 6 relationships in which InventoryItems_Employees is M:N.
-
--   "Primary user is the administrator of this database. It is NOT a customer facing website:":
-
-    -   Yup! Our site is meant for the Haunted House admin team.
-
--   "Every table should be used in at least one SELECT query. For the SELECT queries, it is fine to just display the content of the tables."
--   "Need to include one DELETE and one UPDATE function in your website, for any one of the entities. In addition, it should be possible to add and remove things from at least one many-to-many relationship and it should be possible to add things to all relationships."
--   "Need SELECT & INSERT functionalities for all relationships as well as entities. And DELETE & UPDATE for least one m:m relationship."
-
-    -   We are planning to have 'read' and 'create' for all entities, and 'update' for all entities except Tickets. The InventoryItems-Employees M:N relationship will have full CRUD implemented. Entities are spread across multiple pages, with tables and forms for each entity.
-
--   "Note that it's not acceptable to require the user to enter IDs for foreign keys. Instead your website needs to use a dynamically populated drop-down list or have the ability to search using text instead of entering in the ID. This Dynamic drop-down/Search functionality should be present for at least one entity.":
-
-    -   Foreign keys will use select elements and populate them with readable fields (eg. when creating a new review, if selecting a room, the user selects by room name). Will add a filter select for InventoryItems to view by room or employee.
-
--   "In one relationship, you should be able to set the foreign key value to NULL using UPDATE, that removes the relationship.":
-
-    -   The 1:M optional relationship between Rooms and Inventory Items fulfils this for us.
-
--   "You should be able to DELETE a record from a M:M relationship without creating a data anomaly in the related tables.":
-
-    -   If an Inventory Item or Employee is deleted, accordingly, the intersection table InventoryItems_Employees will be updated as it has the appropriate ON DELETE CASCADE.

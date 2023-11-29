@@ -1,6 +1,18 @@
+-- Team Spooktacular (Team 32)
+-- Debbie Nguyen, Dawn Toh 
+
 /*------------------------------
-    Team Spooktacular (Team 32)
-    Debbie Nguyen, Dawn Toh 
+-- Citations:
+
+-- Title: 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
+-- Date: 12 Nov 2023
+-- Adapted from URL: https://stackoverflow.com/a/58886829
+-- Author: GMB
+
+-- Title: YEAR(CURDATE()) syntax to get rows in AdmissionPrices where year matches the current year.
+-- Date: 28 Nov 2023
+-- Adapted from URL: https://stackoverflow.com/a/27745487
+-- Author: John Conde
 ------------------------------*/
 
 /*------------------------------
@@ -238,15 +250,3 @@ VALUES (:customerID, :priceID, :quantity);
 
 -- Delete a Ticket
 DELETE FROM Tickets WHERE ticketID = :ticketIDToDelete;
-
-
--- Citations
--- 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
--- Date: 12 Nov 2023
--- Adapted from URL: https://stackoverflow.com/a/58886829
--- Author: GMB
-
--- YEAR(CURDATE()) syntax to get rows in AdmissionPrices where year matches the current year.
--- Date: 28 Nov 2023
--- Adapted from URL: https://stackoverflow.com/a/27745487
--- Author: John Conde
