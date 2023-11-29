@@ -6,6 +6,8 @@ Basic Node.js, Express, MySQL CRUD project with Handlebars templating
 
 ### Citations
 
+Most of the code structure was our own work, but we did check up many references along the way to work out various issues, as listed below. The CSS is original and is not copied.
+
 **SQL**
 
 -   Title: 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
@@ -77,7 +79,7 @@ Basic Node.js, Express, MySQL CRUD project with Handlebars templating
 
 ---
 
-### Running the project:
+### Running the project
 
 -   Clone project to a local directory.
 -   In the root directory, duplicate the .env.template file and rename it to .env. Fill in the fields with your own settings. Eg.:
