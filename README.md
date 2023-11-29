@@ -23,6 +23,12 @@ Most of the code structure was our own work, but we did check up many references
 
 **Handlebars**
 
+-   Title: Checking Handlebars documentation to figure out how it works, from layouts to partials to built-in helpers such as 'if' and 'each'.
+
+    -   Date Accessed: 30 Oct 2023
+    -   Adapted from URL: https://handlebarsjs.com/guide/
+    -   Author: Yehuda Katz
+
 -   Title: Registering ifCond helper for Handlebars.
     -   Date Accessed: 30 Oct 2023
     -   Adapted from URL: https://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional/16315366#16315366
@@ -30,7 +36,7 @@ Most of the code structure was our own work, but we did check up many references
 
 **Misc**
 
--   Title: Reference for how to proceed with adding new data, though we have modified it significantly to use an MVC structure.
+-   Title: Reference for how to proceed with opening a connection and implementing CRUD, though we have modified it significantly to use an MVC structure.
 
     -   Date Accessed: 30 Oct 2023
     -   Adapted from URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
