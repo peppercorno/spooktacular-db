@@ -145,5 +145,6 @@ let defineErrorMessage = (errType, customers, rooms) => {
 	if (!rooms || rooms === null) return "Unable to retrieve data for rooms."
 	if (errType === "customerIDMissing") return "A review must be written by a customer."
 	if (errType === "invalidRating") return "Rating must be a number ranging from 0 to 5."
+	if (errType === "emptyReview") return "Please select a rating, write some text, or do both!"
 	return
 }

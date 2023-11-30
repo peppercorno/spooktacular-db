@@ -33,7 +33,7 @@ class Customer {
 			sqlQuery += "(EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID) "
 			sqlQuery += "OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID)) "
 			sqlQuery += "AS hasChildRows "
-			sqlQuery += "FROM Customers;"
+			sqlQuery += "FROM Customers ORDER BY customerID DESC;"
 
 			db.pool.query(sqlQuery, (err, rows) => {
 				if (err) {
@@ -54,7 +54,7 @@ class Customer {
 	// Read: get all rows for dropdown menus. Limit to CustomerID and name details only.
 	static findFullNames() {
 		return new Promise((resolve, reject) => {
-			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers;"
+			let sqlQuery = "SELECT customerID, firstName, lastName FROM Customers ORDER BY customerID DESC;"
 
 			db.pool.query(sqlQuery, (err, rows) => {
 				if (err) {
@@ -97,7 +97,6 @@ class Customer {
 			if (this.lastName.length === 0) throw new Error("lastNameMissing")
 			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("lastNameLength")
 			if (this.email.length === 0) throw new Error("emailMissing")
-			// TODO: Add email validation using regex
 
 			// Escape quotes
 			let firstName = this.firstName.replace(/(?<!')'(?!')/g, "''")

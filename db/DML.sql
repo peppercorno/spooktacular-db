@@ -52,10 +52,10 @@ SELECT customerID, firstName, lastName, email,
 (EXISTS (SELECT 1 FROM Tickets t1 WHERE t1.customerID = Customers.customerID)
     OR EXISTS (SELECT 1 FROM Reviews r1 WHERE r1.customerID = Customers.customerID))
     AS hasChildRows
-FROM Customers;
+FROM Customers ORDER BY lastName ASC;
 
 -- For dropdown menus: Get all Customer rows-- customerID and name-related details only
-SELECT customerID, firstName, lastName FROM Customers ORDER BY customerID ASC;
+SELECT customerID, firstName, lastName FROM Customers ORDER BY customerID DESC;
 
 -- Add a new Customer
 INSERT INTO Customers (firstName, lastName, email) VALUES (:newFirstName, :newLastName, :newEmail);

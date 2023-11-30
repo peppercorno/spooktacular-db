@@ -132,6 +132,7 @@ let defineErrorMessage = errType => {
 	if (errType === "jobTitleMissing") return "Job title is required."
 	if (errType === "startDateMissing") return "Start date is required."
 	if (errType === "endDateMissing") return "End date is required."
+	if (errType === "invalidDates") return "End date must be later than start date."
 	if (errType === "salaryMissing") return "Salary is required."
 	if (errType === "salaryNaN") return "Please use a number for the salary."
 	if (errType === "firstNameLength" || errType === "lastNameLength")

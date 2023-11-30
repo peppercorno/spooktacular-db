@@ -108,12 +108,13 @@ class Employee {
 			if (this.lastName.length === 0) throw new Error("lastNameMissing")
 			if (this.lastName.length < 2 || this.lastName.length > 60) throw new Error("lastNameLength")
 			if (this.email.length === 0) throw new Error("emailMissing")
-			// TODO: Add email validation using regex
 			if (this.jobTitle.length === 0) throw new Error("jobTitleMissing")
 			if (this.salary.length === 0) throw new Error("salaryMissing")
 			if (isNaN(this.salary)) throw new Error("salaryNaN")
 			if (this.startDate === "" || this.startDate === null) throw new Error("startDateMissing")
 			if (this.endDate === "" || this.endDate === null) throw new Error("endDateMissing")
+			// If end date is earlier than or same as start date
+			if (moment(this.endDate) <= moment(this.startDate)) throw new Error("invalidDates")
 
 			// Escape quotes
 			let firstName = this.firstName.replace(/(?<!')'(?!')/g, "''")
@@ -123,7 +124,7 @@ class Employee {
 			// Parse as int
 			let salary = parseInt(this.salary)
 
-			// Use expected date format
+			// Use date format SQL expects
 			let startDate = moment(this.startDate).format("YYYY-MM-DD hh:mm:ss")
 			let endDate = moment(this.endDate).format("YYYY-MM-DD hh:mm:ss")
 

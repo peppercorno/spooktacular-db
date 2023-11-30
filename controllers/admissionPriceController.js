@@ -117,6 +117,6 @@ let defineErrorMessage = errType => {
 	if (errType === "invalidYear") return "Year must be a valid number, eg. 2025."
 	if (errType === "descriptionMissing") return "Description is missing."
 	if (errType === "basePriceMissing") return "Base price is missing."
-	if (errType === "invalidBasePrice") return "Base price must be a number."
+	if (errType === "invalidBasePrice") return "Base price must be a number and non-negative."
 	return
 }

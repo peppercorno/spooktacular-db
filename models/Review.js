@@ -46,7 +46,7 @@ class Review {
 					if (row.text === "" || row.text === null) row.text = "--"
 
 					// Format creation date
-					let creationDate = moment(row.creationDate).format("MMM D YYYY, h:mm A")
+					let creationDate = moment(row.creationDate).format("YYYY-MM-DD, h:mm A")
 
 					reviews.push(
 						new this(
@@ -89,7 +89,7 @@ class Review {
 				let roomName = res[0].roomID === undefined || res[0].roomID === null ? "--" : res[0].roomName
 
 				// Format creation date
-				let creationDate = moment(res[0].creationDate).format("MMM D YYYY, h:mm A")
+				let creationDate = moment(res[0].creationDate).format("YYYY-MM-DD, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
 				let review = new this(
@@ -116,6 +116,7 @@ class Review {
 			if (this.rating !== "norating") {
 				if (isNaN(this.rating) || this.rating < 0 || this.rating > 5) throw new Error("invalidRating")
 			}
+			if (this.rating === "norating" && this.text === "") throw new Error("emptyReview")
 
 			// Parse as int
 			let customerID = parseInt(this.customerID)

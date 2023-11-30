@@ -40,7 +40,7 @@ class Ticket {
 				let tickets = []
 				for (let row of rows) {
 					// Format date
-					let purchaseDate = moment(row.purchaseDate).format("MMM D YYYY, h:mm A")
+					let purchaseDate = moment(row.purchaseDate).format("YYYY-MM-DD, h:mm A")
 
 					tickets.push(
 						new this(
@@ -83,7 +83,7 @@ class Ticket {
 				}
 
 				// Format date
-				let purchaseDate = moment(res[0].purchaseDate).format("MMM D YYYY, h:mm A")
+				let purchaseDate = moment(res[0].purchaseDate).format("YYYY-MM-DD, h:mm A")
 
 				// res is an array. Create new class instance using data from first item in array
 				let ticket = new this(
