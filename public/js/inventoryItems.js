@@ -2,7 +2,8 @@
 ------------------------------------------------------------------------
 	Title: Checking syntax for querySelectorAll() to apply click event listeners to buttons in all table rows.
 	Date: 4 Nov 2023
-	Adapted from URL: https://stackoverflow.com/a/50229330
+	Adapted from: https://stackoverflow.com/a/50229330
+	Degree of originality: Largely original. Just needed to check the name of the built-in method.
 	Author: Mamun
 ------------------------------------------------------------------------*/
 

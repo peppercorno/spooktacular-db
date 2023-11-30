@@ -1,13 +1,15 @@
 /*Citations
 ------------------------------------------------------------------------
-	Title: Reference for MVC structure, though our model is not an object. We use a class and promises instead.
+	Title: A starting point for figuring out how to set-up an MVC structure.
 	Date: 3 Nov 2023
-	Adapted from URL: https://github.com/rahulguptafullstack/node-mysql-crud-app/blob/master/src/models/employee.model.js
+	Adapted from: https://github.com/rahulguptafullstack/node-mysql-crud-app/blob/master/src/models/employee.model.js
+	Degree of originality: Our models and controllers are largely original and use classes and promises instead.
 	Author: Rahul Gupta
 
-	Title: Checking how to use promises in JS
+	Title: Checking up how to use promises in JS
 	Date: 3 Nov 2023
-	Adapted from URL: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+	Adapted from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+	Degree of originality: Mostly original. Just checked the documentation to be doubly sure on 'resolve' and 'reject'.
 	Author: MDN Contributors
 ------------------------------------------------------------------------*/
 

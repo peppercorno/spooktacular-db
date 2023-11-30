@@ -2,7 +2,8 @@
 ------------------------------------------------------------------------
 	Title: Checking up the use of multipleStatements in mysql.createConnection()
 	Date: 13 Nov 2023
-	Adapted from URL: https://anonystick.com/blog-developer/nodejs-mysql-multiple-statement-queries-2020040188043017
+	Adapted from: https://anonystick.com/blog-developer/nodejs-mysql-multiple-statement-queries-2020040188043017
+	Degree of originality: Copied the one line over. Just needed to check how this multipleStatements key-value pair is used by others.
 	Author: Anonystick
 ------------------------------------------------------------------------*/
 

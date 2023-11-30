@@ -2,7 +2,8 @@
 ------------------------------------------------------------------------
 	Title: Reference for how to proceed with opening a connection and implementing CRUD, though we have modified it significantly to use an MVC structure.
 	Date: 30 Oct 2023
-	Adapted from URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+	Adapted from: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%205%20-%20Adding%20New%20Data
+	Degree of originality: Our code is much the same for setting up the connection, but deviates from the class guide significantly thereafter.
 	Author: CS 340 Instruction Team
 ------------------------------------------------------------------------*/
 

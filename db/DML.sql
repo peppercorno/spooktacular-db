@@ -6,12 +6,14 @@
 
 -- Title: 'Exists' SQL syntax to return a boolean as to whether a parent row has any child rows.
 -- Date: 12 Nov 2023
--- Adapted from URL: https://stackoverflow.com/a/58886829
+-- Based on: https://stackoverflow.com/a/58886829
+-- Degree of originality: Implemented the same way, just with different entity names and attributes to suit our DB.
 -- Author: GMB
 
 -- Title: YEAR(CURDATE()) syntax to get rows in AdmissionPrices where year matches the current year.
 -- Date: 28 Nov 2023
--- Adapted from URL: https://stackoverflow.com/a/27745487
+-- Based on: https://stackoverflow.com/a/27745487
+-- Degree of originality: Implemented the same way, just with different entity names and attributes to suit our DB.
 -- Author: John Conde
 ------------------------------*/
 

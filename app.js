@@ -2,7 +2,8 @@
 ------------------------------------------------------------------------
 	Title: Registering ifCond helper for Handlebars.
 	Date: 30 Oct 2023
-	Adapted from URL: https://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional/16315366#16315366
+	Copied from: https://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional/16315366#16315366
+	Degree of originality: Copied the comparison function over, no changes by us.
 	Author: Jim
 ------------------------------------------------------------------------*/
 
@@ -33,6 +34,7 @@ app.use(express.json()) // content-type - application/json
 app.use(express.static(path.join(__dirname, "/public")))
 
 // Handlebars as templating engine
+// ifCond helper allows us to use operators for comparison in our .hbs files
 const handlebars = exphbs.create({
 	extname: ".hbs",
 	helpers: {

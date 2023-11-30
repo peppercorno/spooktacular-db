@@ -1,8 +1,9 @@
 /*Citations
 ------------------------------------------------------------------------
-	Title: How to get the ID of a newly-inserted row, so we know which row to highlight in a table.
+	Title: Checking how to get the ID of a newly-inserted row, so we know which row to highlight in a table.
 	Date: 28 Nov 2023
-	Adapted from URL: https://www.npmjs.com/package/mysql#getting-the-id-of-an-inserted-row
+	Copied from: https://www.npmjs.com/package/mysql#getting-the-id-of-an-inserted-row
+	Degree of originality: We followed the documentation exactly to use res.insertId.
 	Author: mysql npm creators
 ------------------------------------------------------------------------*/
 
