@@ -1,6 +1,6 @@
 # CS 340 Spooktacular Database
 
-Basic Node.js, Express, MySQL CRUD project with Handlebars templating
+Basic Node.js, Express, MySQL CRUD project with Handlebars templating.
 
 ---
 
@@ -82,10 +82,11 @@ Most of the code structure was our own work, but we did check up many references
     -   Degree of originality: We changed this to use a regular expression instead.
     -   Author: Borislav Hadzhiev
 
-    -   Title: Escaping quotes: Using a slash (eg. "\'") does prevent SQL errors, but it stores the slash in the database. So, trying a regex instead which prevents multiple single quotes when editing a string that contains a single quote.
+-   Title: Regex to prevent multiple single quotes when editing a string that contains a single quote.
+
     -   Date Accessed: 28 Nov 2023
     -   Based on: https://stackoverflow.com/questions/6070275/regular-expression-match-only-non-repeated-occurrence-of-a-character
-    -   Degree of originality: We copied over the regular expression to use inside string.replace().
+    -   Degree of originality: We copied over the regex to use inside string.replace().
     -   Author: Cory
 
 -   Title: How to get the ID of a newly-inserted row, so we know which row to highlight in a table.
