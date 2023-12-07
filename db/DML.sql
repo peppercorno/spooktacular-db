@@ -139,7 +139,8 @@ SELECT InventoryItems_Employees.relationshipID, InventoryItems_Employees.itemID,
     CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName 
 FROM InventoryItems_Employees
 INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.itemID 
-INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;
+INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID
+ORDER BY InventoryItems_Employees.relationshipID DESC;
 
 -- Add a relationship between Inventory Items and Employees
 INSERT INTO InventoryItems_Employees (itemID, employeeID) VALUES (:newItemID, :newEmployeeID);

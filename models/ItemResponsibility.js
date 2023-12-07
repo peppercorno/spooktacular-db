@@ -21,7 +21,8 @@ class ItemResponsibility {
 			sqlQuery += "CONCAT(Employees.firstName, ' ', Employees.lastName) as employeeFullName  "
 			sqlQuery += "FROM InventoryItems_Employees "
 			sqlQuery += "INNER JOIN InventoryItems ON InventoryItems.itemID = InventoryItems_Employees.itemID "
-			sqlQuery += "INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID;"
+			sqlQuery += "INNER JOIN Employees ON Employees.employeeID = InventoryItems_Employees.employeeID "
+			sqlQuery += "ORDER BY InventoryItems_Employees.relationshipID DESC;"
 
 			db.pool.query(sqlQuery, (err, rows) => {
 				if (err) {
